@@ -12,6 +12,9 @@ import java.io.*;
  */
 public class Lexer {
     public Lexer() {
+        Token a =new Token();
+        final Token.Tokens token1 = Token.Tokens.TOKEN1;
+        System.out.println(token1.toString());
 
     }
 
