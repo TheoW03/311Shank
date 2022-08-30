@@ -15,7 +15,7 @@ public class Token {
         TOKEN1("+"),
         TOKEN2("-"),
         TOKEN3("/"),
-        TOKEN5("*"),
+        TOKEN5("="),
         TOKEN4(";"),//Can I not do endOfLine for my break line bc I love java syntax
         ;
         private String s;
