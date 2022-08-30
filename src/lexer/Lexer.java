@@ -11,11 +11,9 @@ import java.io.*;
  * @Javadoc
  */
 public class Lexer {
+    private Token tokenList;
     public Lexer() {
-        Token a =new Token();
-        final Token.Tokens token1 = Token.Tokens.TOKEN1;
-        System.out.println(token1.toString());
-
+        this.tokenList = new Token();
     }
 
     /**
