@@ -1,5 +1,6 @@
 package lexer;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
@@ -12,8 +13,11 @@ import java.io.*;
  */
 public class Lexer {
     private Token tokenList;
-    public Lexer() {
+    private String data;
+    public Lexer(String data) {
         this.tokenList = new Token();
+        this.data=data;
+
     }
 
     /**
@@ -22,7 +26,36 @@ public class Lexer {
      *
      */
     public ArrayList<String> lexer() {
-        return new ArrayList<String>();
+        ArrayList<String> tokenData =  new ArrayList<String>();
+        Token.OPTokens [] opTokens = Token.OPTokens.values();
+        EnumSet<Token.NumTokens> numTokens = EnumSet.allOf(Token.NumTokens.class);
+//        System.out.println(opTokens.);
+        for(int i = 0;i < this.data.length();i++){
+//            boolean errorState = false;
+//            char token = this.data.charAt(i);
+//
+//            if(opTokens(String.valueOf(token))){
+//                if(!this.number(token)){
+//                    errorState=true;
+//                }
+//            }else if(numTokens.contains(String.valueOf(token))){ //num token
+//                tokenData.add(Token.OPTokens.valueOf(String.valueOf(token)).toString()+" "+token);
+//            }else{
+//                errorState = true;
+//            }
+//            if(errorState){
+//                throw new RuntimeException("Error token "+token+" doesnt work");
+//            }
+        }
+        System.out.println("sucess");
+        return tokenData;
+    }
+//    public boolean operator(char token){
+//
+//        return false;
+//    }
+    public boolean number(char token){
+        return false;
     }
 
     /**

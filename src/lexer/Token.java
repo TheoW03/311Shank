@@ -11,23 +11,27 @@ import java.io.*;
  * @Javadoc
  */
 public class Token {
+    //state 1
     enum OPTokens{
         ADD("+"),
         SUBTRACT("-"),
         DIVIDE("/"),
         MULTIPLY("*"),
         TOKEN4(";"),//Can I not do endOfLine for my break line bc I love java syntax
+
         ;
         private String s;
         OPTokens(String s) {
             this.s = s;
         }
 
+
         @Override
         public String toString() {
-            return s;
+            return this.getClass().getName();
         }
     }
+    //state 2
     enum NumTokens{
         ZERO("0"),
         ONE("1"),
