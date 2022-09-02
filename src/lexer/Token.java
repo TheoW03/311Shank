@@ -66,12 +66,12 @@ public class Token {
             default -> null;
         };
     }
-    public int esNumbre(char token){
+    public boolean esNumbre(char token){
         try{
             int a = Integer.parseInt(String.valueOf(token));
-            return a;
+            return true;
         }catch (Exception e){
-            return 11;
+            return false;
         }
     }
 

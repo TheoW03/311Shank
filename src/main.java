@@ -18,14 +18,14 @@ public class main {
         LexerTestMethod();
     }
     public static void LexerTestMethod(){
-        Lexer obk = new Lexer("+++++---1112322; 878978987;");
+        Lexer obk = new Lexer("5+-4--24;");
         ArrayList<String> tokenData = obk.lexer();
         for(int i = 0; i < tokenData.size(); i++){
             System.out.println(tokenData.get(i));
         }
         a.getTime().stop();
+        System.out.println("\n");
         System.out.println("sucess");
-        System.out.println("time elapsed: "+a.getTimeElapsed());
 
     }
 }

@@ -32,20 +32,60 @@ public class Lexer {
         int lineNum = 1;
 //        System.out.println(opTokens.);
         String arToString = Arrays.toString(opTokens);
+        String numbre = "";
+        boolean esDeciamal = false;
+        boolean esMathmatica = false;
+        String OPperLine = "";
         for(int i = 0;i < this.data.length();i++){
             char token = this.data.charAt(i);
             if(token == ';'){
+                if(!numbre.equals("")){
+                    tokenData.add(numbre);
+                    numbre = "";
+                }
+                OPperLine = "";
                 lineNum++;
             }
             boolean errorState = false;
             if(token != ' '){
-                if(tokenList.compare(token) != null){
-                    tokenData.add(tokenList.compare(token));
-                }else if(tokenList.esNumbre(token) < 11){
-                    tokenData.add("number"+token);
+                if(tokenList.compare(token) != null) {
+                    if(token == '-'){
+                        if(numbre.equals("-")){
+                            tokenData.add(tokenList.compare(token));
+                            continue;
+                        }
+                        if(!numbre.equals("")){
+                            tokenData.add(numbre);
+                            numbre = "";
+                        }
+                        numbre += String.valueOf(token);
+
+                    }else{
+                        if(!numbre.equals("")){
+                            tokenData.add(numbre);
+                            numbre = "";
+                        }
+                        if(OPperLine.equals("")){
+                            OPperLine = tokenList.compare(token);
+                        }
+                        if(OPperLine.equals(tokenList.compare(token))){
+                            tokenData.add(tokenList.compare(token));
+                        }else{
+                           errorState = true;
+                        }
+
+                    }
+
+                }else if(tokenList.esNumbre(token)){
+                    numbre += String.valueOf(token);
                 }else if(token == '.'){
-                    if(data.charAt(i-1) != token && i > 1 && tokenList.esNumbre(data.charAt(i-1)) < 11){
-                        tokenData.add("DECIMAL");
+                    //play with later
+                    if(esDeciamal){
+                        errorState = true;
+                    }
+                    if(data.charAt(i-1) != token && i >= 1 && tokenList.esNumbre(data.charAt(i-1))){
+                        numbre += String.valueOf(token);
+                        esDeciamal = true;
                     }else{
                         errorState=true;
                     }
@@ -54,7 +94,7 @@ public class Lexer {
                     errorState = true;
                 }
             }else{
-                tokenData.add("SPACE");
+                continue;
             }
 
             if(errorState){
