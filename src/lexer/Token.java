@@ -1,5 +1,6 @@
 package lexer;
 
+import javax.swing.text.NumberFormatter;
 import java.util.*;
 import java.io.*;
 
@@ -13,22 +14,24 @@ import java.io.*;
 public class Token {
     //state 1
     enum OPTokens{
-        ADD("+"),
-        SUBTRACT("-"),
-        DIVIDE("/"),
-        MULTIPLY("*"),
-        TOKEN4(";"),//Can I not do endOfLine for my break line bc I love java syntax
+        ADD("+","PLUS"),
+        SUBTRACT("-","SUBTRACT"),
+        DIVIDE("/","DIVIDE"),
+        MULTIPLY("*" ,"MUTIPLY"),
+        TOKEN4(";","EOL"),//Can I not do endOfLine for my break line bc I love java syntax
 
         ;
         private String s;
-        OPTokens(String s) {
+        private String value;
+        OPTokens(String value,String s) {
             this.s = s;
+            this.value=value;
         }
 
 
         @Override
         public String toString() {
-            return this.getClass().getName();
+            return  this.s;
         }
     }
     //state 2
@@ -51,6 +54,23 @@ public class Token {
         @Override
         public String toString() {
             return s;
+        }
+    }
+    public String compare(char token){
+        return switch (token) {
+            case '+' -> OPTokens.ADD.toString();
+            case '-' -> OPTokens.SUBTRACT.toString();
+            case '*' -> OPTokens.MULTIPLY.toString();
+            case '/' -> OPTokens.DIVIDE.toString();
+            default -> null;
+        };
+    }
+    public int esNumbre(char token){
+        try{
+            int a = Integer.parseInt(String.valueOf(token));
+            return a;
+        }catch (Exception e){
+            return 11;
         }
     }
 

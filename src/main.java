@@ -14,7 +14,7 @@ public class main {
         LexerTestMethod();
     }
     public static void LexerTestMethod(){
-        Lexer obk = new Lexer("+++++---");
+        Lexer obk = new Lexer("+++++---1112322a");
         ArrayList<String> a = obk.lexer();
         for(int i = 0; i < a.size(); i++){
             System.out.println(a.get(i));

@@ -30,23 +30,24 @@ public class Lexer {
         Token.OPTokens [] opTokens = Token.OPTokens.values();
         EnumSet<Token.NumTokens> numTokens = EnumSet.allOf(Token.NumTokens.class);
 //        System.out.println(opTokens.);
+        String arToString = Arrays.toString(opTokens);
         for(int i = 0;i < this.data.length();i++){
-//            boolean errorState = false;
-//            char token = this.data.charAt(i);
-//
-//            if(opTokens(String.valueOf(token))){
-//                if(!this.number(token)){
-//                    errorState=true;
-//                }
-//            }else if(numTokens.contains(String.valueOf(token))){ //num token
-//                tokenData.add(Token.OPTokens.valueOf(String.valueOf(token)).toString()+" "+token);
-//            }else{
-//                errorState = true;
-//            }
-//            if(errorState){
-//                throw new RuntimeException("Error token "+token+" doesnt work");
-//            }
+            char token = this.data.charAt(i);
+            boolean errorState = false;
+            if(tokenList.compare(token) != null){
+                tokenData.add(tokenList.compare(token));
+            }else if(tokenList.esNumbre(token) < 11){
+                tokenData.add("number"+token);
+            }else if(token == '.'){
+
+            }else{
+                errorState = true;
+            }
+            if(errorState){
+                throw new UnauthTokenException("token '"+token+"' is unauthorized");
+            }
         }
+
         System.out.println("sucess");
         return tokenData;
     }
