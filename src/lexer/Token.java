@@ -18,7 +18,7 @@ public class Token {
         SUBTRACT("-","SUBTRACT"),
         DIVIDE("/","DIVIDE"),
         MULTIPLY("*" ,"MUTIPLY"),
-        TOKEN4(";","EOL"),//Can I not do endOfLine for my break line bc I love java syntax
+        ENDOFLINE(";","EOL"),//Can I not do endOfLine for my break line bc I love java syntax
 
         ;
         private String s;
@@ -62,6 +62,7 @@ public class Token {
             case '-' -> OPTokens.SUBTRACT.toString();
             case '*' -> OPTokens.MULTIPLY.toString();
             case '/' -> OPTokens.DIVIDE.toString();
+            case ';' -> OPTokens.ENDOFLINE.toString();
             default -> null;
         };
     }
