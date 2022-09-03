@@ -1,0 +1,67 @@
+//        for(int i = 0;i < this.data.length();i++){
+//            char token = this.data.charAt(i);
+//            if(token == ';'){
+//                if(!numbre.equals("")){
+//                    tokenData.add(numbre);
+//                    numbre = "";
+//                }
+//                OPperLine = "";
+//                lineNum++;
+//            }
+//            boolean errorState = false;
+//            if(token != ' '){
+//                if(tokenList.compare(token) != null) {
+//                    if(token == '-'){
+//                        if(numbre.equals("-")){
+//                            tokenData.add(tokenList.compare(token));
+//                            continue;
+//                        }
+//                        if(!numbre.equals("")){
+//                            tokenData.add(numbre);
+//                            numbre = "";
+//                        }
+//                        numbre += String.valueOf(token);
+//
+//                    }else{
+//                        if(!numbre.equals("")){
+//                            tokenData.add(numbre);
+//                            numbre = "";
+//                        }
+//                        if(OPperLine.equals("")){
+//                            OPperLine = tokenList.compare(token);
+//                        }
+//                        if(OPperLine.equals(tokenList.compare(token))){
+//                            tokenData.add(tokenList.compare(token));
+//                        }else{
+//                           errorState = true;
+//                        }
+//
+//                    }
+//
+//                }else if(tokenList.esNumbre(token)){
+//                    numbre += String.valueOf(token);
+//                }else if(token == '.'){
+//                    //play with later
+//                    if(esDeciamal){
+//                        errorState = true;
+//                    }
+//                    if(data.charAt(i-1) != token && i >= 1 && tokenList.esNumbre(data.charAt(i-1))){
+//                        numbre += String.valueOf(token);
+//                        esDeciamal = true;
+//                    }else{
+//                        errorState=true;
+//                    }
+//
+//                }else{
+//                    errorState = true;
+//                }
+//            }else{
+//                continue;
+//            }
+//
+//            if(errorState){
+//                throw new UnauthTokenException("line "+lineNum+" at char "+i+" token '"+token+"' is unauthorized");
+//            }
+//        }
+
+saving incase of bugs
