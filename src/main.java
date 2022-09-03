@@ -1,4 +1,5 @@
 import lexer.Lexer;
+import lexer.Token;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,9 +29,9 @@ public class main {
 //        Path path = Paths.get("TestFile");
         ArrayList<String> a = (ArrayList<String>) Files.readAllLines(Path.of(PATH), StandardCharsets.UTF_8);
         Lexer obk = new Lexer(a);
-        ArrayList<String> tokenData = obk.lexer();
+        ArrayList<Token> tokenData = obk.lexer();
         for(int i = 0; i < tokenData.size(); i++){
-            System.out.println(tokenData.get(i));
+            System.out.println(tokenData.get(i).toString());
         }
 //        a.getTime().stop();
         System.out.println("\n");

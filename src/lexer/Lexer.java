@@ -19,7 +19,6 @@ public class Lexer {
         this.tokenList = new Token();
         this.data = data;
 //        this.data=data;
-
     }
 
     /**
@@ -27,10 +26,11 @@ public class Lexer {
      * @return array list of chars
      *
      */
-    public ArrayList<String> lexer() {
+    public ArrayList<Token> lexer() {
         ArrayList<String> tokenData =  new ArrayList<String>();
+        ArrayList<Token> tokenDataR = new ArrayList<>();
 //        Token.OPTokens [] opTokens = Token.OPTokens.values();
-        EnumSet<Token.NumTokens> numTokens = EnumSet.allOf(Token.NumTokens.class);
+//        EnumSet<Token.NumTokens> numTokens = EnumSet.allOf(Token.NumTokens.class);
         int lineNum = 1;
 //        System.out.println(opTokens.);
 //        String arToString = Arrays.toString(opTokens);
@@ -48,26 +48,30 @@ public class Lexer {
                     if(tokenList.compare(token) != null) {
                         if(token == '-'){
                             if(numbre.equals("-")){
-                                tokenData.add(tokenList.compare(token));
+                                tokenDataR.add(new Token(token,tokenList.compare(token)));
+//                                tokenData.add(tokenList.compare(token));
                                 i++;
                                 continue;
                             }
                             if(!numbre.equals("")){
-                                tokenData.add(numbre);
+                                tokenDataR.add(new Token('n',numbre));
+//                                tokenData.add(numbre);
                                 numbre = "";
                             }
                             numbre += String.valueOf(token);
 
                         }else{
                             if(!numbre.equals("")){
-                                tokenData.add(numbre);
+                                tokenDataR.add(new Token('n',numbre));
+//                                tokenData.add(numbre);
                                 numbre = "";
                             }
                             if(OPperLine.equals("")){
                                 OPperLine = tokenList.compare(token);
                             }
                             if(OPperLine.equals(tokenList.compare(token))){
-                                tokenData.add(tokenList.compare(token));
+                                tokenDataR.add(new Token(token,tokenList.compare(token)));
+//                                tokenData.add(tokenList.compare(token));
                             }else{
                                 errorState = true;
                             }
@@ -100,13 +104,14 @@ public class Lexer {
                 }
                 i++;
             }
-            tokenData.add(numbre);
+//            tokenData.add(numbre);
+            tokenDataR.add(new Token('n',numbre));
             numbre = "";
             OPperLine = "";
             lineNum++;
 
         }
-        return tokenData;
+        return tokenDataR;
     }
 //    public boolean operator(char token){
 //
