@@ -13,7 +13,7 @@ import java.io.*;
  */
 public class Token {
     //state 1
-    enum OPTokens{
+    private enum OPTokens{
         ADD("+","PLUS"),
         SUBTRACT("-","SUBTRACT"),
         DIVIDE("/","DIVIDE"),

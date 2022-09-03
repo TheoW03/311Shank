@@ -13,10 +13,12 @@ import java.io.*;
  */
 public class Lexer {
     private Token tokenList;
-    private String data;
-    public Lexer(String data) {
+//    private String data;
+    private ArrayList<String> data;
+    public Lexer(ArrayList<String> data) {
         this.tokenList = new Token();
-        this.data=data;
+        this.data = data;
+//        this.data=data;
 
     }
 
@@ -27,80 +29,148 @@ public class Lexer {
      */
     public ArrayList<String> lexer() {
         ArrayList<String> tokenData =  new ArrayList<String>();
-        Token.OPTokens [] opTokens = Token.OPTokens.values();
+//        Token.OPTokens [] opTokens = Token.OPTokens.values();
         EnumSet<Token.NumTokens> numTokens = EnumSet.allOf(Token.NumTokens.class);
         int lineNum = 1;
 //        System.out.println(opTokens.);
-        String arToString = Arrays.toString(opTokens);
+//        String arToString = Arrays.toString(opTokens);
         String numbre = "";
         boolean esDeciamal = false;
         boolean esMathmatica = false;
         String OPperLine = "";
-        for(int i = 0;i < this.data.length();i++){
-            char token = this.data.charAt(i);
-            if(token == ';'){
-                if(!numbre.equals("")){
-                    tokenData.add(numbre);
-                    numbre = "";
-                }
-                OPperLine = "";
-                lineNum++;
-            }
-            boolean errorState = false;
-            if(token != ' '){
-                if(tokenList.compare(token) != null) {
-                    if(token == '-'){
-                        if(numbre.equals("-")){
-                            tokenData.add(tokenList.compare(token));
-                            continue;
+        for(int i1 = 0; i1 < data.size(); i1++){
+            String dataTokensLine = data.get(i1);
+            int i = 0;
+            while(i < dataTokensLine.length()){
+                boolean errorState = false;
+                char token = dataTokensLine.charAt(i);
+                if(token != ' '){
+                    if(tokenList.compare(token) != null) {
+                        if(token == '-'){
+                            if(numbre.equals("-")){
+                                tokenData.add(tokenList.compare(token));
+                                i++;
+                                continue;
+                            }
+                            if(!numbre.equals("")){
+                                tokenData.add(numbre);
+                                numbre = "";
+                            }
+                            numbre += String.valueOf(token);
+
+                        }else{
+                            if(!numbre.equals("")){
+                                tokenData.add(numbre);
+                                numbre = "";
+                            }
+                            if(OPperLine.equals("")){
+                                OPperLine = tokenList.compare(token);
+                            }
+                            if(OPperLine.equals(tokenList.compare(token))){
+                                tokenData.add(tokenList.compare(token));
+                            }else{
+                                errorState = true;
+                            }
+
                         }
-                        if(!numbre.equals("")){
-                            tokenData.add(numbre);
-                            numbre = "";
-                        }
+
+                    }else if(tokenList.esNumbre(token)){
                         numbre += String.valueOf(token);
+                    }else if(token == '.'){
+                        //play with later
+                        if(esDeciamal){
+                            errorState = true;
+                        }
+                        if(dataTokensLine.charAt(i-1) != token && i >= 1 && tokenList.esNumbre(dataTokensLine.charAt(i-1))){
+                            numbre += String.valueOf(token);
+                            esDeciamal = true;
+                        }else{
+                            errorState=true;
+                        }
 
                     }else{
-                        if(!numbre.equals("")){
-                            tokenData.add(numbre);
-                            numbre = "";
-                        }
-                        if(OPperLine.equals("")){
-                            OPperLine = tokenList.compare(token);
-                        }
-                        if(OPperLine.equals(tokenList.compare(token))){
-                            tokenData.add(tokenList.compare(token));
-                        }else{
-                           errorState = true;
-                        }
-
-                    }
-
-                }else if(tokenList.esNumbre(token)){
-                    numbre += String.valueOf(token);
-                }else if(token == '.'){
-                    //play with later
-                    if(esDeciamal){
                         errorState = true;
                     }
-                    if(data.charAt(i-1) != token && i >= 1 && tokenList.esNumbre(data.charAt(i-1))){
-                        numbre += String.valueOf(token);
-                        esDeciamal = true;
-                    }else{
-                        errorState=true;
-                    }
-
                 }else{
-                    errorState = true;
+                    i++;
+                    continue;
                 }
-            }else{
-                continue;
+                if(errorState){
+                    throw new UnauthTokenException("line "+lineNum+" at char "+i+" token '"+token+"' is unauthorized");
+                }
+                i++;
             }
+            tokenData.add(numbre);
+            numbre = "";
+            OPperLine = "";
+            lineNum++;
 
-            if(errorState){
-                throw new UnauthTokenException("line "+lineNum+" at char "+i+" token '"+token+"' is unauthorized");
-            }
         }
+//        for(int i = 0;i < this.data.length();i++){
+//            char token = this.data.charAt(i);
+//            if(token == ';'){
+//                if(!numbre.equals("")){
+//                    tokenData.add(numbre);
+//                    numbre = "";
+//                }
+//                OPperLine = "";
+//                lineNum++;
+//            }
+//            boolean errorState = false;
+//            if(token != ' '){
+//                if(tokenList.compare(token) != null) {
+//                    if(token == '-'){
+//                        if(numbre.equals("-")){
+//                            tokenData.add(tokenList.compare(token));
+//                            continue;
+//                        }
+//                        if(!numbre.equals("")){
+//                            tokenData.add(numbre);
+//                            numbre = "";
+//                        }
+//                        numbre += String.valueOf(token);
+//
+//                    }else{
+//                        if(!numbre.equals("")){
+//                            tokenData.add(numbre);
+//                            numbre = "";
+//                        }
+//                        if(OPperLine.equals("")){
+//                            OPperLine = tokenList.compare(token);
+//                        }
+//                        if(OPperLine.equals(tokenList.compare(token))){
+//                            tokenData.add(tokenList.compare(token));
+//                        }else{
+//                           errorState = true;
+//                        }
+//
+//                    }
+//
+//                }else if(tokenList.esNumbre(token)){
+//                    numbre += String.valueOf(token);
+//                }else if(token == '.'){
+//                    //play with later
+//                    if(esDeciamal){
+//                        errorState = true;
+//                    }
+//                    if(data.charAt(i-1) != token && i >= 1 && tokenList.esNumbre(data.charAt(i-1))){
+//                        numbre += String.valueOf(token);
+//                        esDeciamal = true;
+//                    }else{
+//                        errorState=true;
+//                    }
+//
+//                }else{
+//                    errorState = true;
+//                }
+//            }else{
+//                continue;
+//            }
+//
+//            if(errorState){
+//                throw new UnauthTokenException("line "+lineNum+" at char "+i+" token '"+token+"' is unauthorized");
+//            }
+//        }
 
 
         return tokenData;
