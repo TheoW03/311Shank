@@ -12,7 +12,7 @@ import java.io.*;
  * @Javadoc
  */
 public class Token {
-    //state 1
+    //OP state
     private enum OPTokens{
         ADD("+","PLUS"),
         SUBTRACT("-","SUBTRACT"),
@@ -47,9 +47,12 @@ public class Token {
     public Token(String tokenName){
         this.tokenName = tokenName;
     }
-    public Token(){
-
-    }
+    public Token() {}
+    /**
+     *
+     * @param token takes token
+     * @return the string value of token
+     */
     public String compare(char token){
         return switch (token) {
             case '+' -> OPTokens.ADD.toString();
@@ -60,6 +63,12 @@ public class Token {
             default -> null;
         };
     }
+
+    /**
+     *
+     * @param token nombre
+     * @return True or false
+     */
     public boolean esNumbre(char token){
         try{
             int a = Integer.parseInt(String.valueOf(token));
@@ -68,6 +77,11 @@ public class Token {
             return false;
         }
     }
+
+    /**
+     *
+     * @return return token name and Token
+     */
     @Override
     public String toString(){
         return this.tokenName + " ("+String.valueOf(this.token)+")";
