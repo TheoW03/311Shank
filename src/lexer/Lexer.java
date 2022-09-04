@@ -72,10 +72,11 @@ public class Lexer {
                             checkIfNOpISRpeated++;
 
                         }else{ //if +*/
-                            checkIfOPRepeated++;
+
                             if(checkIfOPRepeated >= 2){ //checks for 2***3 or 2++4
                                 errorState=true;
                             }
+                            checkIfOPRepeated++;
                             checkIfNOpISRpeated++;
                             if(!numbre.equals("")){ //check if being used in eq
                                 tokenDataR.add(new Token('n',numbre));
@@ -95,6 +96,7 @@ public class Lexer {
                     }else if(tokenList.esNumbre(token)){ //123
                         checkIfNOpISRpeated = 0;
                         checkIfOPRepeated = 0;
+                        OPperLine = "";
                         numbre += String.valueOf(token);
                     }else if(token == '.'){ //decimal
                         checkIfNOpISRpeated = 0;
