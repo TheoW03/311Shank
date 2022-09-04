@@ -13,13 +13,12 @@ import java.nio.file.Files;
  * ~ project outline here ~
  * @Javadoc
  */
+//compiles. trust me bro ;)
 public class Shank {
-    public static TimeElapsedRun a = new TimeElapsedRun();
-
-
     public static void main(String[] args) throws IOException {
         LexerTestMethod();
     }
+
     public static void LexerTestMethod() throws IOException {
         String PATH = "src/TestFile";
         ArrayList<String> a = (ArrayList<String>) Files.readAllLines(Path.of(PATH), StandardCharsets.UTF_8);
