@@ -19,7 +19,6 @@ public class Lexer {
     public Lexer(ArrayList<String> data) {
         this.tokenList = new Token();
         this.data = data;
-//        this.data=data;
     }
 
     /**
@@ -48,27 +47,26 @@ public class Lexer {
                 if(token != ' '){
                     if(tokenList.compare(token) != null) {
                         if(token == '-'){
-
                             if(checkIfNOpISRpeated >= 2){
                                 errorState=true;
-                            }
-//                            System.out.println(checkIfNOpISRpeated);
-                            if(numbre.equals("-")){
-                                checkIfNOpISRpeated++;
-                                tokenDataR.add(new Token(token,tokenList.compare(token)));
-                                i++;
-                                continue;
                             }
                             if(!numbre.equals("")){
                                 tokenDataR.add(new Token('n',numbre));
                                 numbre = "";
                             }
+                            if(numbre.equals("-") || checkIfNOpISRpeated == 0){
+                                checkIfNOpISRpeated++;
+                                tokenDataR.add(new Token(token,tokenList.compare(token)));
+                                i++;
+                                continue;
+                            }
+
                             numbre += String.valueOf(token);
                             checkIfNOpISRpeated++;
 
                         }else{
                             checkIfOPRepeated++;
-                            if(checkIfOPRepeated >= 3){
+                            if(checkIfOPRepeated >= 2){
                                 errorState=true;
                             }
                             checkIfNOpISRpeated++;
@@ -79,7 +77,7 @@ public class Lexer {
                             if(OPperLine.equals("")){
                                 OPperLine = tokenList.compare(token);
                             }
-                            if(OPperLine.equals(tokenList.compare(token))){
+                            if(OPperLine.equals(tokenList.compare(token)) ){
                                 tokenDataR.add(new Token(token,tokenList.compare(token)));
                             }else{
                                 errorState = true;

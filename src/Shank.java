@@ -1,12 +1,9 @@
 import lexer.Lexer;
 import lexer.Token;
 
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 import java.nio.file.Files;
 
@@ -16,7 +13,7 @@ import java.nio.file.Files;
  * ~ project outline here ~
  * @Javadoc
  */
-public class main {
+public class Shank {
     public static TimeElapsedRun a = new TimeElapsedRun();
 
 
@@ -24,16 +21,13 @@ public class main {
         LexerTestMethod();
     }
     public static void LexerTestMethod() throws IOException {
-//        Lexer obk = new Lexer("5+-4+-24;");
         String PATH = "src/TestFile";
-//        Path path = Paths.get("TestFile");
         ArrayList<String> a = (ArrayList<String>) Files.readAllLines(Path.of(PATH), StandardCharsets.UTF_8);
         Lexer obk = new Lexer(a);
         ArrayList<Token> tokenData = obk.lexer();
         for(int i = 0; i < tokenData.size(); i++){
             System.out.println(tokenData.get(i).toString());
         }
-//        a.getTime().stop();
         System.out.println("\n");
         System.out.println("sucess");
 
