@@ -13,8 +13,9 @@ import java.io.*;
  */
 public class Lexer {
     private Token tokenList;
-//    private String data;
+    //    private String data;
     private ArrayList<String> data;
+
     public Lexer(ArrayList<String> data) {
         this.tokenList = new Token();
         this.data = data;
@@ -22,9 +23,7 @@ public class Lexer {
     }
 
     /**
-     *
      * @return array list of chars
-     *
      */
     public ArrayList<Token> lexer() {
         ArrayList<String> tokenData =  new ArrayList<String>();
@@ -36,6 +35,8 @@ public class Lexer {
 //        String arToString = Arrays.toString(opTokens);
         String numbre = "";
         boolean esDeciamal = false;
+        int checkIfOPRepeated = 0;
+        int checkIfNOpISRpeated = 0;
         boolean esMathmatica = false;
         String OPperLine = "";
         for(int i1 = 0; i1 < data.size(); i1++){
@@ -47,23 +48,32 @@ public class Lexer {
                 if(token != ' '){
                     if(tokenList.compare(token) != null) {
                         if(token == '-'){
+
+                            if(checkIfNOpISRpeated >= 2){
+                                errorState=true;
+                            }
+//                            System.out.println(checkIfNOpISRpeated);
                             if(numbre.equals("-")){
+                                checkIfNOpISRpeated++;
                                 tokenDataR.add(new Token(token,tokenList.compare(token)));
-//                                tokenData.add(tokenList.compare(token));
                                 i++;
                                 continue;
                             }
                             if(!numbre.equals("")){
                                 tokenDataR.add(new Token('n',numbre));
-//                                tokenData.add(numbre);
                                 numbre = "";
                             }
                             numbre += String.valueOf(token);
+                            checkIfNOpISRpeated++;
 
                         }else{
+                            checkIfOPRepeated++;
+                            if(checkIfOPRepeated >= 3){
+                                errorState=true;
+                            }
+                            checkIfNOpISRpeated++;
                             if(!numbre.equals("")){
                                 tokenDataR.add(new Token('n',numbre));
-//                                tokenData.add(numbre);
                                 numbre = "";
                             }
                             if(OPperLine.equals("")){
@@ -71,7 +81,6 @@ public class Lexer {
                             }
                             if(OPperLine.equals(tokenList.compare(token))){
                                 tokenDataR.add(new Token(token,tokenList.compare(token)));
-//                                tokenData.add(tokenList.compare(token));
                             }else{
                                 errorState = true;
                             }
@@ -79,8 +88,12 @@ public class Lexer {
                         }
 
                     }else if(tokenList.esNumbre(token)){
+                        checkIfNOpISRpeated = 0;
+                        checkIfOPRepeated = 0;
                         numbre += String.valueOf(token);
                     }else if(token == '.'){
+                        checkIfNOpISRpeated = 0;
+                        checkIfOPRepeated = 0;
                         //play with later
                         if(esDeciamal){
                             errorState = true;
@@ -95,6 +108,7 @@ public class Lexer {
                     }else{
                         errorState = true;
                     }
+
                 }else{
                     i++;
                     continue;
@@ -102,21 +116,20 @@ public class Lexer {
                 if(errorState){
                     throw new UnauthTokenException("line "+lineNum+" at char "+i+" token '"+token+"' is unauthorized");
                 }
+
                 i++;
             }
-//            tokenData.add(numbre);
-            tokenDataR.add(new Token('n',numbre));
-            numbre = "";
+            if(!numbre.equals("")){
+                tokenDataR.add(new Token('n',numbre));
+                numbre = "";
+            }
+            tokenDataR.add(new Token(';',"ENDOFLINE"));
             OPperLine = "";
             lineNum++;
 
         }
         return tokenDataR;
     }
-//    public boolean operator(char token){
-//
-//        return false;
-//    }
     public boolean number(char token){
         return false;
     }
