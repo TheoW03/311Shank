@@ -19,6 +19,11 @@ public class Shank {
         LexerTestMethod();
     }
 
+    /**
+     *
+     * @throws IOException file
+     * method to run becvause I didnt want to overload main
+     */
     public static void LexerTestMethod() throws IOException {
         String PATH = "src/TestFile";
         ArrayList<String> a = (ArrayList<String>) Files.readAllLines(Path.of(PATH), StandardCharsets.UTF_8);

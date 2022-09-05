@@ -13,8 +13,12 @@ import java.io.*;
 public class Lexer {
     private Token tokenList;
     //    private String data;
-    private ArrayList<String> data;
-
+    private ArrayList<String> data; //data
+    /**
+     *
+     * @param data Mss
+     *
+     */
     public Lexer(ArrayList<String> data) {
         this.tokenList = new Token();
         this.data = data;
@@ -41,14 +45,13 @@ public class Lexer {
         boolean esDeciamal = false;
         int checkIfOPRepeated = 0;
         int checkIfNOpISRpeated = 0;
-        boolean esMathmatica = false;
         String OPperLine = "";
         for(int i1 = 0; i1 < data.size(); i1++){ //loop
             String dataTokensLine = data.get(i1); //token
             int i = 0; //i
             while(i < dataTokensLine.length()){
                 boolean errorState = false;
-                char token = dataTokensLine.charAt(i);
+                char token = dataTokensLine.charAt(i); //each token
                 if(token != ' '){ //ignore space
                     //es Mathmatica state
                     if(tokenList.compare(token) != null) {
