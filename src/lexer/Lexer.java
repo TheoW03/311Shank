@@ -60,11 +60,12 @@ public class Lexer {
                             if(checkIfNOpISRpeated >= 2){ //if 2---3
                                 errorState=true;
                             }
+                            //somehow works. I made this really cheeky :')
                             if(!numbre.equals("")){ //break numbre
                                 tokenDataR.add(new Token('n',numbre));
                                 numbre = "";
                             }
-                            if(numbre.equals("-") || checkIfNOpISRpeated == 0){ //if Its 2-3
+                            if(checkIfNOpISRpeated == 0){ //if Its 2-3
                                 checkIfNOpISRpeated++;
                                 tokenDataR.add(new Token(token,tokenList.compare(token)));
                                 i++;
