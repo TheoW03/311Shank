@@ -17,6 +17,8 @@ import java.nio.file.Files;
 public class Shank {
     public static void main(String[] args) throws IOException {
         LexerTestMethod();
+        System.out.println("\n");
+        System.out.println("sucess");
     }
 
     /**
@@ -32,8 +34,11 @@ public class Shank {
         for(int i = 0; i < tokenData.size(); i++){
             System.out.println(tokenData.get(i).toString());
         }
-        System.out.println("\n");
-        System.out.println("sucess");
+        ParserTestMethod(tokenData);
+
+
+    }
+    public static void ParserTestMethod(ArrayList<Token> a){
 
     }
 }
