@@ -63,6 +63,9 @@ public class Token {
             default -> null;
         };
     }
+    public String getTokenName(){
+        return tokenName;
+    }
 
     /**
      *

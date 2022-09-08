@@ -14,4 +14,8 @@ public class floatNode extends Node{
 
     }
 
+    @Override
+    public String ToString() {
+        return null;
+    }
 }

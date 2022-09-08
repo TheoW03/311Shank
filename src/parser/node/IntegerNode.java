@@ -11,8 +11,15 @@ import java.io.*;
  * @Javadoc
  */
 public class IntegerNode extends  Node{
-    public IntegerNode() {
-
+    private int IntegerANomerul;
+    public Node right;
+    public Node left;
+    public IntegerNode(int integerANomerul) {
+        this.IntegerANomerul=integerANomerul;
     }
 
+    @Override
+    public String ToString() {
+        return null;
+    }
 }
