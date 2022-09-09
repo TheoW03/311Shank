@@ -15,6 +15,7 @@ public class MathOpNode extends Node{
     private Node leftN;
     private Node rightN;
     private char OP;
+    private String endOfLine;
 
     private enum Operands{
         PLUS("+"),
@@ -30,6 +31,9 @@ public class MathOpNode extends Node{
         this.leftN = left;
         this.rightN = right;
         this.OP = OP;
+    }
+    public MathOpNode(String endOfLineChar){
+        this.endOfLine = endOfLineChar;
     }
     public char getOP(){
         return OP;

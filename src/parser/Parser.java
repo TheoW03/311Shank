@@ -53,7 +53,8 @@ public class Parser {
                             in--;
                         }
                         if(in == 0 ){
-//                            MathOpNode a = new MathOpNode();
+                            MathOpNode a = new MathOpNode(tokens.get(i).toString());
+                            nodeLis.add(a);
                         }
                         /**
                          * pseudo code ->
