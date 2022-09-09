@@ -10,10 +10,13 @@ import java.io.*;
  * @Javadoc
  */
 public class floatNode extends Node{
-    public floatNode() {
-
+    private float value;
+    public floatNode(float value) {
+this.value = value;
     }
-
+    public float getValue(){
+        return this.value;
+    }
     @Override
     public String ToString() {
         return null;

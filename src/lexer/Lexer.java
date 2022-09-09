@@ -78,8 +78,13 @@ public class Lexer {
                             checkIfNOpISRpeated++;
 
                         }else{ //if +*/
+                            if(token == '('){
+                                tokenDataR.add(new Token(token,tokenList.compare(token)));
+                                i++;
+                                continue;
+                            }
 
-                            if(checkIfOPRepeated >= 2){ //checks for 2***3 or 2++4
+                            if(checkIfOPRepeated >= 2 && token != ')'){ //checks for 2***3 or 2++4
                                 errorState=true;
                             }
                             checkIfOPRepeated++;
@@ -88,10 +93,15 @@ public class Lexer {
                                 tokenDataR.add(new Token('n',numbre));
                                 numbre = "";
                             }
-                            if(OPperLine.equals("")){  //checks for 2+*3
+                            if(OPperLine.equals("") &&  token != ')'){  //checks for 2+*3
                                 OPperLine = tokenList.compare(token);
                             }
-                            if(OPperLine.equals(tokenList.compare(token)) ){ //adds to list
+                            if(token == ')'){
+                                tokenDataR.add(new Token(token,tokenList.compare(token)));
+                                i++;
+                                continue;
+                            }
+                            if(OPperLine.equals(tokenList.compare(token) ) ){ //adds to list
                                 tokenDataR.add(new Token(token,tokenList.compare(token)));
                             }else{
                                 errorState = true;

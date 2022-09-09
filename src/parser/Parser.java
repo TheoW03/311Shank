@@ -1,5 +1,6 @@
 package parser;
 
+import lexer.Token;
 import parser.node.Node;
 
 import java.util.*;
@@ -12,8 +13,8 @@ import java.io.*;
  * @Javadoc
  */
 public class Parser {
-    ArrayList<String> tokens;
-    public Parser(ArrayList<String> tokens) {
+    ArrayList<Token> tokens;
+    public Parser(ArrayList<Token> tokens) {
     }
 
     /**
@@ -22,6 +23,12 @@ public class Parser {
      *
      */
     public Node parserMethod(){
+        for(int i = 0; i < tokens.size(); i++){
+            if(this.matchAndRemove(String.valueOf(tokens.get(i))) != null){
+
+
+            }
+        }
         /**
          * ArrayOfTokens
          * loop through array
@@ -33,8 +40,12 @@ public class Parser {
          */
         return null;
     }
-    public boolean matchAndRemove(char token){
-        return false;
+    public String matchAndRemove(String token){
+        if(token.equals(tokens.get(0).getTokenName()))   {
+            tokens.remove(tokens.get(0));
+            return token;
+        }
+        return null;
     }
 
 }

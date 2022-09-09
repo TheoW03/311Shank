@@ -1,5 +1,6 @@
 package parser;
 
+import lexer.Token;
 import parser.node.Node;
 
 import java.util.*;
@@ -17,10 +18,19 @@ import java.io.*;
 //puts your work in obsecure folders. which is a pain to get to.
 
 public class Interperter {
+    private ArrayList<Token> ListToCompare;
     public Interperter() {
 
     }
-    public Node Resolve(Node thingYouWantResolved){
-        return null;
+    public void Resolve(Node thingYouWantResolved){
+        if(thingYouWantResolved == null){
+            System.out.println("~snap peters neck~. this " +
+                    "issued has been resolved would anyone else like to join him" +
+                    "(funny famuly guy)"); //it seems today all we see is violent movies and sex on TV.
+            return;
+        }
+
+        Resolve(thingYouWantResolved.left);
+        Resolve(thingYouWantResolved.right);
     }
 }

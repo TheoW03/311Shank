@@ -17,15 +17,22 @@ public class MathOpNode extends Node{
     private char OP;
 
     private enum Operands{
-        PLUS,
-        SUBTRACT,
-        DIVIDE,
-        MULTIPLY;
+        PLUS("+"),
+        SUBTRACT("-"),
+        DIVIDE("/"),
+        MULTIPLY("*");
+        String LaOperand;
+        Operands(String LaOperand){
+            this.LaOperand = LaOperand;
+        }
     }
     public MathOpNode(Node left, Node right, char OP) {
         this.leftN = left;
         this.rightN = right;
         this.OP = OP;
+    }
+    public char getOP(){
+        return OP;
     }
     @Override
     public String ToString() {

@@ -17,6 +17,9 @@ public class IntegerNode extends  Node{
     public IntegerNode(int integerANomerul) {
         this.IntegerANomerul=integerANomerul;
     }
+    public int getIntegerANomerul(){
+        return IntegerANomerul;
+    }
 
     @Override
     public String ToString() {

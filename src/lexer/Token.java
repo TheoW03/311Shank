@@ -19,7 +19,8 @@ public class Token {
         DIVIDE("/","DIVIDE"),
         MULTIPLY("*" ,"MUTIPLY"),
         ENDOFLINE(";","EOL"),//Can I not do endOfLine for my break line bc I love java syntax
-
+        LParan(")","Lparenthsis"),
+        RParan("(","Rparenthsis");
         ;
         private String s;
         private String value;
@@ -59,6 +60,8 @@ public class Token {
             case '-' -> OPTokens.SUBTRACT.toString();
             case '*' -> OPTokens.MULTIPLY.toString();
             case '/' -> OPTokens.DIVIDE.toString();
+            case '(' -> OPTokens.LParan.toString();
+            case ')' -> OPTokens.RParan.toString();
             case ';' -> OPTokens.ENDOFLINE.toString();
             default -> null;
         };
@@ -66,6 +69,7 @@ public class Token {
     public String getTokenName(){
         return tokenName;
     }
+
 
     /**
      *
