@@ -1,8 +1,12 @@
 package parser;
 
 import lexer.Token;
+import parser.node.FloatNode;
+import parser.node.IntegerNode;
+import parser.node.MathOpNode;
 import parser.node.Node;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.io.*;
 
@@ -23,9 +27,47 @@ public class Parser {
      *
      */
     public Node parserMethod(){
+        ArrayList<Node> nodeLis = new ArrayList<Node>();
         for(int i = 0; i < tokens.size(); i++){
-            if(this.matchAndRemove(String.valueOf(tokens.get(i))) != null){
+            String tokenInList = matchAndRemove(tokens.get(i).getTokenName());
+            if(tokenInList != null){
+                try{
+                    float a = Float.parseFloat(tokens.get(i).getTokenName());
+                    FloatNode b = new FloatNode(a);
+                    nodeLis.add(b);
 
+                }catch (NumberFormatException e1){
+                    try{
+                        int a = Integer.parseInt(tokens.get(i).getTokenName());
+                        IntegerNode b = new IntegerNode(a);
+                        nodeLis.add(b);
+                    }catch (NumberFormatException e2){
+//                        MathOpNode a = new MathOpNode(tokenInList);
+                        int in = i;
+                        Node getNode = null;
+                        while(in > 0){
+                            getNode = nodeLis.get(in);
+                            if(getNode instanceof IntegerNode || getNode instanceof FloatNode){
+                                break;
+                            }
+                            in--;
+                        }
+                        if(in == 0 ){
+//                            MathOpNode a = new MathOpNode();
+                        }
+                        /**
+                         * pseudo code ->
+                         *
+                         * checks if Op
+                         * if its OP it will go back until instance of int Node or FLoat Node
+                         * if its EOL. it will check for an OP.
+                         *
+                         *
+                         */
+
+                    }
+                }
+            }else{
 
             }
         }
@@ -47,5 +89,6 @@ public class Parser {
         }
         return null;
     }
+
 
 }
