@@ -14,7 +14,7 @@ import java.io.*;
 public class MathOpNode extends Node{
     private Node leftN;
     private Node rightN;
-    private char OP;
+    private String OP;
     private String endOfLine;
 
     private enum Operands{
@@ -27,20 +27,15 @@ public class MathOpNode extends Node{
             this.LaOperand = LaOperand;
         }
     }
-    public MathOpNode(Node left, Node right, char OP) {
-        this.leftN = left;
-        this.rightN = right;
-        this.OP = OP;
+    public MathOpNode(String op){
+        this.OP = op;
     }
-    public MathOpNode(String endOfLineChar){
-        this.endOfLine = endOfLineChar;
-    }
-    public char getOP(){
+    public String getOP(){
         return OP;
     }
     @Override
     public String ToString() {
-        return leftN.ToString() + " " + rightN.ToString();
+        return endOfLine;
     }
 
 

@@ -1,5 +1,8 @@
 import lexer.Lexer;
 import lexer.Token;
+import parser.Interperter;
+import parser.Parser;
+import parser.node.Node;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -39,6 +42,17 @@ public class Shank {
 
     }
     public static void ParserTestMethod(ArrayList<Token> a){
+        Parser p = new Parser(a);
+
+        Interperter i = new Interperter();
+        System.out.println();
+        System.out.println(i.Resolve(p.parserMethod().right));
+//        System.out.println(i.Resolve());
+//        Parser c = new Parser(a);
+////       ArrayList<Node> b = c.parserMethod();
+//       for(int i = 0; i < b.size(); i++){
+//           System.out.println(b.get(i).ToString());
+//       }
 
     }
 }

@@ -7,6 +7,7 @@ import parser.node.MathOpNode;
 import parser.node.Node;
 
 import java.lang.reflect.Array;
+import java.sql.Struct;
 import java.util.*;
 import java.io.*;
 
@@ -17,8 +18,19 @@ import java.io.*;
  * @Javadoc
  */
 public class Parser {
-    ArrayList<Token> tokens;
+    private ArrayList<Token> tokens;
+    private Token tok;
+    private Parser rootNode;
+    public Parser left,right;
+    public Node element;
     public Parser(ArrayList<Token> tokens) {
+        this.tokens = tokens;
+    }
+    public Parser(Node element){
+        this.element=element;
+    }
+    public Parser(Parser ro){
+        this.rootNode = ro;
     }
 
     /**
@@ -26,70 +38,87 @@ public class Parser {
      * @return node of this
      *
      */
-    public Node parserMethod(){
-        ArrayList<Node> nodeLis = new ArrayList<Node>();
-        for(int i = 0; i < tokens.size(); i++){
-            String tokenInList = matchAndRemove(tokens.get(i).getTokenName());
-            if(tokenInList != null){
-                try{
-                    float a = Float.parseFloat(tokens.get(i).getTokenName());
-                    FloatNode b = new FloatNode(a);
-                    nodeLis.add(b);
+    /**
+     * thanks 213 ;)
+     * @param op
+     * @return
+     */
+    public int OrderOfOp(String op) {
+        if (op.equals("+") || op.equals("-")) {
+            return 1;
+        }
+        if (op.equals("/") || op.equals("*")) {
+            return 2;
+        }
+        if(op.equals("^")){
+            return 3;
+        }
 
-                }catch (NumberFormatException e1){
-                    try{
-                        int a = Integer.parseInt(tokens.get(i).getTokenName());
-                        IntegerNode b = new IntegerNode(a);
-                        nodeLis.add(b);
-                    }catch (NumberFormatException e2){
-//                        MathOpNode a = new MathOpNode(tokenInList);
-                        int in = i;
-                        Node getNode = null;
-                        while(in > 0){
-                            getNode = nodeLis.get(in);
-                            if(getNode instanceof IntegerNode || getNode instanceof FloatNode){
-                                break;
-                            }
-                            in--;
-                        }
-                        if(in == 0 ){
-                            MathOpNode a = new MathOpNode(tokens.get(i).toString());
-                            nodeLis.add(a);
-                        }
-                        /**
-                         * pseudo code ->
-                         *
-                         * checks if Op
-                         * if its OP it will go back until instance of int Node or FLoat Node
-                         * if its EOL. it will check for an OP.
-                         *
-                         *
-                         */
+        return -1;
+    }
 
+    public Parser parserMethod() {
+        try{
+            if (matchAndRemove(tokens.get(0).getTokenAsString()) != null) {
+                this.tok = tokens.get(0);
+                if (nomeral() != null) {
+                    this.left = new Parser(nomeral());
+                    parserMethod();
+                }
+                if (esExpression() != null) {
+                    if (OrderOfOp(tok.getTokenAsString()) >= 2) {
+                        this.left = new Parser(esExpression());
+                    } else {
+                        if(esExpression() != null){
+                            this.right = new Parser(esExpression());
+                        }
+                        parserMethod();
                     }
                 }
-            }else{
+            }
+        }catch (IndexOutOfBoundsException e){
 
+        }
+        return this;
+
+    }
+    public Node nomeral() {
+
+        try {
+            float a = Float.parseFloat(tok.getTokenName());
+            FloatNode b = new FloatNode(a);
+            return b;
+//                    nodeLis1.add(b);
+
+        } catch (NumberFormatException e1) {
+            try {
+                int a = Integer.parseInt(tok.getTokenName());
+                IntegerNode b = new IntegerNode(a);
+                return b;
+//                        nodeLis1.add(b);
+            } catch (NumberFormatException e2) {
+                esExpression();
+                return null;
             }
         }
-        /**
-         * ArrayOfTokens
-         * loop through array
-         *
-         * For loop (psuedo code)
-         *     if(conditions for an OP meant/MatchRemove is true){
-         *          new MathNode((node)goes right here)
-         *     }
-         */
-        return null;
     }
-    public String matchAndRemove(String token){
-        if(token.equals(tokens.get(0).getTokenName()))   {
-            tokens.remove(tokens.get(0));
-            return token;
+    public MathOpNode esExpression(){
+        if(tok.getTokenAsString().equals(";")){
+            return null;
         }
-        return null;
+        return new MathOpNode(tok.getTokenAsString());
     }
 
 
-}
+        public String matchAndRemove (String token){
+//            System.out.println("token: "+tokens.get(0) +" \n"+token);
+            if (token.equals(tokens.get(0).getTokenAsString())) {
+
+                return tokens.remove(0).getTokenName();
+            }
+
+            return null;
+        }
+
+
+    }

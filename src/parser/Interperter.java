@@ -1,6 +1,9 @@
 package parser;
 
 import lexer.Token;
+import parser.node.FloatNode;
+import parser.node.IntegerNode;
+import parser.node.MathOpNode;
 import parser.node.Node;
 
 import java.util.*;
@@ -22,15 +25,64 @@ public class Interperter {
     public Interperter() {
 
     }
-    public void Resolve(Node thingYouWantResolved){
+    public float Resolve(Parser thingYouWantResolved){
+        System.out.println(thingYouWantResolved);
+
         if(thingYouWantResolved == null){
+            return -1;
+        }
+//        System.out.println(thingYouWantResolved);
+        if(thingYouWantResolved.element instanceof IntegerNode){
             System.out.println("~snap peters neck~. this " +
                     "issued has been resolved would anyone else like to join him" +
                     "(funny famuly guy)"); //it seems today all we see is violent movies and sex on TV.
-            return;
+            float a = (float) ((IntegerNode) thingYouWantResolved.element).getIntegerANomerul();
+            return a;
+        }else if(thingYouWantResolved.element  instanceof FloatNode){
+            System.out.println("~snap peters neck~. this " +
+                    "issued has been resolved would anyone else like to join him" +
+                    "(funny famuly guy)"); //it seems today all we see is violent movies and sex on TV.
+            return ((FloatNode) thingYouWantResolved.element ).getValue();
+        }else{
+            Resolve(thingYouWantResolved.right);
+            Resolve(thingYouWantResolved.left);
+            float a;
+            MathOpNode v;
+            v = (MathOpNode) thingYouWantResolved.element;
+            switch (v.getOP()) {
+                case "+":
+                    a = Resolve(thingYouWantResolved.left) + Resolve(thingYouWantResolved.left);
+                    return a;
+                case "*":
+                    a = Resolve(thingYouWantResolved.left) * Resolve(thingYouWantResolved.right);
+                    return a;
+                case "/":
+                    if (Resolve(thingYouWantResolved.right) == 0) {
+                        throw new InvalidMathOPException("cant devided by 0");
+                    }
+                    a = Resolve(thingYouWantResolved.left) / Resolve(thingYouWantResolved.right);
+                    return a;
+                case "-":
+                    a = Resolve(thingYouWantResolved.left) - Resolve(thingYouWantResolved.right);
+                    return a;
+                default:
+                    return -2;
+            }
+
         }
 
-        Resolve(thingYouWantResolved.left);
-        Resolve(thingYouWantResolved.right);
+
+
+
+
+//        if(thingYouWantResolved == null){
+//            Resolve(thingYouWantResolved.left);
+//        }
+
+//        System.out.println("~snap peters neck~. this " +
+//                "issued has been resolved would anyone else like to join him" +
+//                "(funny famuly guy)"); //it seems today all we see is violent movies and sex on T
+
+
     }
 }

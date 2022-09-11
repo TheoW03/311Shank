@@ -49,6 +49,9 @@ public class Token {
         this.tokenName = tokenName;
     }
     public Token() {}
+    public String getTokenAsString(){
+        return String.valueOf(token);
+    }
     /**
      *
      * @param token takes token
