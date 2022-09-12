@@ -4,6 +4,9 @@ import parser.Interperter;
 import parser.Parser;
 import parser.node.Node;
 
+import lexer.Lexer;
+import lexer.Token;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -46,7 +49,7 @@ public class Shank {
 
         Interperter i = new Interperter();
         System.out.println();
-        System.out.println(i.Resolve(p.parserMethod().right));
+        System.out.println(i.Resolve(p.parserMethod()));
 //        System.out.println(i.Resolve());
 //        Parser c = new Parser(a);
 ////       ArrayList<Node> b = c.parserMethod();

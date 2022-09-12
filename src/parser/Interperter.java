@@ -6,8 +6,7 @@ import parser.node.IntegerNode;
 import parser.node.MathOpNode;
 import parser.node.Node;
 
-import java.util.*;
-import java.io.*;
+import java.util.ArrayList;
 
 
 /**
@@ -22,36 +21,28 @@ import java.io.*;
 
 public class Interperter {
     private ArrayList<Token> ListToCompare;
-    public Interperter() {
 
-    }
-    public float Resolve(Parser thingYouWantResolved){
-        System.out.println(thingYouWantResolved);
+    /**
+     * "Resolve in the interpreter is:
+     * If I have an integer, convert to float and return
+     * If I have a float, return.
+     * If I have a math op, resolve(left) and resolve (right) then do the op and return the value"
+     * @param thingYouWantResolved
+     * @return
+     */
+    public float Resolve(Node thingYouWantResolved){
 
         if(thingYouWantResolved == null){
             return -1;
         }
-//        System.out.println(thingYouWantResolved);
-        if(thingYouWantResolved.element instanceof IntegerNode){
-            System.out.println("~snap peters neck~. this " +
-                    "issued has been resolved would anyone else like to join him" +
-                    "(funny famuly guy)"); //it seems today all we see is violent movies and sex on TV.
-            float a = (float) ((IntegerNode) thingYouWantResolved.element).getIntegerANomerul();
-            return a;
-        }else if(thingYouWantResolved.element  instanceof FloatNode){
-            System.out.println("~snap peters neck~. this " +
-                    "issued has been resolved would anyone else like to join him" +
-                    "(funny famuly guy)"); //it seems today all we see is violent movies and sex on TV.
-            return ((FloatNode) thingYouWantResolved.element ).getValue();
-        }else{
-            Resolve(thingYouWantResolved.right);
-            Resolve(thingYouWantResolved.left);
+        //if math node/.
+        if(thingYouWantResolved instanceof MathOpNode){
             float a;
             MathOpNode v;
-            v = (MathOpNode) thingYouWantResolved.element;
+            v = (MathOpNode) thingYouWantResolved;
             switch (v.getOP()) {
                 case "+":
-                    a = Resolve(thingYouWantResolved.left) + Resolve(thingYouWantResolved.left);
+                    a = Resolve(thingYouWantResolved.left) + Resolve(thingYouWantResolved.right);
                     return a;
                 case "*":
                     a = Resolve(thingYouWantResolved.left) * Resolve(thingYouWantResolved.right);
@@ -65,24 +56,15 @@ public class Interperter {
                 case "-":
                     a = Resolve(thingYouWantResolved.left) - Resolve(thingYouWantResolved.right);
                     return a;
-                default:
-                    return -2;
             }
-
         }
-
-
-
-
-
-//        if(thingYouWantResolved == null){
-//            Resolve(thingYouWantResolved.left);
-//        }
-
-//        System.out.println("~snap peters neck~. this " +
-//                "issued has been resolved would anyone else like to join him" +
-//                "(funny famuly guy)"); //it seems today all we see is violent movies and sex on T
-
+        //if float
+        if(thingYouWantResolved instanceof IntegerNode){
+            return (float) ((IntegerNode) thingYouWantResolved).getIntegerANomerul();
+        }else if(thingYouWantResolved instanceof FloatNode){
+            return  ((FloatNode) thingYouWantResolved).getValue();
+        }
+        return 0;
 
     }
 }

@@ -27,6 +27,11 @@ public class MathOpNode extends Node{
             this.LaOperand = LaOperand;
         }
     }
+    public MathOpNode(Node left, Node right, String op){
+        this.left = left; //left operand.
+        this.right = right;
+        this.OP = op;
+    }
     public MathOpNode(String op){
         this.OP = op;
     }

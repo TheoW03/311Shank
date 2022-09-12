@@ -1,124 +1,142 @@
 package parser;
 
+
 import lexer.Token;
 import parser.node.FloatNode;
 import parser.node.IntegerNode;
 import parser.node.MathOpNode;
 import parser.node.Node;
 
-import java.lang.reflect.Array;
-import java.sql.Struct;
 import java.util.*;
-import java.io.*;
 
 /**
  * @author Theo willis
  * @version 1.0.0
  * ~ project outline here ~
  * @Javadoc
+ *
+ * legit. been foicused on this all weekend.
+ * and i cant T~T
  */
 public class Parser {
     private ArrayList<Token> tokens;
-    private Token tok;
+    private Token tok, next;
     private Parser rootNode;
-    public Parser left,right;
+    public Node left, right;
     public Node element;
+
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
     }
-    public Parser(Node element){
-        this.element=element;
+
+    public Parser(Node element) {
+        this.element = element;
     }
-    public Parser(Parser ro){
+
+    public Parser(Parser ro) {
         this.rootNode = ro;
     }
 
     /**
-     *
-     * @return node of this
-     *
+     * @return Node
+     * well. I tried. coding it.
      */
-    /**
-     * thanks 213 ;)
-     * @param op
-     * @return
-     */
-    public int OrderOfOp(String op) {
-        if (op.equals("+") || op.equals("-")) {
-            return 1;
-        }
-        if (op.equals("/") || op.equals("*")) {
-            return 2;
-        }
-        if(op.equals("^")){
-            return 3;
-        }
+    public Node parserMethod() {
 
-        return -1;
-    }
-
-    public Parser parserMethod() {
+        this.tok = tokens.get(0);
+        this.next = tokens.get(1);
         try{
-            if (matchAndRemove(tokens.get(0).getTokenAsString()) != null) {
-                this.tok = tokens.get(0);
-                if (nomeral() != null) {
-                    this.left = new Parser(nomeral());
-                    parserMethod();
+
+            if (matchAndRemove(tok.getTokenAsString()) != null) {
+                //if number
+                if (nomeral(tok) != null) {
+                    return nomeral(tok);
+                    //if expression
+                } else {
+                    return esExpression();
                 }
-                if (esExpression() != null) {
-                    if (OrderOfOp(tok.getTokenAsString()) >= 2) {
-                        this.left = new Parser(esExpression());
-                    } else {
-                        if(esExpression() != null){
-                            this.right = new Parser(esExpression());
-                        }
-                        parserMethod();
-                    }
-                }
+
+
             }
+            parserMethod();
         }catch (IndexOutOfBoundsException e){
 
         }
-        return this;
-
+        return esExpression(); //IDK wtf im doing :')
     }
-    public Node nomeral() {
 
+    /**
+     *
+     * @param value
+     * @return node for number.
+     */
+    public Node nomeral(Token value) {
         try {
-            float a = Float.parseFloat(tok.getTokenName());
-            FloatNode b = new FloatNode(a);
+            int a = Integer.parseInt(value.getTokenName());
+            IntegerNode b = new IntegerNode(a);
             return b;
-//                    nodeLis1.add(b);
-
         } catch (NumberFormatException e1) {
             try {
-                int a = Integer.parseInt(tok.getTokenName());
-                IntegerNode b = new IntegerNode(a);
+                float a = Float.parseFloat(value.getTokenName());
+                FloatNode b = new FloatNode(a);
                 return b;
-//                        nodeLis1.add(b);
             } catch (NumberFormatException e2) {
-                esExpression();
                 return null;
             }
         }
     }
-    public MathOpNode esExpression(){
-        if(tok.getTokenAsString().equals(";")){
+
+    /**
+     *
+     * expression. esponal bc I hate english.
+     * @return MathOPnode
+     */
+
+    public MathOpNode esExpression() {
+
+        //EOL.
+        if (next.getTokenAsString().equals(";")) {
             return null;
         }
-        return new MathOpNode(tok.getTokenAsString());
+        if(tok.getTokenName().equals("(")){
+            term();
+            return term();
+        }
+        if(tok.getTokenName().equals("*") || tok.getTokenName().equals("/")){
+            return factor();
+        }
+        left = parserMethod();
+        right = parserMethod();
+        return new MathOpNode(this.left, this.right, tok.getTokenAsString());
     }
 
+    /**
+     * trying to make it look like i remotely know what im doing :')
+     * @return
+     */
+    public MathOpNode term(){
+        left = parserMethod();
+        right = parserMethod();
+        return new MathOpNode(this.left, this.right, tok.getTokenAsString());
+    }
+    public MathOpNode factor(){
+        left = parserMethod();
+        right = parserMethod();
+        return new MathOpNode(this.left, this.right, tok.getTokenAsString());
+    }
 
-        public String matchAndRemove (String token){
+    /**
+     * @param token
+     */
+    public String matchAndRemove(String token) {
 //            System.out.println("token: "+tokens.get(0) +" \n"+token);
-            if (token.equals(tokens.get(0).getTokenAsString())) {
+        if (token.equals(tokens.get(0).getTokenAsString())) {
 
-                return tokens.remove(0).getTokenName();
-            }
-
-            return null;
+            return tokens.remove(0).getTokenName();
         }
 
-
+        return null;
     }
+
+
+}

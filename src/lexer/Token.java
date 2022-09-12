@@ -1,10 +1,5 @@
 package lexer;
 
-import javax.swing.text.NumberFormatter;
-import java.util.*;
-import java.io.*;
-
-
 /**
  * @author Theo willis
  * @version 1.0.0
