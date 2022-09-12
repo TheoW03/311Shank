@@ -1,17 +1,15 @@
+//custom imports for I have my code in different dir's
+//pls comment out if problem.
 import lexer.Lexer;
 import lexer.Token;
 import parser.Interperter;
 import parser.Parser;
-import parser.node.Node;
-
-import lexer.Lexer;
-import lexer.Token;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 
 /**
  * @author Theo willis

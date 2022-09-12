@@ -1,6 +1,7 @@
 package parser;
 
-
+//custom imports for I have my code in different dir's
+//pls comment out if problem.
 import lexer.Token;
 import parser.node.FloatNode;
 import parser.node.IntegerNode;
@@ -72,14 +73,15 @@ public class Parser {
      */
     public Node nomeral(Token value) {
         try {
-            int a = Integer.parseInt(value.getTokenName());
-            IntegerNode b = new IntegerNode(a);
+            float a = Float.parseFloat(value.getTokenName());
+            FloatNode b = new FloatNode(a);
             return b;
         } catch (NumberFormatException e1) {
+            //number.
             try {
-                float a = Float.parseFloat(value.getTokenName());
-                FloatNode b = new FloatNode(a);
-                return b;
+              int a = Integer.parseInt(value.getTokenName());
+                IntegerNode a2 = new IntegerNode(a);
+                return a2;
             } catch (NumberFormatException e2) {
                 return null;
             }

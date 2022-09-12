@@ -13,5 +13,5 @@ import java.io.*;
 public class InvalidMathOPException extends RuntimeException{
     public InvalidMathOPException(String message) {
         super(message);
-    }
+    } // prevent exceptions
 }
