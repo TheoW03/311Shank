@@ -1,5 +1,7 @@
 package parser.node;
 
+import lexer.Token;
+
 import java.util.*;
 import java.io.*;
 
@@ -12,10 +14,12 @@ import java.io.*;
  */
 
 public class MathOpNode extends Node{
-    private Node leftN;
-    private Node rightN;
-    private String OP;
+    private Node left;
+    private Node right;
+    private Token OP;
+    private String OP2;
     private String endOfLine;
+
 
     private enum Operands{
         PLUS("+"),
@@ -27,20 +31,43 @@ public class MathOpNode extends Node{
             this.LaOperand = LaOperand;
         }
     }
-    public MathOpNode(Node left, Node right, String op){
-        this.left = left; //left operand.
+    public MathOpNode(Node left, Node right, Token token) {
+        this.left = left;
         this.right = right;
-        this.OP = op;
+        this.OP = token;
+
     }
-    public MathOpNode(String op){
-        this.OP = op;
+    public MathOpNode(Node left, Node right){
+        this.left = left;
+        this.right = right;
     }
-    public String getOP(){
-        return OP;
+
+    public MathOpNode(String OP2){
+        this.OP2 = OP2;
+
+    }
+    public MathOpNode(Node left,  Token OP){
+        this.left = left;
+        this.OP = OP;
+    }
+
+    public String  getOP() {
+        return OP.getTokenAsString();
+    }
+
+    //parenthisis
+    public MathOpNode(MathOpNode exp){
+
+    }
+    public String getOP2(){
+        return OP2;
     }
     @Override
     public String ToString() {
-        return endOfLine;
+        if(OP2 == null){
+            return left.ToString() +" "+right.ToString() + " " + OP;
+        }
+        return OP2;
     }
 
 

@@ -16,9 +16,6 @@ import java.util.ArrayList;
  * ~ project outline here ~
  * @Javadoc
  */
-//pls accept my set up. I like my code organized in Folders. if its not I will not feel happy
-//and using zip bc I hate playing. FIND THE FUCKING JAVA INTELLIJ directory on my computer. becaue inetellIJ
-//puts your work in obsecure folders. which is a pain to get to.
 
 public class Interperter {
     private ArrayList<Token> ListToCompare;
@@ -36,14 +33,16 @@ public class Interperter {
         if(thingYouWantResolved == null){
             return -1;
         }
+        Resolve(thingYouWantResolved.right);
+        Resolve(thingYouWantResolved.left);
         //if math node/.
         if(thingYouWantResolved instanceof MathOpNode){
             float a;
             MathOpNode v;
             v = (MathOpNode) thingYouWantResolved;
-            switch (v.getOP()) {
+            switch (v.getOP2()) {
                 case "+":
-                    a = Resolve(thingYouWantResolved.left) + Resolve(thingYouWantResolved.right);
+                    a = Resolve(thingYouWantResolved.right) + Resolve(thingYouWantResolved.left);
                     return a;
                 case "*":
                     a = Resolve(thingYouWantResolved.left) * Resolve(thingYouWantResolved.right);

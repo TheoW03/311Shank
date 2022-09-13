@@ -23,6 +23,6 @@ public class IntegerNode extends  Node{
 
     @Override
     public String ToString() {
-        return null;
+        return String.valueOf(getIntegerANomerul());
     }
 }

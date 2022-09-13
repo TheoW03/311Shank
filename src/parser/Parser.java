@@ -2,11 +2,13 @@ package parser;
 
 //custom imports for I have my code in different dir's
 //pls comment out if problem.
+
 import lexer.Token;
 import parser.node.FloatNode;
 import parser.node.IntegerNode;
 import parser.node.MathOpNode;
 import parser.node.Node;
+
 
 import java.util.*;
 
@@ -14,9 +16,7 @@ import java.util.*;
  * @author Theo willis
  * @version 1.0.0
  * ~ project outline here ~
- * @Javadoc
- *
- * legit. been foicused on this all weekend.
+ * @Javadoc legit. been foicused on this all weekend.
  * and i cant T~T
  */
 public class Parser {
@@ -25,9 +25,12 @@ public class Parser {
     private Parser rootNode;
     public Node left, right;
     public Node element;
+    private Node root;
+    private ArrayList<Node> lisOfNodes;
 
     public Parser(ArrayList<Token> tokens) {
         this.tokens = tokens;
+        lisOfNodes = new ArrayList<>();
     }
 
     public Parser(Node element) {
@@ -41,36 +44,99 @@ public class Parser {
     /**
      * @return Node
      * well. I tried. coding it.
+     * <p>
+     * <p>
+     * arraylist
+     * check for all rules
      */
-    public Node parserMethod() {
-
+    public Node parserMethodThis() {
         this.tok = tokens.get(0);
-        this.next = tokens.get(1);
-        try{
-
-            if (matchAndRemove(tok.getTokenAsString()) != null) {
-                //if number
-                if (nomeral(tok) != null) {
-                    return nomeral(tok);
-                    //if expression
-                } else {
-                    return esExpression();
-                }
-
-
+        if (matchAndRemove(tok.getTokenAsString()) != null) {
+            if (nomeral(tok) != null) {
+                return nomeral(tok);
+            } else {
+                return esExpression(tok);
             }
-            parserMethod();
-        }catch (IndexOutOfBoundsException e){
-
         }
-        return esExpression(); //IDK wtf im doing :')
+        return null;
+    }
+
+    public Node Next() {
+        this.next = tokens.get(0);
+        tokens.remove(0);
+        if (nomeral(next) != null) {
+            return nomeral(next);
+        } else {
+            return esExpression(next);
+        }
+
+
     }
 
     /**
-     *
+     * if(!noOp's){
+     * <p>
+     * <p>
+     * <p>
+     * }
+     * if(factor){
+     * <p>
+     * <p>
+     * }
+     * if(term){
+     * <p>
+     * }
+     * if(expression){
+     * <p>
+     * }
+     */
+    public Node parse2() {
+        try {
+
+            Node curr = parserMethodThis();
+            Node nextS = Next();
+
+            if (nextS instanceof MathOpNode && root == null) {
+                this.root = nextS;
+            }
+            if (curr == null || nextS == null) {
+                parse2();
+            }
+//            System.out.println("current: " + curr.ToString() + "  next " + nextS.ToString() + " next one: " + tokens.get(0).toString());
+            root.left = nomeral(tokens.get(0));
+            root.right = curr;
+
+            if (left == null || curr instanceof MathOpNode) {
+                parse2();
+            }
+            return root;
+        } catch (Exception e) {
+            System.out.println(e);
+            return root;
+        }
+
+    }
+
+
+    public Node term(Node node){
+
+        return new IntegerNode(1);
+    }
+    public Node expression(Node left, Node right){
+        //recurson.
+        return new MathOpNode(term(left),term(right));
+    }
+
+    public ArrayList<Node> getLisOfNodes() {
+        return lisOfNodes;
+    }
+
+
+    /**
      * @param value
      * @return node for number.
      */
+    //factor. i just named it nomeral;
     public Node nomeral(Token value) {
         try {
             float a = Float.parseFloat(value.getTokenName());
@@ -79,7 +145,7 @@ public class Parser {
         } catch (NumberFormatException e1) {
             //number.
             try {
-              int a = Integer.parseInt(value.getTokenName());
+                int a = Integer.parseInt(value.getTokenName());
                 IntegerNode a2 = new IntegerNode(a);
                 return a2;
             } catch (NumberFormatException e2) {
@@ -89,42 +155,27 @@ public class Parser {
     }
 
     /**
-     *
      * expression. esponal bc I hate english.
+     *
      * @return MathOPnode
      */
 
-    public MathOpNode esExpression() {
-
-        //EOL.
-        if (next.getTokenAsString().equals(";")) {
+    public MathOpNode esExpression(Token token) {
+        if (token.getTokenAsString().equals(";")) {
             return null;
         }
-        if(tok.getTokenName().equals("(")){
-            term();
-            return term();
-        }
-        if(tok.getTokenName().equals("*") || tok.getTokenName().equals("/")){
-            return factor();
-        }
-        left = parserMethod();
-        right = parserMethod();
-        return new MathOpNode(this.left, this.right, tok.getTokenAsString());
+        return new MathOpNode(token.getTokenAsString());
     }
 
     /**
      * trying to make it look like i remotely know what im doing :')
+     *
      * @return
      */
-    public MathOpNode term(){
-        left = parserMethod();
-        right = parserMethod();
-        return new MathOpNode(this.left, this.right, tok.getTokenAsString());
-    }
-    public MathOpNode factor(){
-        left = parserMethod();
-        right = parserMethod();
-        return new MathOpNode(this.left, this.right, tok.getTokenAsString());
+
+    public MathOpNode factor() {
+        return null;
+//        return new MathOpNode(this.left, this.right, tok.getTokenAsString());
     }
 
     /**

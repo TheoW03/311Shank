@@ -16,6 +16,6 @@ this.value = value;
     }
     @Override
     public String ToString() {
-        return null;
+        return String.valueOf(value);
     }
 }
