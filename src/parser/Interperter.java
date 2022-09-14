@@ -19,6 +19,16 @@ import java.util.ArrayList;
 
 public class Interperter {
     private ArrayList<Token> ListToCompare;
+    public void travserse(Node root){
+        if(root == null){
+            return;
+        }
+        System.out.println(root.ToString());
+        travserse(root.right);
+        travserse(root.left);
+
+
+    }
 
     /**
      * "Resolve in the interpreter is:
@@ -42,9 +52,9 @@ public class Interperter {
             v = (MathOpNode) thingYouWantResolved;
             switch (v.getOP()) {
                 case "+":
-                    float addingNum1 = Resolve(thingYouWantResolved.right);
-                    float addingNum2 =  Resolve(thingYouWantResolved.left);
-                    System.out.println("Oerand1: "+addingNum1 + " OP2: "+addingNum2);
+                    float addingNum1 = Resolve(thingYouWantResolved.left);
+                    float addingNum2 =  Resolve(thingYouWantResolved.right);
+                    System.out.println("Operand1: "+addingNum1 + " OP2: "+addingNum2);
                     a = addingNum1 + addingNum2;
                     System.out.println("result: "+a);
                     return a;

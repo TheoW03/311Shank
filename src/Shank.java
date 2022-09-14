@@ -50,10 +50,11 @@ public class Shank {
         Parser p = new Parser(a);
         ArrayList<Node> n = new ArrayList<>();
 
-        n = p.getLisOfNodes();
-
         Interperter i = new Interperter();
-        System.out.println(i.Resolve(p.parse2()));
+//        System.out.println(i.Resolve(p.parse2()));
+//        i.travserse(p.parse2());
+        float w = i.Resolve(p.parse());
+        System.out.println(w);
 //        System.out.println(i.Resolve());
 //        System.out.println(i.Resolve());
 //        Parser c = new Parser(a);

@@ -65,3 +65,33 @@
 //        }
 
 saving incase of bugs
+
+    //me being an idiot. LOL ignore it pls.
+
+//    public Node parse2() {
+//        try {
+//
+//            Node curr = parserMethodThis();
+//            Node nextS = Next();
+//
+//            if (nextS instanceof MathOpNode) {
+//                this.root = nextS;
+//            }
+//            if (curr == null || nextS == null) {
+//                parse2();
+//            }
+//            System.out.println("current: " + curr.ToString() + "  next " + nextS.ToString() + " next one: " + tokens.get(0).toString());
+//            root.left = nomeral(tokens.get(0));;
+//            root.right = curr;
+//            System.out.println(root.right.ToString() + " "+root.left.ToString());
+//
+//            if (left == null || curr instanceof MathOpNode) {
+//                parse2();
+//            }
+//            return root;
+//        } catch (Exception e) {
+//            System.out.println(e);
+//            return root;
+//        }
+//
+//    }

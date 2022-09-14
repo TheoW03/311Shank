@@ -62,6 +62,11 @@ public class Parser {
         return null;
     }
 
+    /**
+     *
+     * @return next node.
+     */
+
     public Node Next() {
         this.next = tokens.get(0);
         tokens.remove(0);
@@ -70,105 +75,62 @@ public class Parser {
         } else {
             return esExpression(next);
         }
-
-
     }
 
     /**
-     * if(!noOp's){
-     * <p>
-     * <p>
-     * <p>
-     * }
-     * if(factor){
-     * <p>
-     * <p>
-     * }
-     * if(term){
-     * <p>
-     * }
-     * if(expression){
-     * <p>
-     * }
+     * yep. Its not Solving. it works but it isnt solving.
      */
-    public Node parse2() {
+    public Node parse() {
         if (tokens.size() == 2) {
+            // the problem is here. for some reason if I dont terminate higher than 2 it throws a IndexOutOFboundsException
+            //on me. (if your willing to patch that will be nice. but I tried it and IDK how to get rid of it).
             return root;
         }
         Node curr = parserMethodThis();
         Node nextS = Next();
         if(curr == null || nextS == null){
-            parse2();
+            parse();
         }
         this.root = expression();
-        parse2();
+        parse();
         return root;
     }
 
+    /**
+     *
+     * @return new node
+     * EXPRESSION = TERM { (plus or minus) TERM} :')
+     */
     public Node expression() {
         Node node = term();
-
-//        while(){
-//        }
-
-
-//        node = BinOp(left=node, op=token, right=self.term())
-
-        return new MathOpNode(node,term(), next);
+        return new MathOpNode(node, term(), next);
     }
-    public Node Factor(){
-        if(nomeral(tok) != null){
+
+    /**
+     * FACTOR = {-} number or lparen EXPRESSION rparen
+     * @return node
+     */
+    public Node Factor() {
+        if (nomeral(tok) != null) {
             return nomeral(tok);
-        }else if(tok.getTokenAsString().equals("(")){
-            Node node = expression();
-            return node;
+        } else if (tok.getTokenAsString().equals("(()")) {
+            return expression();
         }
         return null;
 
     }
 
-//    public Node parse2() {
-//        try {
-//
-//            Node curr = parserMethodThis();
-//            Node nextS = Next();
-//
-//            if (nextS instanceof MathOpNode) {
-//                this.root = nextS;
-//            }
-//            if (curr == null || nextS == null) {
-//                parse2();
-//            }
-//            System.out.println("current: " + curr.ToString() + "  next " + nextS.ToString() + " next one: " + tokens.get(0).toString());
-//            root.left = nomeral(tokens.get(0));;
-//            root.right = curr;
-//            System.out.println(root.right.ToString() + " "+root.left.ToString());
-//
-//            if (left == null || curr instanceof MathOpNode) {
-//                parse2();
-//            }
-//            return root;
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            return root;
-//        }
-//
-//    }
-
-
+    /**
+     * TERM = FACTOR { (times or divide) FACTOR}
+     * @return
+     */
     public Node term() {
-        Node node = Factor();
-        return new MathOpNode(node,Factor(),next);
+        Node node = this.Factor();
+        return new MathOpNode(node, this.Factor(), next);
     }
-
-
-    public ArrayList<Node> getLisOfNodes() {
-        return lisOfNodes;
-    }
-
 
     /**
-     * @param value
+     * @param value - token
      * @return node for number.
      */
     //factor. i just named it nomeral;
@@ -201,23 +163,10 @@ public class Parser {
         }
         return new MathOpNode(token.getTokenAsString());
     }
-
-    /**
-     * trying to make it look like i remotely know what im doing :')
-     *
-     * @return
-     */
-
-    public MathOpNode factor() {
-        return null;
-//        return new MathOpNode(this.left, this.right, tok.getTokenAsString());
-    }
-
     /**
      * @param token
      */
     public String matchAndRemove(String token) {
-//            System.out.println("token: "+tokens.get(0) +" \n"+token);
         if (token.equals(tokens.get(0).getTokenAsString())) {
 
             return tokens.remove(0).getTokenName();
