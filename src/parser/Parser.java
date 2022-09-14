@@ -26,6 +26,7 @@ public class Parser {
     public Node left, right;
     public Node element;
     private Node root;
+    private Node curr;
     private ArrayList<Node> lisOfNodes;
 
     public Parser(ArrayList<Token> tokens) {
@@ -91,41 +92,75 @@ public class Parser {
      * }
      */
     public Node parse2() {
-        try {
-
-            Node curr = parserMethodThis();
-            Node nextS = Next();
-
-            if (nextS instanceof MathOpNode && root == null) {
-                this.root = nextS;
-            }
-            if (curr == null || nextS == null) {
-                parse2();
-            }
-//            System.out.println("current: " + curr.ToString() + "  next " + nextS.ToString() + " next one: " + tokens.get(0).toString());
-            root.left = nomeral(tokens.get(0));
-            root.right = curr;
-
-            if (left == null || curr instanceof MathOpNode) {
-                parse2();
-            }
-            return root;
-        } catch (Exception e) {
-            System.out.println(e);
+        if (tokens.size() == 2) {
             return root;
         }
+        Node curr = parserMethodThis();
+        Node nextS = Next();
+        if(curr == null || nextS == null){
+            parse2();
+        }
+        this.root = expression();
+        parse2();
+        return root;
+    }
+
+    public Node expression() {
+        Node node = term();
+
+//        while(){
+//        }
+
+
+//        node = BinOp(left=node, op=token, right=self.term())
+
+        return new MathOpNode(node,term(), next);
+    }
+    public Node Factor(){
+        if(nomeral(tok) != null){
+            return nomeral(tok);
+        }else if(tok.getTokenAsString().equals("(")){
+            Node node = expression();
+            return node;
+        }
+        return null;
 
     }
 
+//    public Node parse2() {
+//        try {
+//
+//            Node curr = parserMethodThis();
+//            Node nextS = Next();
+//
+//            if (nextS instanceof MathOpNode) {
+//                this.root = nextS;
+//            }
+//            if (curr == null || nextS == null) {
+//                parse2();
+//            }
+//            System.out.println("current: " + curr.ToString() + "  next " + nextS.ToString() + " next one: " + tokens.get(0).toString());
+//            root.left = nomeral(tokens.get(0));;
+//            root.right = curr;
+//            System.out.println(root.right.ToString() + " "+root.left.ToString());
+//
+//            if (left == null || curr instanceof MathOpNode) {
+//                parse2();
+//            }
+//            return root;
+//        } catch (Exception e) {
+//            System.out.println(e);
+//            return root;
+//        }
+//
+//    }
 
-    public Node term(Node node){
 
-        return new IntegerNode(1);
+    public Node term() {
+        Node node = Factor();
+        return new MathOpNode(node,Factor(),next);
     }
-    public Node expression(Node left, Node right){
-        //recurson.
-        return new MathOpNode(term(left),term(right));
-    }
+
 
     public ArrayList<Node> getLisOfNodes() {
         return lisOfNodes;

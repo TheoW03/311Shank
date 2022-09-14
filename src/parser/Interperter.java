@@ -31,7 +31,7 @@ public class Interperter {
     public float Resolve(Node thingYouWantResolved){
 
         if(thingYouWantResolved == null){
-            return -1;
+            return 0;
         }
         Resolve(thingYouWantResolved.right);
         Resolve(thingYouWantResolved.left);
@@ -40,9 +40,13 @@ public class Interperter {
             float a;
             MathOpNode v;
             v = (MathOpNode) thingYouWantResolved;
-            switch (v.getOP2()) {
+            switch (v.getOP()) {
                 case "+":
-                    a = Resolve(thingYouWantResolved.right) + Resolve(thingYouWantResolved.left);
+                    float addingNum1 = Resolve(thingYouWantResolved.right);
+                    float addingNum2 =  Resolve(thingYouWantResolved.left);
+                    System.out.println("Oerand1: "+addingNum1 + " OP2: "+addingNum2);
+                    a = addingNum1 + addingNum2;
+                    System.out.println("result: "+a);
                     return a;
                 case "*":
                     a = Resolve(thingYouWantResolved.left) * Resolve(thingYouWantResolved.right);

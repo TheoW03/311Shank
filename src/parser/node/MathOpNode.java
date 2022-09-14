@@ -14,8 +14,8 @@ import java.io.*;
  */
 
 public class MathOpNode extends Node{
-    private Node left;
-    private Node right;
+//    public Node left;
+//    public Node right;
     private Token OP;
     private String OP2;
     private String endOfLine;
@@ -37,10 +37,10 @@ public class MathOpNode extends Node{
         this.OP = token;
 
     }
-    public MathOpNode(Node left, Node right){
-        this.left = left;
-        this.right = right;
-    }
+//    public MathOpNode(Node left, Node right){
+//        this.left = left;
+//        this.right = right;
+//    }
 
     public MathOpNode(String OP2){
         this.OP2 = OP2;
