@@ -150,6 +150,8 @@ public class Parser {
      */
     public Node term() {
         Node node = this.Factor();
+        if(matchAndRemove("*")  != null || matchAndRemove("/") != null)
+            return null;
         return new MathOpNode(node, this.Factor(), next);
     }
 
@@ -193,6 +195,7 @@ public class Parser {
     //compares head of the list. and returns null.
 
     public String matchAndRemove(String token) {
+        System.out.println("a: "+tokens.size());
         if (token.equals(tokens.get(0).getTokenAsString())) {
             return tokens.remove(0).getTokenName();
         }

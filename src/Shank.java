@@ -4,6 +4,7 @@ import lexer.Lexer;
 import lexer.Token;
 import parser.Interperter;
 import parser.Parser;
+import parser.ParserAgain;
 import parser.node.Node;
 
 import java.io.IOException;
@@ -47,16 +48,17 @@ public class Shank {
 
     }
     public static void ParserTestMethod(ArrayList<Token> a){
-        Parser p = new Parser(a);
+        ParserAgain p = new ParserAgain(a);
         ArrayList<Node> n = new ArrayList<>();
-
         Interperter i = new Interperter();
 //        System.out.println(i.Resolve(p.parse2()));
 //        i.travserse(p.parse2());
-        float w = i.Resolve(p.parse());
-        System.out.println(w);
+//        float w = i.Resolve(p.parse());
+//        System.out.println(p.parse());
+//        System.out.println(w);
 //        System.out.println(i.Resolve());
-//        System.out.println(i.Resolve());
+//        i.travserse(p.parse());
+        System.out.println(i.Resolve(p.parse()));
 //        Parser c = new Parser(a);
 ////       ArrayList<Node> b = c.parserMethod();
 //       for(int i = 0; i < b.size(); i++){
