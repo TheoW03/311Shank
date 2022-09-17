@@ -38,9 +38,9 @@ public class Shank {
         Lexer obk = new Lexer(a);
         ArrayList<Token> tokenData = obk.lexer();
         for(int i = 0; i < tokenData.size(); i++){
-            System.out.println(tokenData.get(i).toString());
+            System.out.println("output: "+tokenData.get(i).toString());
         }
-        ParserTestMethod(tokenData);
+//        ParserTestMethod(tokenData);
 
 
     }
@@ -58,7 +58,9 @@ public class Shank {
 //        System.out.println(w);
 //        System.out.println(i.Resolve());
 //        i.travserse(p.parse());
-        System.out.println(i.Resolve(p.parse()));
+        Node root = p.parse();
+        System.out.println("answer: "+i.Resolve(root));
+//        i.travserse(root);
 //        Parser c = new Parser(a);
 ////       ArrayList<Node> b = c.parserMethod();
 //       for(int i = 0; i < b.size(); i++){

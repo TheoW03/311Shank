@@ -52,7 +52,7 @@ public class MathOpNode extends Node{
     }
 
     public String  getOP() {
-        return OP.getTokenAsString();
+        return OP.getTokenValue();
     }
 
     //parenthisis

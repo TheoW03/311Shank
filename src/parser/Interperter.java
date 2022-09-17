@@ -44,6 +44,7 @@ public class Interperter {
      * @return
      */
     public float Resolve(Node thingYouWantResolved) {
+        System.out.println(thingYouWantResolved);
         System.out.println("traverse");
         if (thingYouWantResolved == null) {
             System.out.println("es ndad :')");
@@ -58,9 +59,11 @@ public class Interperter {
             return ((FloatNode) thingYouWantResolved).getValue();
         }
         if (thingYouWantResolved instanceof MathOpNode) {
+            System.out.println("e");
             float a;
             MathOpNode v;
             v = (MathOpNode) thingYouWantResolved;
+            System.out.println("a: "+v.getOP());
             switch (v.getOP()) {
                 case "+":
                     float addingNum1 = Resolve(thingYouWantResolved.right);
@@ -84,7 +87,7 @@ public class Interperter {
             }
         }
         //if float
-        System.out.println("es cero");
+        System.out.println(thingYouWantResolved.ToString());
         return 0;
 
     }
