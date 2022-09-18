@@ -49,12 +49,11 @@ public class Lexer {
             String dataTokensLine = data.get(i1); //token
             buffer = "";
             for (int i = 0; i < dataTokensLine.length(); ++i) {
-                System.out.println("top");
                 currentChar = dataTokensLine.charAt(i); //each token
-                System.out.println("current: "+currentChar);
+                System.out.println("state: "+state);
                 //ooperator.
                 if (currentChar != ' ') {
-                    if (state == 1) {
+                    if (state == 1) { //operator
                         if (!buffer.equals("")) {
                             tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
                             buffer = "";
@@ -63,10 +62,10 @@ public class Lexer {
                             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                                 state = 3;
                                 buffer += currentChar;
-                                System.out.println("buffer: " + buffer);
+
                             }
                             case '+' -> {
-                                System.out.println("plus: state1: ite" + i);
+
                                 state = 2;
                                 tokenDataR.add(new Token(Token.OPTokens.ADD, "+"));
                             }
@@ -87,13 +86,11 @@ public class Lexer {
                         //Idk
                     } else if (state == 2) {
 
-                    } else if (state == 3) { //Es nomeral.
-                        System.out.println("buffer (num): " + buffer + " index: " + i);
+                    } else if (state == 3) { //number
+
                         switch (currentChar) {
                             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> { // is number. this loops
                                 buffer += String.valueOf(currentChar);
-                                System.out.println("cond1 state: " + state);
-                                System.out.println("buffer en state 3: " + buffer);
                             }
                             case '+', '-', '*', '/', ';' -> {
                                 if (!buffer.equals("")) {
@@ -110,37 +107,35 @@ public class Lexer {
                                     tokenDataR.add(new Token(Token.OPTokens.DIVIDE, "/"));
                                 }
                                 state = 1;
-                                System.out.println("cond2 state: " + state);
-                                System.out.println("char?: " + currentChar);
                             }
                             case '.' -> {
                                 if (state == 5 || buffer.contains(".")) {
                                     throw new UnauthTokenException("Error There 2 decimals");
                                 }
                                 buffer += currentChar;
-                                System.out.println("cond3 state: " + state);
+                                state = 5;
                             }
                         }
 
                     } else if (state == 4) {
 
-                    } else if (state == 5) { //es floatar.
+                    } else if (state == 5) { //es decimal .
                         buffer += currentChar;
+                        switch (currentChar){
+                            case '+', '-', '*', '/' -> {
+                                throw new UnauthTokenException("unauth exption moment");
+                            }
+                        }
                         state = 3;
-                        System.out.println("buffer (Dec): " + buffer + " index: " + i);
-                        System.out.println("state: " + state);
 
-                    } else if (state == 6) {
+                    } else if (state == 6) { //es Idk. State.
                     } else {
                         throw new UnauthTokenException("error");
                     }
-                } else {
-                    System.out.println("space");
                 }
-                System.out.println("next char");
             } //eof
             if (!buffer.equals("")) {
-                System.out.println("end of loop");
+
                 tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
                 buffer = "";
             }
