@@ -51,6 +51,7 @@ public class Lexer {
             for (int i = 0; i < dataTokensLine.length(); ++i) {
                 System.out.println("top");
                 currentChar = dataTokensLine.charAt(i); //each token
+                System.out.println("current: "+currentChar);
                 //ooperator.
                 if (currentChar != ' ') {
                     if (state == 1) {
@@ -65,7 +66,6 @@ public class Lexer {
                                 System.out.println("buffer: " + buffer);
                             }
                             case '+' -> {
-
                                 System.out.println("plus: state1: ite" + i);
                                 state = 2;
                                 tokenDataR.add(new Token(Token.OPTokens.ADD, "+"));
@@ -117,7 +117,7 @@ public class Lexer {
                                 if (state == 5 || buffer.contains(".")) {
                                     throw new UnauthTokenException("Error There 2 decimals");
                                 }
-                                state = 5;
+                                buffer += currentChar;
                                 System.out.println("cond3 state: " + state);
                             }
                         }
@@ -125,7 +125,7 @@ public class Lexer {
                     } else if (state == 4) {
 
                     } else if (state == 5) { //es floatar.
-                        buffer += ".";
+                        buffer += currentChar;
                         state = 3;
                         System.out.println("buffer (Dec): " + buffer + " index: " + i);
                         System.out.println("state: " + state);
