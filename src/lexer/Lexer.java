@@ -50,7 +50,7 @@ public class Lexer {
             buffer = "";
             for (int i = 0; i < dataTokensLine.length(); ++i) {
                 currentChar = dataTokensLine.charAt(i); //each token
-                System.out.println("state: "+state);
+                System.out.println("char: " + currentChar);
                 //ooperator.
                 if (currentChar != ' ') {
                     if (state == 1) { //operator
@@ -58,6 +58,7 @@ public class Lexer {
                             tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
                             buffer = "";
                         }
+
                         switch (currentChar) {
                             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> {
                                 state = 3;
@@ -65,34 +66,53 @@ public class Lexer {
 
                             }
                             case '+' -> {
-
                                 state = 2;
                                 tokenDataR.add(new Token(Token.OPTokens.ADD, "+"));
                             }
                             case '-' -> {
-
-                                state = 2;
+                                state=2;
+                                System.out.println("subtract");
+                                System.out.println("buffer: "+buffer);
                                 tokenDataR.add(new Token(Token.OPTokens.SUBTRACT, "-"));
                             }
                             case '*' -> {
+                                state=2;
                                 tokenDataR.add(new Token(Token.OPTokens.MULTIPLY, "*"));
                             }
                             case '/' -> {
+                                state=2;
                                 tokenDataR.add(new Token(Token.OPTokens.DIVIDE, "/"));
                             }
                             case ' ' -> tokenDataR.add(new Token(Token.OPTokens.ENDOFLINE, "/"));
+                            case '.' -> {
+                                state = 5;
+                                buffer += currentChar;
+                            }
                             default -> state = -1;
                         }
-                        //Idk
+
+                        //suntraction
                     } else if (state == 2) {
+                        System.out.println("statew current: "+currentChar);
+                        switch (currentChar){
+                            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-' -> {
+                                state = 3;
+                                System.out.println("cond1 state2");
+                                buffer += currentChar;
+                                System.out.println("buffer: "+buffer);
+                            }
+                            case '+', '*', '/', ';' -> { //prevent -+
+                                throw new UnauthTokenException("error");
+                            }
+                        }
 
                     } else if (state == 3) { //number
-
                         switch (currentChar) {
                             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> { // is number. this loops
                                 buffer += String.valueOf(currentChar);
                             }
                             case '+', '-', '*', '/', ';' -> {
+
                                 if (!buffer.equals("")) {
                                     tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
                                     buffer = "";
@@ -121,7 +141,7 @@ public class Lexer {
 
                     } else if (state == 5) { //es decimal .
                         buffer += currentChar;
-                        switch (currentChar){
+                        switch (currentChar) {
                             case '+', '-', '*', '/' -> {
                                 throw new UnauthTokenException("unauth exption moment");
                             }
