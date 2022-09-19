@@ -40,11 +40,8 @@ public class Shank {
         for(int i = 0; i < tokenData.size(); i++){
             System.out.println("output: "+tokenData.get(i).toString());
         }
-//        ParserTestMethod(tokenData);
+        ParserTestMethod(tokenData);
 
-
-    }
-    public void expression(){
 
     }
     public static void ParserTestMethod(ArrayList<Token> a){

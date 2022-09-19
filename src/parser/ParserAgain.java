@@ -39,51 +39,77 @@ public class ParserAgain {
         System.out.println("call Expression");
         System.out.println("=======================");
 
-        Node node = term(); //returns a mathOPNode.
-        if (matchAndRemove(Token.OPTokens.ADD) != null
-                || matchAndRemove(Token.OPTokens.SUBTRACT) != null) {
-            System.out.println("left(EXPERSSON): "+node.ToString());
-            var right = term();
-            System.out.println("Right (expression): "+right.ToString());
-            System.out.println("Operator (expression): "+current.getTokenEnum());
-            System.out.println("expression OP: "+current);
-            System.out.println("=======================");
-            return new MathOpNode(node, right, current);
+        Node opNode = term(); //returns a mathOPNode.
+        Token op = (matchAndRemove(Token.OPTokens.ADD) != null) ? current:
+                (matchAndRemove(Token.OPTokens.SUBTRACT) != null) ? current:null;
+        if (op != null) {
+            Node node = null;
+            while (true){
+                if(node != null){
+                    op = (matchAndRemove(Token.OPTokens.ADD) != null) ? current:
+                            (matchAndRemove(Token.OPTokens.SUBTRACT) != null) ? current:null;
+                }
+                if(op == null){
+                    return opNode;
+                }
+                var right = term();
+                System.out.println("left(EXPERSSON): "+opNode.ToString());
+                System.out.println("Right (expression): "+right.ToString());
+                System.out.println("expression OP: "+op);
+                System.out.println("=======================");
+                opNode=  new MathOpNode(opNode, right, op);
+                node=opNode;
+            }
+
         }
-        System.out.println("node(match and remove fail)(EXPERSSON): "+node.ToString());
+        System.out.println("node(match and remove fail)(EXPERSSON): "+opNode.ToString());
         System.out.println("=======================");
-        return node;
+        return opNode;
 
     }
 
     public Node term() {
         System.out.println("call term");
         System.out.println("=======================");
-        Node node = this.factor();
-        if(node != null)
-            System.out.println(node.ToString());
-        System.out.println("ret nill");
-        if (matchAndRemove(Token.OPTokens.MULTIPLY) != null
-                || matchAndRemove(Token.OPTokens.DIVIDE) != null) {
-            System.out.println("Left (term): " + node.ToString());
+        Node opNode = this.factor();
+        Token op = (matchAndRemove(Token.OPTokens.MULTIPLY) != null) ? current:
+                (matchAndRemove(Token.OPTokens.DIVIDE) != null) ? current:null;
+        if (op != null) {
+            //loop.
+            Node node = null;
+            //probably while OP != null
+            //return something.
+            while(true){
+                if(node != null){
+                    op = (matchAndRemove(Token.OPTokens.MULTIPLY) != null) ? current:
+                            (matchAndRemove(Token.OPTokens.DIVIDE) != null) ? current:null;
+                }
+                if(op == null){
+                    return opNode;
+                }
+                var right = factor();
+                System.out.println("Left (term): " + opNode.ToString());
+                System.out.println("Right (term): "+right.ToString());
+                System.out.println("Operator (term): "+op);
+                System.out.println("=======================");
+                opNode = new MathOpNode(opNode, right, op);
+                node = opNode;
 
-            var right = factor();
-            System.out.println("Right (term): "+right.ToString());
-            System.out.println("Operator (term): "+current.getTokenEnum());
-            System.out.println("=======================");
-            return new MathOpNode(node, right, current);
+            }
+
         }
-        System.out.println("node(match and remove fail)(Term): "+node.ToString());
+        System.out.println("node(match and remove fail)(Term): "+opNode.ToString());
         System.out.println("=======================");
-        return node;
+        return opNode;
     }
 
     public Node factor() {
         System.out.println("call factor ");
         System.out.println("=======================");
         System.out.println("current: "+current);
-        if (esNomeralElFloatar(current) != null) {
+        if (esNomeralElFloatar(current) != null || matchAndRemove(Token.OPTokens.NUMBER) != null) {
             float a = (float) esNomeralElFloatar(current);
+            matchAndRemove(Token.OPTokens.NUMBER);
             System.out.println("Node output es Nomeral: "+a);
             return new FloatNode(a);
         }else if (matchAndRemove(Token.OPTokens.LParan) != null) {
@@ -103,7 +129,6 @@ public class ParserAgain {
     private Token matchAndRemove(Token.OPTokens token) {
         System.out.println("in matchAndRemove, looking for: "+token);
         System.out.println("in matchAndRemove, found: "+tokenList.get(0).getTokenEnum());
-
         if(token.equals(tokenList.get(0).getTokenEnum()) ){
             var retVal = this.tokenList.remove(0);
             current = retVal;
@@ -113,28 +138,6 @@ public class ParserAgain {
         System.out.println();
         System.out.println("in matchAndRemove, returning (failed): null");
         return null;
-//        return null;
-//        if(toke){
-//
-//
-//        }
-//        if (tokenList.get(0).getTokenAsString().equals(";")) {
-////            tokenList.remove(0);
-//            return null;
-//        }
-//        if (token..equals(tokenList.get(0).getTokenAsString())) {
-//            this.current = tokenList.get(0);
-//            Token returnType = this.tokenList.remove(0);
-//            return returnType;
-//        }
-//        if (token.equals(tokenList.get(0).getTokenName())) {
-//            Token returnType = this.tokenList.remove(0);
-//            this.current = tokenList.get(0);
-////            this.next = tokenList.get(0);
-//            return returnType;
-//        }
-
-
     }
 
     /**

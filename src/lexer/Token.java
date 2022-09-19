@@ -17,7 +17,7 @@ public class Token {
         LParan(")","Lparenthsis"),
         RParan("(","Rparenthsis"),
         NUMBER("0-9","NUMBER"),
-        WORD("A-Z","WORD"),
+        IDENTIFIER("A-Z","WORD"),
         KEY_WORD("keyword","keyword"),
         NAME("IDENTIFIRE","e");
         ;
