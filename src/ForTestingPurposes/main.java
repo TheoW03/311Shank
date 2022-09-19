@@ -5,6 +5,7 @@ import parser.node.Node;
 
 import java.util.*;
 import java.io.*;
+import java.util.regex.Pattern;
 
 /**
  * @author Theo willis
@@ -13,12 +14,15 @@ import java.io.*;
  * @Javadoc
  */
 public class main {
-//    public static void main(String[] args) {
-//        LexxerTester a = new LexxerTester("1+2");
-//        ASTTest b = new ASTTest(a.tokenizerL());
-//        ArrayList<Node> c = b.parserMethodTest();
-//        for(int i = 0; i < c.size(); i++){
-//            System.out.println(c.toString());
-//        }
-//    }
+    private static final String REGEX = "[1-9]*";
+
+    private static final String INPUT = "1234589";
+
+    public static void main( String args[] ) {
+        System.out.println("Current REGEX is: "+REGEX);
+        System.out.println("Current INPUT is: "+INPUT);
+//        stateIsNum = Pattern.matches("[1-9+*/-]*",String.valueOf(currentChar));
+
+        System.out.println("matches(): "+Pattern.matches("[1-9+*/.-]*","."));
+    }
 }

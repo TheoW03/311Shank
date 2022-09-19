@@ -16,7 +16,10 @@ public class Token {
         ENDOFLINE(";","EOL"),//Can I not do endOfLine for my break line bc I love java syntax
         LParan(")","Lparenthsis"),
         RParan("(","Rparenthsis"),
-        NUMBER("0-9","NUMBER");
+        NUMBER("0-9","NUMBER"),
+        WORD("A-Z","WORD"),
+        KEY_WORD("keyword","keyword"),
+        NAME("IDENTIFIRE","e");
         ;
         private String s;
         private String value;

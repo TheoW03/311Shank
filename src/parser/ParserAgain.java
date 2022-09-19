@@ -1,10 +1,7 @@
 package parser;
 
 import lexer.Token;
-import parser.node.FloatNode;
-import parser.node.IntegerNode;
-import parser.node.MathOpNode;
-import parser.node.Node;
+import parser.node.*;
 
 import java.util.*;
 import java.io.*;
@@ -30,6 +27,12 @@ public class ParserAgain {
     public Node parse() {
         return expression();
 
+    }
+    public Node functionDef(){
+//        if(matchAndRemove(Token.OPTokens.DEFINE)){
+//            //logic.
+//        }
+        return new FunctionNode("hello",new ArrayList<>());
     }
 
     public Node expression() {
