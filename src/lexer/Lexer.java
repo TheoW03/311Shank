@@ -13,7 +13,7 @@ public class Lexer {
     //    private String data;
     public final String NUM_REGEX = "[1-9]*";
     private ArrayList<String> data; //data
-    public HashMap<String,Token> keyWords = new HashMap<>();
+    public HashMap<String, Token> keyWords = new HashMap<>();
 
     /**
      * @param data Mss
@@ -21,13 +21,13 @@ public class Lexer {
     public Lexer(ArrayList<String> data) {
         this.data = data;
         //im just going to add all possible key words so I dont have to worry
-
-        keyWords.put("integer",new Token(Token.OPTokens.KEY_WORD,"integer"));
-        keyWords.put("define",new Token(Token.OPTokens.KEY_WORD,"define"));
-        keyWords.put("constants",new Token(Token.OPTokens.KEY_WORD,"constants"));
-        keyWords.put("end",new Token(Token.OPTokens.KEY_WORD,"end"));
-        keyWords.put("begin",new Token(Token.OPTokens.KEY_WORD,"begin"));
-        keyWords.put("write",new Token(Token.OPTokens.KEY_WORD,"write"));
+        keyWords.put("integer:", new Token(Token.OPTokens.KEY_WORD, "integer"));
+        keyWords.put("integer", new Token(Token.OPTokens.KEY_WORD, "integer"));
+        keyWords.put("define", new Token(Token.OPTokens.KEY_WORD, "define"));
+        keyWords.put("constants", new Token(Token.OPTokens.KEY_WORD, "constants"));
+        keyWords.put("end", new Token(Token.OPTokens.END, "end"));
+        keyWords.put("begin", new Token(Token.OPTokens.BEGIN, "begin"));
+        keyWords.put("write", new Token(Token.OPTokens.KEY_WORD, "write"));
 
     }
 
@@ -58,13 +58,22 @@ public class Lexer {
             buffer = "";
             for (int i = 0; i < dataTokensLine.length(); ++i) {
                 currentChar = dataTokensLine.charAt(i); //each token
-                stateIsWord = Pattern.matches("[a-zA-Z=\",]*", String.valueOf(currentChar)); //regex moment :D
-                stateIsNum = Pattern.matches("[1-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment
+                stateIsWord = Pattern.matches("[:=a-zA-Z\",]*", String.valueOf(currentChar)); //regex moment :D
+                stateIsNum = Pattern.matches("[0-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment
                 //ooperator.
                 if (currentChar != ' ') {
                     if (stateIsNum) {
+
                         if (state == 1) { //operator
-                            if(buffer.equals("-")){
+                            if (!wordBuffer.equals("")) {
+                                if (keyWords.get(wordBuffer) != null) { //get out of word state
+                                    tokenDataR.add(keyWords.get(wordBuffer));
+                                } else {
+                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                }
+                                wordBuffer = "";
+                            } //removes word buffer.
+                            if (buffer.equals("-")) {
                                 throw new UnauthTokenException("error");
                             }
                             if (!buffer.equals("")) {
@@ -81,9 +90,9 @@ public class Lexer {
                                     tokenDataR.add(new Token(Token.OPTokens.ADD, "+"));
                                 }
                                 case '-' -> {
-                                    if(buffer.equals("")){ //Very wierd tbh Idek how this works
+                                    if (buffer.equals("")) { //Very wierd tbh Idek how this works
                                         buffer += currentChar;
-                                    }else{
+                                    } else {
                                         tokenDataR.add(new Token(Token.OPTokens.SUBTRACT, "-"));
                                     }
                                     state = 2;
@@ -104,7 +113,7 @@ public class Lexer {
                                 case '(' -> {
                                     tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
                                 }
-                                case ')' ->{
+                                case ')' -> {
                                     tokenDataR.add(new Token(Token.OPTokens.RParan, ")"));
                                 }
                                 default -> state = -1;
@@ -115,10 +124,11 @@ public class Lexer {
 
                             switch (currentChar) {
                                 case '-' -> {
-                                    if(buffer.contains("-")){
-                                        throw new UnauthTokenException("line "+lineNum+" at char "+i+" token '"+currentChar+"' is unauthorized");
+                                    if (buffer.contains("-")) {
+                                        throw new UnauthTokenException("line " + lineNum + " at char " + i + " token '"
+                                                + currentChar + "' is unauthorized");
 
-                                    }else{
+                                    } else {
                                         state = 3;
                                         buffer += currentChar;
                                     }
@@ -128,12 +138,13 @@ public class Lexer {
                                     buffer += currentChar;
                                 }
                                 case '+', '*', '/', ';' -> { //prevent -+
-                                    throw new UnauthTokenException("line "+lineNum+" at char "+i+" token '"+currentChar+"' is unauthorized");
+                                    throw new UnauthTokenException("line " + lineNum + " at char " + i + " token '"
+                                            + currentChar + "' is unauthorized");
 
                                 }
-                                case '('->{
-                                    state =1;
-                                    tokenDataR.add(new Token(Token.OPTokens.LParan,"("));
+                                case '(' -> {
+                                    state = 1;
+                                    tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
                                 }
 
                             }
@@ -143,9 +154,9 @@ public class Lexer {
                                 case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> { // is number. this loops
                                     buffer += String.valueOf(currentChar);
                                 }
-                                case '+', '-', '*', '/', ';','(',')' -> {
-                                    state=2;
-                                    if(buffer.equals("-")){
+                                case '+', '-', '*', '/', ';', '(', ')' -> {
+                                    state = 2;
+                                    if (buffer.equals("-")) {
                                         throw new UnauthTokenException("error");
                                     }
 
@@ -160,19 +171,20 @@ public class Lexer {
                                         tokenDataR.add(new Token(Token.OPTokens.SUBTRACT, "-"));
                                     } else if (currentChar == '*') {
                                         tokenDataR.add(new Token(Token.OPTokens.MULTIPLY, "*"));
-                                    } else if(currentChar == '/') {
+                                    } else if (currentChar == '/') {
                                         tokenDataR.add(new Token(Token.OPTokens.DIVIDE, "/"));
-                                    }else if(currentChar == '('){
+                                    } else if (currentChar == '(') {
                                         tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
-                                    }else{
-                                        state=1;
+                                    } else {
+                                        state = 1;
                                         tokenDataR.add(new Token(Token.OPTokens.RParan, ")"));
                                     }
 
                                 }
                                 case '.' -> {
                                     if (buffer.contains(".")) {
-                                        throw new UnauthTokenException("line "+lineNum+" at char "+i+" token '"+currentChar+"' is unauthorized");
+                                        throw new UnauthTokenException("line " + lineNum + " at char "
+                                                + i + " token '" + currentChar + "' is unauthorized");
 
                                     }
                                     buffer += currentChar;
@@ -195,37 +207,38 @@ public class Lexer {
                         } else {
                             throw new UnauthTokenException("error");
                         }
-                    }else if(stateIsWord){
+                    } else if (stateIsWord) {
                         wordBuffer += currentChar;
-                    }else{
+                    } else {
                         Random r = new Random();
                         int a = r.nextInt(100);
-                        if(a == 80){ //funny easter egg.
+                        if (a == 80) { //funny easter egg.
                             throw new UnauthTokenException("error: Fatty finger moment."); //easter egg.
-                        }else{
-                            throw new UnauthTokenException("error");
+                        } else {
+                            throw new UnauthTokenException("line " + lineNum + " at char "
+                                    + i + " token '" + currentChar + "' is unauthorized");
                         }
 
                     }
-                }else{ //space clears buffer
-                    if (!wordBuffer.equals("")){
-                        if(keyWords.get(wordBuffer) != null){
+                } else { //space clears buffer
+                    if (!wordBuffer.equals("")) {
+                        if (keyWords.get(wordBuffer) != null) {
                             tokenDataR.add(keyWords.get(wordBuffer));
-                        }else{
-                            tokenDataR.add(new Token( Token.OPTokens.IDENTIFIER,wordBuffer));
+                        } else {
+                            tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
                         }
                         wordBuffer = "";
                     }
                 }
             } //eof
-            if (!wordBuffer.equals("")){
+            if (!wordBuffer.equals("")) {
                 //check if Keyword in hasmap
                 //if it is Return New Keyword token
                 //else return Identifire token.
-                if(keyWords.get(wordBuffer) != null){
+                if (keyWords.get(wordBuffer) != null) {
                     tokenDataR.add(keyWords.get(wordBuffer));
-                }else{
-                    tokenDataR.add(new Token( Token.OPTokens.IDENTIFIER,wordBuffer));
+                } else {
+                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
                 }
                 wordBuffer = "";
             }
@@ -242,14 +255,13 @@ public class Lexer {
     }
 
     /**
-     *
      * @param word a
-     * @return
-     * im adding this to prevent spaghetti Code.
+     * @return im adding this to prevent spaghetti Code.
      */
-    public Token whatWordIsIt(String word){
+    public Token whatWordIsIt(String word) {
         return null;
     }
+
     /**
      * @return string stuff
      * <p>

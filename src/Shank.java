@@ -36,9 +36,11 @@ public class Shank {
         String PATH = "src/TestFile";
         ArrayList<String> a = (ArrayList<String>) Files.readAllLines(Path.of(PATH), StandardCharsets.UTF_8);
         Lexer obk = new Lexer(a);
+        System.out.println("lexxing..");
         ArrayList<Token> tokenData = obk.lexer();
-        for(int i = 0; i < tokenData.size(); i++){
-            System.out.println("output: "+tokenData.get(i).toString());
+        System.out.println("lexxing complete");
+        for (int i = 0; i <tokenData.size();i++){
+            System.out.println(tokenData.get(i).toString());
         }
         ParserTestMethod(tokenData);
 
@@ -46,8 +48,13 @@ public class Shank {
     }
     public static void ParserTestMethod(ArrayList<Token> a){
         ParserAgain p = new ParserAgain(a);
-        ArrayList<Node> n = new ArrayList<>();
+        System.out.println(p.parse().ToString());
+
+//        ArrayList<Node> n = new ArrayList<>();
+
         Interperter i = new Interperter();
+//        i.Resolve(p.parse());
+
 //        System.out.println(i.Resolve(p.parse2()));
 //        i.travserse(p.parse2());
 //        float w = i.Resolve(p.parse());
@@ -55,8 +62,10 @@ public class Shank {
 //        System.out.println(w);
 //        System.out.println(i.Resolve());
 //        i.travserse(p.parse());
-        Node root = p.parse();
-        System.out.println("answer: "+i.Resolve(root));
+//        System.out.println("parsing..");
+//        Node root = p.parse();
+//        System.out.println("parsing complete");
+//        System.out.println("answer: "+i.Resolve(root));
 //        i.travserse(root);
 //        Parser c = new Parser(a);
 ////       ArrayList<Node> b = c.parserMethod();

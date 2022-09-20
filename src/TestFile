@@ -1,1 +1,4 @@
-1+2+(4+3)+(3+4)*5
+define TestFUnction(integer: a) begin
+constants
+    integer a := 0
+end

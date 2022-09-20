@@ -19,7 +19,10 @@ public class Token {
         NUMBER("0-9","NUMBER"),
         IDENTIFIER("A-Z","WORD"),
         KEY_WORD("keyword","keyword"),
-        NAME("IDENTIFIRE","e");
+        BEGIN("begin","e"),
+        END("end","end"), //im adding this just because.
+        INTEGER("Int","s"),FLOAT("f","f"),
+
         ;
         private String s;
         private String value;

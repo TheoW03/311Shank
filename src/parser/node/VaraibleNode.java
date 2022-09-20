@@ -18,6 +18,10 @@ public class VaraibleNode extends Node{
         this.name = name;
         
     }
+    public VaraibleNode(String name){
+        this.name = name;
+        this.type = null;
+    }
 
     @Override
     public String ToString() {
