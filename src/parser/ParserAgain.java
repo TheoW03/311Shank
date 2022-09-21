@@ -133,7 +133,7 @@ public class ParserAgain {
             throw new UnauthTokenException("error something name: "+name + " type: "+type);
         }
         if(matchAndRemove(Token.OPTokens.NUMBER) != null){
-            valu=new FloatNode(Float.parseFloat(current.getTokenValue()));
+            valu=expression();
         }
         if(varaiblesWithnoType.size() == 0){
             varaiblesWithnoType.add(name);

@@ -1,4 +1,4 @@
 define TestFunction(a, b, c:integer) begin
 constants
-    integer a := 0
+    integer a := 5+8
 end
