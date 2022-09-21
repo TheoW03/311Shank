@@ -31,12 +31,19 @@ public class ParserAgain {
 //        }
         Node r = functionDef();
         if(r == null){
-            throw new UnauthTokenException("Bro coder moment.");
+            throw new UnauthTokenException("Bro coder moment."); //5 days of non stop coding really puts a toll on u mentally.
+            //so pls enjoy the random exception messages from my brain decaying from coding non stop for 5 days.
         }
         return r;
 //        return expression();
 
     }
+
+    /**
+     *
+     * @return Node.
+     * yep. I brute forced :')
+     */
 
     public Node functionDef() {
         matchAndRemove(Token.OPTokens.ENDOFLINE);
@@ -46,24 +53,19 @@ public class ParserAgain {
                 System.out.println("made it to define");
                 Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
                 if (name == null) {
-                    throw new UnauthTokenException("error. your name is incorrect");
+                    throw new UnauthTokenException("error. your name is incorrect brocoded."); //this is checks if null
                 }
-                matchAndRemove(Token.OPTokens.LParan);
+                matchAndRemove(Token.OPTokens.LParan); //method
+                //DEFINE NAME Lparan(params,) -> begin body end.
                 ArrayList<Node> params = new ArrayList<>();
                 while (true) {
-//                    params.add(varaible(false));
                     ArrayList<Node> list = varaible(false);
                     params.addAll(list);
                     if (matchAndRemove(Token.OPTokens.RParan) != null) {
-                        break;
+                        break; //checks for params
                     }
-//                    if(matchAndRemove(Token.OPTokens.IDENTIFIER) == null){
-//                        throw new UnauthTokenException("bad identifier");
-//                    }
                 }
-
-
-                ArrayList<Node> varaibles = new ArrayList<>();
+                ArrayList<Node> varaibles = new ArrayList<>(); //di vars
                 if (matchAndRemove(Token.OPTokens.BEGIN) != null) {
                     matchAndRemove(Token.OPTokens.ENDOFLINE);
                     while (true) {
@@ -82,12 +84,11 @@ public class ParserAgain {
                             }
 
                         }else{
-//                            return new FunctionNode(name.getTokenValue(), params,varaibles);
-                            throw new UnauthTokenException("error. your name is incorrect");
+                            throw new UnauthTokenException("error. your name is incorrect"); //if not existent it crashes.
                         }
-                        matchAndRemove(Token.OPTokens.ENDOFLINE);
-                        Token end = matchAndRemove(Token.OPTokens.END);
-                        System.out.println(end);
+                        matchAndRemove(Token.OPTokens.ENDOFLINE); //i really brute forced didnt i :')
+                        Token end = matchAndRemove(Token.OPTokens.END); //e
+                        System.out.println(end); //end
                         if (end != null) {
                             return new FunctionNode(name.getTokenValue(), params,varaibles);
                         }
@@ -111,9 +112,9 @@ public class ParserAgain {
     public ArrayList<Node> varaible(boolean isConstant) {
         ArrayList<Token> varaiblesWithnoType = new ArrayList<>();
         ArrayList<Node> retList = new ArrayList<>();
-        Token type = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null;
+        Token type = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null; //lamda pro here.
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
-        if(type == null){
+        if(type == null){ //if type == null
             while (true){
                 if(matchAndRemove(Token.OPTokens.KEY_WORD) != null){
                     type = current;

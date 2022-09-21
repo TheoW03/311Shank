@@ -58,7 +58,15 @@ public class Lexer {
             for (int i = 0; i < dataTokensLine.length(); ++i) {
                 currentChar = dataTokensLine.charAt(i); //each token
 //                stateIsWord = Pattern.matches("[:=a-zA-Z\",]*", String.valueOf(currentChar)); //regex moment :D
-                stateIsNum = Pattern.matches("[0-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment
+//                stateIsNum = Pattern.matches("[0-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment WTF phipps.
+                switch (currentChar){
+                    case '1','2','4','5','6','7','8','9','0','+','*','/',')','(','.','-'->{ //PHIPPS. >:( U said. REGEX isnt allowed BRUHV
+                        stateIsNum = true;
+                    }
+                    default -> {
+                        stateIsNum = false;
+                    }
+                }
                 //ooperator.
                 if (currentChar != ' ') {
                     if (stateIsNum) {
