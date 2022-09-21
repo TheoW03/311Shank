@@ -1,5 +1,7 @@
 package parser.node;
 
+import lexer.Token;
+
 import java.util.*;
 import java.io.*;
 
@@ -11,20 +13,20 @@ import java.io.*;
  * @Javadoc
  */
 public class VaraibleNode extends Node{
-    private String name;
+    private Token name;
     private Node type;
-    public VaraibleNode(Node type,String name) {
+    public VaraibleNode(Node type, Token name, boolean isConstant) {
         this.type=type;
         this.name = name;
         
     }
-    public VaraibleNode(String name){
+    public VaraibleNode(Token name){
         this.name = name;
         this.type = null;
     }
 
     @Override
     public String ToString() {
-        return null;
+        return name.getTokenValue() + " "+type;
     }
 }

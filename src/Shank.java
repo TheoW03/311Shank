@@ -52,7 +52,7 @@ public class Shank {
 
 //        ArrayList<Node> n = new ArrayList<>();
 
-        Interperter i = new Interperter();
+//        Interperter i = new Interperter();
 //        i.Resolve(p.parse());
 
 //        System.out.println(i.Resolve(p.parse2()));

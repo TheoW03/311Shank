@@ -14,12 +14,12 @@ import java.io.*;
  * @Javadoc
  */
 public class ParserAgain {
-    public ArrayList<Token> tokenList;
+    public ArrayList<Token> tokenList, VaraiblesWithnoType;
     private Token current, next;
 
     public ParserAgain(ArrayList<Token> tokenList) {
         this.tokenList = tokenList;
-
+        this.VaraiblesWithnoType = new ArrayList<>();
         this.current = tokenList.get(0);
         this.next = tokenList.get(1);
 //        tokenList.remove(0);
@@ -29,15 +29,18 @@ public class ParserAgain {
 //        if (functionDef() != null) {
 //
 //        }
-
-        return functionDef();
+        Node r = functionDef();
+        if(r == null){
+            throw new UnauthTokenException("Bro coder moment.");
+        }
+        return r;
 //        return expression();
 
     }
 
     public Node functionDef() {
+        matchAndRemove(Token.OPTokens.ENDOFLINE);
         Token functionDef = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null;
-        System.out.println(functionDef);
         if (functionDef != null) {
             if (functionDef.getTokenValue().equals("define")) {
                 System.out.println("made it to define");
@@ -48,7 +51,9 @@ public class ParserAgain {
                 matchAndRemove(Token.OPTokens.LParan);
                 ArrayList<Node> params = new ArrayList<>();
                 while (true) {
-                    params.add(varaible());
+//                    params.add(varaible(false));
+                    ArrayList<Node> list = varaible(false);
+                    params.addAll(list);
                     if (matchAndRemove(Token.OPTokens.RParan) != null) {
                         break;
                     }
@@ -57,20 +62,34 @@ public class ParserAgain {
 //                    }
                 }
 
+
                 ArrayList<Node> varaibles = new ArrayList<>();
                 if (matchAndRemove(Token.OPTokens.BEGIN) != null) {
                     matchAndRemove(Token.OPTokens.ENDOFLINE);
                     while (true) {
                         Token constants = matchAndRemove(Token.OPTokens.KEY_WORD);
+//                        System.out.println(constants);
                         if(constants != null){
+                            System.out.println(constants);
                             matchAndRemove(Token.OPTokens.ENDOFLINE);
                             if(constants.getTokenValue().equals("constants")){
-                                System.out.println("Constant");
-                                varaibles.add(varaible());
+                                ArrayList<Node> list = varaible(true);
+                                varaibles.addAll(list); //Im love with lambda coding.
+                                System.out.println("past add all");
+                            }else if(constants.getTokenValue().equals("varaibles")){
+                                ArrayList<Node> list = varaible(false);
+                                varaibles.addAll(list); //Im love with lambda coding.
                             }
-                            if (constants.getTokenValue().equals("end")) {
-                                return new FunctionNode(name.getTokenValue(), params,varaibles);
-                            }
+
+                        }else{
+//                            return new FunctionNode(name.getTokenValue(), params,varaibles);
+                            throw new UnauthTokenException("error. your name is incorrect");
+                        }
+                        matchAndRemove(Token.OPTokens.ENDOFLINE);
+                        Token end = matchAndRemove(Token.OPTokens.END);
+                        System.out.println(end);
+                        if (end != null) {
+                            return new FunctionNode(name.getTokenValue(), params,varaibles);
                         }
 
                     }
@@ -81,15 +100,47 @@ public class ParserAgain {
         return null;
     }
 
-    public Node varaible() {
+    /**
+     *
+     * @param isConstant
+     * @return
+     * Idk if im supposed to have isConstant param. but I do because I dont want todo
+     * ctrl C + ctrl v en
+     */
+
+    public ArrayList<Node> varaible(boolean isConstant) {
+        ArrayList<Token> varaiblesWithnoType = new ArrayList<>();
+        ArrayList<Node> retList = new ArrayList<>();
         Token type = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null;
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+        if(type == null){
+            while (true){
+                if(matchAndRemove(Token.OPTokens.KEY_WORD) != null){
+                    type = current;
+                    break;
+                }
+                name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+                if(name == null){
+                    throw new UnauthTokenException("imagine coding this good noob");
+                }
+                varaiblesWithnoType.add(name);
+            }
+        }
         Token equals = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
-//        Node valu = expression().right;
-        if (type == null || name == null) {
+        Node valu = null;
+        if (name == null) {
             throw new UnauthTokenException("error something name: "+name + " type: "+type);
         }
-        return new VaraibleNode(name.getTokenValue());
+        if(matchAndRemove(Token.OPTokens.NUMBER) != null){
+            valu=new FloatNode(Float.parseFloat(current.getTokenValue()));
+        }
+        if(varaiblesWithnoType.size() == 0){
+            varaiblesWithnoType.add(name);
+        }
+        for (Token token : varaiblesWithnoType) {
+            retList.add(new VaraibleNode(valu, token, isConstant));
+        }
+        return retList;
     }
 
     public Node expression() {
@@ -184,15 +235,15 @@ public class ParserAgain {
     }
 
     private Token matchAndRemove(Token.OPTokens token) {
-        System.out.println("param matchh and remove: "+token);
-        System.out.println("head of list: "+tokenList.get(0).getTokenEnum());
+//        System.out.println("param matchh and remove: "+token);
+//        System.out.println("head of list: "+tokenList.get(0).getTokenEnum());
         if (token.equals(tokenList.get(0).getTokenEnum())) {
 
             var retVal = this.tokenList.remove(0);
             current = retVal;
             return retVal;
         }
-        System.out.println("returned null");
+//        System.out.println("returned null");
         return null;
     }
 

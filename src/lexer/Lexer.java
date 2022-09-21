@@ -11,7 +11,6 @@ import java.util.regex.Pattern;
 public class Lexer {
     private Token tokenList;
     //    private String data;
-    public final String NUM_REGEX = "[1-9]*";
     private ArrayList<String> data; //data
     public HashMap<String, Token> keyWords = new HashMap<>();
 
@@ -58,12 +57,11 @@ public class Lexer {
             buffer = "";
             for (int i = 0; i < dataTokensLine.length(); ++i) {
                 currentChar = dataTokensLine.charAt(i); //each token
-                stateIsWord = Pattern.matches("[:=a-zA-Z\",]*", String.valueOf(currentChar)); //regex moment :D
+//                stateIsWord = Pattern.matches("[:=a-zA-Z\",]*", String.valueOf(currentChar)); //regex moment :D
                 stateIsNum = Pattern.matches("[0-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment
                 //ooperator.
                 if (currentChar != ' ') {
                     if (stateIsNum) {
-
                         if (state == 1) { //operator
                             if (!wordBuffer.equals("")) {
                                 if (keyWords.get(wordBuffer) != null) { //get out of word state
@@ -207,17 +205,22 @@ public class Lexer {
                         } else {
                             throw new UnauthTokenException("error");
                         }
-                    } else if (stateIsWord) {
-                        wordBuffer += currentChar;
-                    } else {
-                        Random r = new Random();
-                        int a = r.nextInt(100);
-                        if (a == 80) { //funny easter egg.
-                            throw new UnauthTokenException("error: Fatty finger moment."); //easter egg.
-                        } else {
-                            throw new UnauthTokenException("line " + lineNum + " at char "
-                                    + i + " token '" + currentChar + "' is unauthorized");
+                    } else { //clear
+
+                        if(currentChar == ':' || currentChar== ',' ){
+                            if(!wordBuffer.equals("")){
+                                if (keyWords.get(wordBuffer) != null) {
+                                    tokenDataR.add(keyWords.get(wordBuffer));
+                                } else {
+                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                }
+                            }
+
+                            wordBuffer = "";
+                        }else{
+                            wordBuffer += currentChar;
                         }
+
 
                     }
                 } else { //space clears buffer

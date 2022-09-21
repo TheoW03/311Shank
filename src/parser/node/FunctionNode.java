@@ -24,6 +24,6 @@ public class FunctionNode extends Node{
 
     @Override
     public String ToString() {
-        return "name: "+ident+" params: "+Arrays.toString(params.toArray());
+        return "name: "+ident+" params: "+Arrays.toString(params.toArray())+" constants: "+Arrays.toString(varaibles.toArray());
     }
 }
