@@ -1,14 +1,8 @@
 package parser;
 
-//custom imports for I have my code in different dir's
-//pls comment out if problem.
-
 import lexer.Token;
-import parser.node.FloatNode;
-import parser.node.IntegerNode;
-import parser.node.MathOpNode;
-import parser.node.Node;
-
+import lexer.UnauthTokenException;
+import parser.node.*;
 
 import java.util.*;
 
@@ -16,191 +10,353 @@ import java.util.*;
  * @author Theo willis
  * @version 1.0.0
  * ~ project outline here ~
- * @Javadoc legit. been foicused on this all weekend.
- * and i cant T~T
+ * @Javadoc
  */
 public class Parser {
-//    private ArrayList<Token> tokens;
-//    private Token tok, next; //remove next
-//    private Parser rootNode;
-//    public Node left, right;
-//    public Node element;
-//    private Node root;
-//    private Node curr;
+    public ArrayList<Token> tokenList, VaraiblesWithnoType;
+    private Token current, next;
+
+    public Parser(ArrayList<Token> tokenList) {
+        this.tokenList = tokenList;
+        this.VaraiblesWithnoType = new ArrayList<>();
+        this.current = tokenList.get(0);
+        this.next = tokenList.get(1);
+    }
+
+    public Node parse() {
+        Node r = functionDef();
+        if(r == null){
+            throw new UnauthTokenException("error parsing"+current);
+        }
+        return r;
+    }
+
+    /**
+     *
+     * @return Node.
+     * yep. I brute forced :')
+     */
+
+    public Node functionDef() {
+        matchAndRemove(Token.OPTokens.ENDOFLINE);
+        Token functionDef = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null;
+        if (functionDef != null) {
+            if (functionDef.getTokenValue().equals("define")) {
+                System.out.println("made it to define");
+                Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+                if (name == null) {
+                    throw new UnauthTokenException("error parsing"+current); //if not existent it crashes.
+                }
+                matchAndRemove(Token.OPTokens.LParan); //method
+                //DEFINE NAME Lparan(params,) -> begin body end.
+                ArrayList<Node> params = new ArrayList<>();
+                while (true) {
+                    ArrayList<Node> list = varaible(false);
+                    params.addAll(list);
+                    if (matchAndRemove(Token.OPTokens.RParan) != null) {
+                        break; //checks for params
+                    }
+                }
+                ArrayList<Node> varaibles = new ArrayList<>(); //di vars
+                if (matchAndRemove(Token.OPTokens.BEGIN) != null) {
+//                    while (true) {
+                        while(true){
+                            Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                            if(e == null){
+                                break;
+                            }
+
+                        }
+                        Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null)?current : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null)?current:null ; //reminder
+                    //doesnt work because we need enums for each keyword.
+                        if(constants != null){
+                            if(constants.getTokenValue().equals("constants")) {
+                                while (true) {
+                                    constants = (matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null;
+                                    Token end = matchAndRemove(Token.OPTokens.END);
+                                    if(end != null){
+                                        return new FunctionNode(name.getTokenValue(), params,varaibles);
+                                    }
+                                    ArrayList<Node> list = varaible(true);
+                                    varaibles.addAll(list); //Im love with lambda coding.
+
+                                    if (constants != null) {
+                                        if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) { //recode for enums
+                                            break;
+                                        } else {
+                                            while (true) {
+                                                Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                                                if (e == null) {
+                                                    break;
+                                                }
+
+                                            }
+                                        }
+                                    }
+
+                                }
+                            }
+                            if(constants.getTokenEnum() == Token.OPTokens.VARAIBLES){
+                                while (true){
+                                    constants = matchAndRemove(Token.OPTokens.ENDOFLINE) ;
+                                    Token end = matchAndRemove(Token.OPTokens.END);
+                                    if(end != null){
+                                        return new FunctionNode(name.getTokenValue(), params,varaibles);
+                                    }
+                                    ArrayList<Node> list = varaible(true);
+                                    varaibles.addAll(list); //Im love with lambda coding.
+                                    if(constants != null){
+                                        while (true) {
+                                            Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                                            if (e == null) {
+                                                break;
+                                            }
+
+                                        }
+                                    }
+
+                                }
+                            }
+
+                        }else{
+                            throw new UnauthTokenException("parser error");
+                        }
+
+
+                        //                        while(true){
+//                            if(constants != null){
 //
-//    public Parser(ArrayList<Token> tokens) {
-//        this.tokens = tokens;
-//    }
+//                            }
+//                        }
+//                        if(constants != null){
+//                            System.out.println(constants);
+//                            if(constants.getTokenValue().equals("constants")){
+//                                ArrayList<Node> list = varaible(true);
+//                                varaibles.addAll(list); //Im love with lambda coding.
+//                                System.out.println("past add all");
+//                            }else if(constants.getTokenValue().equals("variables")){
+//                                while(true){
+//                                    ArrayList<Node> list = varaible(false);
+//                                    varaibles.addAll(list);
+//                                }
 //
-//    /**
-//     * @return Node
-//     * well. I tried. coding it.
-//     * <p>
-//     * <p>
-//     * arraylist
-//     * check for all rules
-//     */
-//    public Node parserMethodThis() {
-//        this.tok = tokens.get(0);
-//        if (matchAndRemove(tok.getTokenAsString()) != null) {
-//            if (nomeral(tok) != null) {
-//                return nomeral(tok);
-//            } else {
-//                return esExpression(tok);
-//            }
-//        }
-//        return null;
-//    }
+//                            }else if(constants.getTokenValue().equals("EOL")){
+//                                while(true){
+////                                    System.out.println("removing end of lines");
+//                                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+//                                    if(e == null){
+//                                        break;
+//                                    }
 //
-//    /**
-//     * @return next node.
-//     */
+//                                }
+//                            }
 //
-//    //remove
-//    public Node Next() {
-//        this.next = tokens.get(0);
-//        tokens.remove(0);
-//        if (nomeral(next) != null) {
-//            return nomeral(next);
-//        } else {
-//            return esExpression(next);
-//        }
-//    }
-//
-//    /**
-//     * yep. Its not Solving. it works but it isnt solving.
-//     * remove.
-//     */
-//    public Node parse() {
-////        if (tokens.size() == 2) {
-////            // the problem is here. for some reason if
-////            I dont terminate higher than 2 it throws a IndexOutOFboundsException
-////            //
-////            on me. (if your willing to patch that will be nice. but I tried it and IDK how to get rid of it).
-////            return root;
-//        //enforcing order
-//        //3+2*5
-//        //
-//        // EX
-////        }
-//        Node curr = parserMethodThis();
-//        Node nextS = Next();
-//        System.out.println(nextS + " " + curr);
-////        if (curr == null || nextS == null) {
-////            return root;
-////        }
-//        //so match and remove is a search method??
-//        //how it works
-//        /**
-//         * find number,
-//         * 5+3*5/2
-//         * 5 is our 1st token
-//         * ex calls term
-//         *
-//         * term calls factor. calls match and remove on times (Term calls so calls until it finds PEMDAS)
-//         * Factor can do match and remove
-//         * check if anything is left.
-//         * then factor finds a multiplication.
-//         * return null if and only if u find nothing.
-//         *
-//         */
-//        this.root = expression();
-//        if(nextS == null){
-//            return root;
-//        }
-//        parse();
-//        return root;
-//    }
-//
-//    /**
-//     * @return new node
-//     * EXPRESSION = TERM { (plus or minus) TERM} :')
-//     */
-//    //match and remove
-//    //call term
-//    public Node expression() {
-//        Node node = term(); //returns a mathOPNode.
-//
-//        if(next == null){
-//            return nomeral(tok);
-//        }
-//        return new MathOpNode(node, term(), next);
-//    }
-//
-//    /**
-//     * FACTOR = {-} number or lparen EXPRESSION rparen
-//     *
-//     * @return node
-//     */
-//    //use match and remove */
-//    public Node Factor() {
-//        if (nomeral(tok) != null) { //and for some reason () has a null prob. Idek. :')
-//            return nomeral(tok);
-//        } else if (tok.getTokenAsString().equals("(()")) {
-//            return expression();
-//        }
-//        return null;
-//
-//    }
-//
-//    /**
-//     * TERM = FACTOR { (times or divide) FACTOR}
-//     *
-//     * @return
-//     */
-//    public Node term() {
-//        Node node = this.Factor();
-//        if(matchAndRemove("*")  != null || matchAndRemove("/") != null)
-//            return null;
-//        return new MathOpNode(node, this.Factor(), next);
-//    }
-//
-//    /**
-//     * @param value - token
-//     * @return node for number.
-//     */
-//    //factor. i just named it nomeral;
-//    public Node nomeral(Token value) {
-//        try {
-//            float a = Float.parseFloat(value.getTokenName());
-//            FloatNode b = new FloatNode(a);
-//            return b;
-//        } catch (NumberFormatException e1) {
-//            //number.
-//            try {
-//                int a = Integer.parseInt(value.getTokenName());
-//                return new IntegerNode(a);
-//            } catch (NumberFormatException e2) {
-//                return null;
-//            }
-//        }
-//    }
-//
-//    /**
-//     * expression. esponal bc I hate english.
-//     *
-//     * @return MathOPnode
-//     */
-//
-//    public MathOpNode esExpression(Token token) {
-//        if (token.getTokenAsString().equals(";")) {
-//            return null;
-//        }
-//        return new MathOpNode(token.getTokenAsString());
-//    }
-//
-//    /**
-//     * @param token
-//     */
-//    //compares head of the list. and returns null.
-//
-//    public String matchAndRemove(String token) {
-//        System.out.println("a: "+tokens.size());
-//        if (token.equals(tokens.get(0).getTokenAsString())) {
-//            return tokens.remove(0).getTokenName();
-//        }
-//        return null;
-//    }
+//                        }else{
+//                            System.out.println("constants == null");
+//                            Token end = matchAndRemove(Token.OPTokens.END); //e
+//                            if(end == null){
+//                                throw new UnauthTokenException("error parsing "+current); //if not existent it crashes.
+//                            }else{
+//                                return new FunctionNode(name.getTokenValue(), params,varaibles);
+//                            }
+//                        }
+
+                        Token end = matchAndRemove(Token.OPTokens.END); //e
+                        System.out.println("end: "+end);
+                        System.out.println(end); //end
+                        if (end != null) {
+                            return new FunctionNode(name.getTokenValue(), params,varaibles);
+                        }
+
+                    }
+
+//                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param isConstant
+     * @return
+     * Idk if im supposed to have isConstant param. but I do because I dont want todo
+     * ctrl C + ctrl v en
+     */
+
+    public ArrayList<Node> varaible(boolean isConstant) {
+        while(true){
+            System.out.println("removing end of lines");
+            Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+            if(e == null){
+                break;
+            }
+
+        }
+        ArrayList<Token> varaiblesWithnoType = new ArrayList<>();
+        ArrayList<Node> retList = new ArrayList<>();
+        Token type = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null; //lamda pro here.
+        Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+        Token a = tokenList.get(0);
+        if(type == null){ //if type == null
+            while (true){
+                while(true){
+                    System.out.println("removing end of lines");
+                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                    if(e == null){
+                        break;
+                    }
+
+                }
+                if(matchAndRemove(Token.OPTokens.KEY_WORD) != null){
+                    type = current;
+                    break;
+                }
+                name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+                if(name == null){
+                    throw new UnauthTokenException("error parsing: "+current); //if not existent it crashes.
+                }
+                System.out.println("name: "+name);
+                varaiblesWithnoType.add(name);
+            }
+        }
+        System.out.println(name);
+        Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null;
+        Node valu = null;
+        if (name == null) {
+//            System.out.println("name is null");
+            throw new UnauthTokenException("name is null");
+        }
+        if(matchAndRemove(Token.OPTokens.NUMBER) != null){
+            valu=expression();
+        }
+        if(varaiblesWithnoType.size() == 0){
+            varaiblesWithnoType.add(name);
+        }
+        for (Token token : varaiblesWithnoType) {
+            retList.add(new VaraibleNode(type,valu, token, isConstant));
+        }
+
+        return retList;
+    }
+
+    public Node expression() {
+        System.out.println("call Expression");
+        System.out.println("=======================");
+
+        Node opNode = term(); //returns a mathOPNode.
+        Token op = (matchAndRemove(Token.OPTokens.ADD) != null) ? current :
+                (matchAndRemove(Token.OPTokens.SUBTRACT) != null) ? current : null;
+        if (op != null) {
+            Node node = null;
+            while (true) {
+                if (node != null) {
+                    op = (matchAndRemove(Token.OPTokens.ADD) != null) ? current :
+                            (matchAndRemove(Token.OPTokens.SUBTRACT) != null) ? current : null;
+                }
+                if (op == null) {
+                    return opNode;
+                }
+                var right = term();
+//                System.out.println("left(EXPERSSON): " + opNode.ToString());
+//                System.out.println("Right (expression): " + right.ToString());
+//                System.out.println("expression OP: " + op);
+//                System.out.println("=======================");
+                opNode = new MathOpNode(opNode, right, op);
+                node = opNode;
+            }
+
+        }
+//        System.out.println("node(match and remove fail)(EXPERSSON): " + opNode.ToString());
+//        System.out.println("=======================");
+        return opNode;
+
+    }
+
+    public Node term() {
+        System.out.println("call term");
+        System.out.println("=======================");
+        Node opNode = this.factor();
+        Token op = (matchAndRemove(Token.OPTokens.MULTIPLY) != null) ? current :
+                (matchAndRemove(Token.OPTokens.DIVIDE) != null) ? current : null;
+        if (op != null) {
+            //loop.
+            Node node = null;
+            //probably while OP != null
+            //return something.
+            while (true) {
+                if (node != null) {
+                    op = (matchAndRemove(Token.OPTokens.MULTIPLY) != null) ? current :
+                            (matchAndRemove(Token.OPTokens.DIVIDE) != null) ? current : null;
+                }
+                if (op == null) {
+                    return opNode;
+                }
+                var right = factor();
+//                System.out.println("Left (term): " + opNode.ToString());
+//                System.out.println("Right (term): " + right.ToString());
+//                System.out.println("Operator (term): " + op);
+//                System.out.println("=======================");
+                opNode = new MathOpNode(opNode, right, op);
+                node = opNode;
+
+            }
+
+        }
+//        System.out.println("node(match and remove fail)(Term): " + opNode.ToString());
+//        System.out.println("=======================");
+        return opNode;
+    }
+
+    public Node factor() {
+//        System.out.println("call factor ");
+//        System.out.println("=======================");
+//        System.out.println("current: " + current);
+        if (esNomeralElFloatar(current) != null || matchAndRemove(Token.OPTokens.NUMBER) != null) {
+            float a = (float) esNomeralElFloatar(current);
+            matchAndRemove(Token.OPTokens.NUMBER);
+//            System.out.println("Node output es Nomeral: " + a);
+            return new FloatNode(a);
+        } else if (matchAndRemove(Token.OPTokens.LParan) != null) {
+            Node node = expression();
+//            System.out.println("Node output es Paran: " + node.ToString());
+//            System.out.println("================================");
+            matchAndRemove(Token.OPTokens.RParan);
+            return node;
+        }
+//        System.out.println("factor retruned null");
+//        System.out.println();
+//        System.out.println("================================");
+        return null;
+
+    }
+
+    private Token matchAndRemove(Token.OPTokens token) {
+//        System.out.println("param matchh and remove: "+token);
+//        System.out.println("head of list: "+tokenList.get(0).getTokenEnum());
+        if (token.equals(tokenList.get(0).getTokenEnum())) {
+
+            var retVal = this.tokenList.remove(0);
+            current = retVal;
+//            System.out.println("matched");
+            return retVal;
+        }
+//        System.out.println("returned null");
+        return null;
+    }
+
+    /**
+     * @param token
+     * @return es floatar
+     */
+    public Object esNomeralElFloatar(Token token) {
+        try {
+            float t = Float.parseFloat(token.getTokenValue());
+            return t;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
 
 
 }

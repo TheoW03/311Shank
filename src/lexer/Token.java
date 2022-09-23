@@ -19,11 +19,12 @@ public class Token {
         NUMBER("0-9","NUMBER"),
         IDENTIFIER("A-Z","WORD"),
         KEY_WORD("keyword","keyword"),
-        BEGIN("begin","e"),
+
+        BEGIN("begin","begin"),
         END("end","end"), //im adding this just because.
         INTEGER("Int","s"),FLOAT("f","f"),
-
-        ;
+        EQUALS("=","s"),
+        CONSTANTS("constants","c"),VARAIBLES("vars","v");
         private String s;
         private String value;
         OPTokens(String value,String s) {

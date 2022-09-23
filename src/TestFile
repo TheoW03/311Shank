@@ -1,4 +1,8 @@
 define TestFunction(a, b, c:integer) begin
 constants
-    integer a := 5+8
+    integer madeItHEre := 5+8
+variables
+    integer madeItPastConsts := 5+8
+    integer madeItPastFirst := 5+8
+
 end

@@ -14,10 +14,13 @@ import java.io.*;
  */
 public class VaraibleNode extends Node{
     private Token name;
-    private Node type;
-    public VaraibleNode(Node type, Token name, boolean isConstant) {
+    private Token type;
+    private Node value;
+
+    public VaraibleNode(Token type,Node value, Token name, boolean isConstant) {
         this.type=type;
         this.name = name;
+        this.value = value;
         
     }
     public VaraibleNode(Token name){
@@ -27,6 +30,6 @@ public class VaraibleNode extends Node{
 
     @Override
     public String ToString() {
-        return name.getTokenValue() + " "+type;
+        return "type: "+type.getTokenValue()+" name: "+name.getTokenValue() + " type : "+type;
     }
 }

@@ -2,10 +2,7 @@
 //pls comment out if problem.
 import lexer.Lexer;
 import lexer.Token;
-import parser.Interperter;
 import parser.Parser;
-import parser.ParserAgain;
-import parser.node.Node;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -47,7 +44,7 @@ public class Shank {
 
     }
     public static void ParserTestMethod(ArrayList<Token> a){
-        ParserAgain p = new ParserAgain(a);
+        Parser p = new Parser(a);
         System.out.println(p.parse().ToString());
 
 //        ArrayList<Node> n = new ArrayList<>();

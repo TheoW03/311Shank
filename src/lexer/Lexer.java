@@ -23,10 +23,12 @@ public class Lexer {
         keyWords.put("integer:", new Token(Token.OPTokens.KEY_WORD, "integer"));
         keyWords.put("integer", new Token(Token.OPTokens.KEY_WORD, "integer"));
         keyWords.put("define", new Token(Token.OPTokens.KEY_WORD, "define"));
-        keyWords.put("constants", new Token(Token.OPTokens.KEY_WORD, "constants"));
+        keyWords.put("constants", new Token(Token.OPTokens.CONSTANTS, "constants"));
         keyWords.put("end", new Token(Token.OPTokens.END, "end"));
         keyWords.put("begin", new Token(Token.OPTokens.BEGIN, "begin"));
         keyWords.put("write", new Token(Token.OPTokens.KEY_WORD, "write"));
+        keyWords.put("variables", new Token(Token.OPTokens.VARAIBLES, "variables"));
+        keyWords.put("=", new Token(Token.OPTokens.EQUALS, "="));
 
     }
 
@@ -219,9 +221,11 @@ public class Lexer {
                             if(!wordBuffer.equals("")){
                                 if (keyWords.get(wordBuffer) != null) {
                                     tokenDataR.add(keyWords.get(wordBuffer));
+//                                    stateIsNum = true;
                                 } else {
                                     tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
                                 }
+
                             }
 
                             wordBuffer = "";
