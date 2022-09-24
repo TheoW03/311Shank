@@ -1,5 +1,6 @@
 package parser;
 
+import lexer.Lexer;
 import lexer.Token;
 import lexer.UnauthTokenException;
 import parser.node.*;
@@ -25,14 +26,13 @@ public class Parser {
 
     public Node parse() {
         Node r = functionDef();
-        if(r == null){
-            throw new UnauthTokenException("error parsing"+current);
+        if (r == null) {
+            throw new UnauthTokenException("error parsing" + current);
         }
         return r;
     }
 
     /**
-     *
      * @return Node.
      * yep. I brute forced :')
      */
@@ -45,7 +45,7 @@ public class Parser {
                 System.out.println("made it to define");
                 Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
                 if (name == null) {
-                    throw new UnauthTokenException("error parsing"+current); //if not existent it crashes.
+                    throw new UnauthTokenException("error parsing" + current); //if not existent it crashes.
                 }
                 matchAndRemove(Token.OPTokens.LParan); //method
                 //DEFINE NAME Lparan(params,) -> begin body end.
@@ -60,52 +60,33 @@ public class Parser {
                 ArrayList<Node> varaibles = new ArrayList<>(); //di vars
                 if (matchAndRemove(Token.OPTokens.BEGIN) != null) {
 //                    while (true) {
-                        while(true){
-                            Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                            if(e == null){
-                                break;
-                            }
-
+                    while (true) {
+                        Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                        if (e == null) {
+                            break;
                         }
-                        Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null)?current : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null)?current:null ; //reminder
+
+                    }
+                    Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null) ? current
+                            : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null; //reminder
                     //doesnt work because we need enums for each keyword.
-                        if(constants != null){
-                            if(constants.getTokenValue().equals("constants")) {
-                                while (true) {
-                                    constants = (matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null;
-                                    Token end = matchAndRemove(Token.OPTokens.END);
-                                    if(end != null){
-                                        return new FunctionNode(name.getTokenValue(), params,varaibles);
-                                    }
-                                    ArrayList<Node> list = varaible(true);
-                                    varaibles.addAll(list); //Im love with lambda coding.
+                    if (constants != null) {
+                        if (constants.getTokenValue().equals("constants")) {
+                            while (true) {
+                                constants = (matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current
+                                        : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null)
+                                        ? current : null;
 
-                                    if (constants != null) {
-                                        if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) { //recode for enums
-                                            break;
-                                        } else {
-                                            while (true) {
-                                                Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                                                if (e == null) {
-                                                    break;
-                                                }
-
-                                            }
-                                        }
-                                    }
-
+                                Token end = matchAndRemove(Token.OPTokens.END);
+                                if (end != null) {
+                                    return new FunctionNode(name.getTokenValue(), params, varaibles);
                                 }
-                            }
-                            if(constants.getTokenEnum() == Token.OPTokens.VARAIBLES){
-                                while (true){
-                                    constants = matchAndRemove(Token.OPTokens.ENDOFLINE) ;
-                                    Token end = matchAndRemove(Token.OPTokens.END);
-                                    if(end != null){
-                                        return new FunctionNode(name.getTokenValue(), params,varaibles);
-                                    }
-                                    ArrayList<Node> list = varaible(true);
-                                    varaibles.addAll(list); //Im love with lambda coding.
-                                    if(constants != null){
+                                ArrayList<Node> list = varaible(true);
+                                varaibles.addAll(list); //Im love with lambda coding.
+                                if (constants != null) {
+                                    if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) { //recode for enums
+                                        break;
+                                    } else {
                                         while (true) {
                                             Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
                                             if (e == null) {
@@ -114,81 +95,60 @@ public class Parser {
 
                                         }
                                     }
-
                                 }
+
                             }
+                        }
+                        if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) {
+                            while (true) {
+                                constants = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                                Token end = matchAndRemove(Token.OPTokens.END);
+                                if (end != null) {
+                                    return new FunctionNode(name.getTokenValue(), params, varaibles);
+                                }
+                                ArrayList<Node> list = varaible(true);
+                                varaibles.addAll(list); //Im love with lambda coding.
+                                if (constants != null) {
+                                    while (true) {
+                                        Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                                        if (e == null) {
+                                            break;
+                                        }
 
-                        }else{
-                            throw new UnauthTokenException("parser error");
+                                    }
+                                }
+
+                            }
                         }
 
-
-                        //                        while(true){
-//                            if(constants != null){
-//
-//                            }
-//                        }
-//                        if(constants != null){
-//                            System.out.println(constants);
-//                            if(constants.getTokenValue().equals("constants")){
-//                                ArrayList<Node> list = varaible(true);
-//                                varaibles.addAll(list); //Im love with lambda coding.
-//                                System.out.println("past add all");
-//                            }else if(constants.getTokenValue().equals("variables")){
-//                                while(true){
-//                                    ArrayList<Node> list = varaible(false);
-//                                    varaibles.addAll(list);
-//                                }
-//
-//                            }else if(constants.getTokenValue().equals("EOL")){
-//                                while(true){
-////                                    System.out.println("removing end of lines");
-//                                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-//                                    if(e == null){
-//                                        break;
-//                                    }
-//
-//                                }
-//                            }
-//
-//                        }else{
-//                            System.out.println("constants == null");
-//                            Token end = matchAndRemove(Token.OPTokens.END); //e
-//                            if(end == null){
-//                                throw new UnauthTokenException("error parsing "+current); //if not existent it crashes.
-//                            }else{
-//                                return new FunctionNode(name.getTokenValue(), params,varaibles);
-//                            }
-//                        }
-
-                        Token end = matchAndRemove(Token.OPTokens.END); //e
-                        System.out.println("end: "+end);
-                        System.out.println(end); //end
-                        if (end != null) {
-                            return new FunctionNode(name.getTokenValue(), params,varaibles);
-                        }
-
+                    } else {
+                        throw new UnauthTokenException("parser error");
+                    }
+                    Token end = matchAndRemove(Token.OPTokens.END); //e
+                    System.out.println("end: " + end);
+                    System.out.println(end); //end
+                    if (end != null) {
+                        return new FunctionNode(name.getTokenValue(), params, varaibles);
                     }
 
-//                }
+                }
             }
         }
         return null;
     }
 
     /**
-     *
      * @param isConstant
-     * @return
-     * Idk if im supposed to have isConstant param. but I do because I dont want todo
+     * @return Idk if im supposed to have isConstant param. but I do because I dont want todo
      * ctrl C + ctrl v en
      */
 
     public ArrayList<Node> varaible(boolean isConstant) {
-        while(true){
+        boolean global = (matchAndRemove(Token.OPTokens.VAR) != null);
+        while (true) {
             System.out.println("removing end of lines");
             Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-            if(e == null){
+            if (e == null) {
                 break;
             }
 
@@ -198,43 +158,43 @@ public class Parser {
         Token type = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null; //lamda pro here.
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         Token a = tokenList.get(0);
-        if(type == null){ //if type == null
-            while (true){
-                while(true){
+        if (type == null) { //if type == null
+            while (true) {
+                while (true) {
                     System.out.println("removing end of lines");
                     Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                    if(e == null){
+                    if (e == null) {
                         break;
                     }
 
                 }
-                if(matchAndRemove(Token.OPTokens.KEY_WORD) != null){
+                if (matchAndRemove(Token.OPTokens.KEY_WORD) != null) {
                     type = current;
                     break;
                 }
                 name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
-                if(name == null){
-                    throw new UnauthTokenException("error parsing: "+current); //if not existent it crashes.
+                if (name == null) {
+                    throw new UnauthTokenException("error parsing: " + current); //if not existent it crashes.
                 }
-                System.out.println("name: "+name);
+                System.out.println("name: " + name);
                 varaiblesWithnoType.add(name);
             }
         }
         System.out.println(name);
         Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null;
         Node valu = null;
-        if (name == null) {
+        if (name == null || Lexer.keyWords.get(name.getTokenValue()) != null) {
 //            System.out.println("name is null");
-            throw new UnauthTokenException("name is null");
+            throw new UnauthTokenException("name is null or key word is name");
         }
-        if(matchAndRemove(Token.OPTokens.NUMBER) != null){
-            valu=expression();
+        if (matchAndRemove(Token.OPTokens.NUMBER) != null) {
+            valu = expression();
         }
-        if(varaiblesWithnoType.size() == 0){
+        if (varaiblesWithnoType.size() == 0) {
             varaiblesWithnoType.add(name);
         }
         for (Token token : varaiblesWithnoType) {
-            retList.add(new VaraibleNode(type,valu, token, isConstant));
+            retList.add(new VaraibleNode(type, valu, token, isConstant,global));
         }
 
         return retList;

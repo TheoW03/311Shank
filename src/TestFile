@@ -1,8 +1,9 @@
-define TestFunction(a, b, c:integer) begin
+define TestFunction2(a, b, c:integer, var global:integer) begin
 constants
-    integer madeItHEre := 5+8
+    integer madeItHEre =: 5+8
 variables
-    integer madeItPastConsts := 5+8
-    integer madeItPastFirst := 5+8
+    integer madeItPastConsts =: 5+8
+    integer madeItPastFirst =: 5+8
 
+    integer varWithNOmbre3 =: 5+8
 end

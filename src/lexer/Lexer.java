@@ -12,7 +12,7 @@ public class Lexer {
     private Token tokenList;
     //    private String data;
     private ArrayList<String> data; //data
-    public HashMap<String, Token> keyWords = new HashMap<>();
+    public static HashMap<String, Token> keyWords = new HashMap<>();
 
     /**
      * @param data Mss
@@ -29,6 +29,7 @@ public class Lexer {
         keyWords.put("write", new Token(Token.OPTokens.KEY_WORD, "write"));
         keyWords.put("variables", new Token(Token.OPTokens.VARAIBLES, "variables"));
         keyWords.put("=", new Token(Token.OPTokens.EQUALS, "="));
+        keyWords.put("var", new Token(Token.OPTokens.VAR, "var"));
 
     }
 
@@ -54,6 +55,7 @@ public class Lexer {
         int wordState = 1;
         char currentChar;
         String wordBuffer = "";
+        boolean stateIsComment = false;
         for (int i1 = 0; i1 < data.size(); i1++) { //loop
             String dataTokensLine = data.get(i1); //token
             buffer = "";
@@ -61,16 +63,26 @@ public class Lexer {
                 currentChar = dataTokensLine.charAt(i); //each token
 //                stateIsWord = Pattern.matches("[:=a-zA-Z\",]*", String.valueOf(currentChar)); //regex moment :D
 //                stateIsNum = Pattern.matches("[0-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment WTF phipps.
-                switch (currentChar){
-                    case '1','2','4','5','6','7','8','9','0','+','*','/',')','(','.','-'->{ //PHIPPS. >:( U said. REGEX isnt allowed BRUHV
-                        stateIsNum = true;
+                char a = currentChar;
+                //ignore comments
+                if(stateIsComment){
+                    if(currentChar == '*' && dataTokensLine.charAt(i+1) == ')'){
+                        stateIsComment = false;
                     }
-                    default -> {
-                        stateIsNum = false;
-                    }
+                    continue;
                 }
                 //ooperator.
                 if (currentChar != ' ') {
+                    if (stateIsNum) {
+                        switch (currentChar) {
+                            case '1', '2', '4', '5', '6', '7', '8', '9', '0', '+', '*', '/', ')', '(', '.', '-' -> { //PHIPPS. >:( U said. REGEX isnt allowed BRUHV
+                                stateIsNum = true;
+                            }
+                            default -> {
+                                stateIsNum = false;
+                            }
+                        }
+                    }
                     if (stateIsNum) {
                         if (state == 1) { //operator
                             if (!wordBuffer.equals("")) {
@@ -119,6 +131,10 @@ public class Lexer {
                                     buffer += currentChar;
                                 }
                                 case '(' -> {
+                                    if(dataTokensLine.charAt(i1+1) == '*'){
+                                        stateIsComment = true;
+                                        continue;
+                                    }
                                     tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
                                 }
                                 case ')' -> {
@@ -216,20 +232,45 @@ public class Lexer {
                             throw new UnauthTokenException("error");
                         }
                     } else { //clear
-
-                        if(currentChar == ':' || currentChar== ',' ){
-                            if(!wordBuffer.equals("")){
+                        if (currentChar == '(') {
+                            if (!wordBuffer.equals("")) {
                                 if (keyWords.get(wordBuffer) != null) {
                                     tokenDataR.add(keyWords.get(wordBuffer));
-//                                    stateIsNum = true;
+
+                                } else {
+                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                }
+                                stateIsNum = true;
+                                tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
+                                wordBuffer = "";
+                            }
+
+                        } else if (currentChar == ')') {
+                            if (!wordBuffer.equals("")) {
+                                if (keyWords.get(wordBuffer) != null) {
+                                    tokenDataR.add(keyWords.get(wordBuffer));
+
+                                } else {
+                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                }
+                                stateIsNum = true;
+                                tokenDataR.add(new Token(Token.OPTokens.RParan, ")"));
+                                wordBuffer = "";
+                            }
+
+                        } else if (currentChar == ':' || currentChar == ',' || currentChar == '=') {
+                            if (!wordBuffer.equals("")) {
+                                if (keyWords.get(wordBuffer) != null) {
+                                    tokenDataR.add(keyWords.get(wordBuffer));
+
                                 } else {
                                     tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
                                 }
 
                             }
-
+                            stateIsNum = true;
                             wordBuffer = "";
-                        }else{
+                        } else {
                             wordBuffer += currentChar;
                         }
 
@@ -243,6 +284,7 @@ public class Lexer {
                             tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
                         }
                         wordBuffer = "";
+                        stateIsNum = true;
                     }
                 }
             } //eof

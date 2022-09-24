@@ -17,7 +17,7 @@ public class VaraibleNode extends Node{
     private Token type;
     private Node value;
 
-    public VaraibleNode(Token type,Node value, Token name, boolean isConstant) {
+    public VaraibleNode(Token type,Node value, Token name, boolean isConstant,boolean global) {
         this.type=type;
         this.name = name;
         this.value = value;
