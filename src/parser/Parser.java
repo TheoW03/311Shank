@@ -39,7 +39,7 @@ public class Parser {
      * yep. I brute forced :')
      */
 
-    public ArrayList<Node> processCOnstants() {
+    public ArrayList<Node> processConstants() {
         ArrayList<Node> constantList = new ArrayList<>();
         while (true) {
             Token constants = (matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current
@@ -128,11 +128,6 @@ public class Parser {
                     }
                 }
                 ArrayList<Node> varaibles = new ArrayList<>(); //di vars
-//                if (matchAndRemove(Token.OPTokens.BEGIN) != null) {
-////                    while (true) {
-
-//
-//                    }
                 while (true) {
                     Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
                     if (e == null) {
@@ -144,7 +139,7 @@ public class Parser {
                 //doesnt work because we need enums for each keyword.
                 if (constants != null) {
                     if (constants.getTokenEnum() == Token.OPTokens.CONSTANTS) {
-                        varaibles.addAll(processCOnstants());
+                        varaibles.addAll(processConstants());
                     }
                     if (this.current.getTokenEnum() == Token.OPTokens.VARAIBLES) {
                         varaibles.addAll(processVaraibles());
@@ -160,7 +155,6 @@ public class Parser {
                     } else {
                         throw new UnauthTokenException("parser error");
                     }
-
                 }
                 while (true) {
                     Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
@@ -177,10 +171,10 @@ public class Parser {
                     }
 
                 }
-                tokenList.get(0);
+                Token beforeEnd = tokenList.get(0); //for the debugger
                 Token end = matchAndRemove(Token.OPTokens.END);
                 System.out.println("end: " + end);
-                tokenList.get(0);
+                Token AfterEnd = tokenList.get(0); //for the debugger
                 System.out.println(end); //end
                 if (end != null) {
                     return new FunctionNode(name.getTokenValue(), params, varaibles);
