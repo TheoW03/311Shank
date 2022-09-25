@@ -45,6 +45,12 @@ public class Lexer {
      *
      * @return array list of chars
      */
+    /**
+     *
+     * @return
+     * I might just make a state for comments
+     *
+     */
     public ArrayList<Token> lexer() {
         ArrayList<Token> tokenDataR = new ArrayList<>();
         int lineNum = 1;
@@ -58,7 +64,7 @@ public class Lexer {
         boolean stateIsComment = false;
         for (int i1 = 0; i1 < data.size(); i1++) { //loop
             String dataTokensLine = data.get(i1); //token
-            buffer = "";
+            buffer = ""; //\\
             for (int i = 0; i < dataTokensLine.length(); ++i) {
                 currentChar = dataTokensLine.charAt(i); //each token
 //                stateIsWord = Pattern.matches("[:=a-zA-Z\",]*", String.valueOf(currentChar)); //regex moment :D
@@ -66,6 +72,7 @@ public class Lexer {
                 char a = currentChar;
                 //ignore comments
                 if (stateIsComment) {
+                    System.out.println("e");
                     if (currentChar == '*' && dataTokensLine.charAt(i + 1) == ')') {
                         stateIsComment = false;
                     }
@@ -132,6 +139,7 @@ public class Lexer {
                                 case '(' -> {
                                     if (dataTokensLine.charAt(i1 + 1) == '*') {
                                         stateIsComment = true;
+                                        System.out.println("e");
                                         continue;
                                     }
                                     tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
@@ -166,6 +174,11 @@ public class Lexer {
 
                                 }
                                 case '(' -> {
+                                    if (dataTokensLine.charAt(i1 + 1) == '*') {
+                                        stateIsComment = true;
+                                        System.out.println("e");
+                                        continue;
+                                    }
                                     state = 1;
                                     tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
                                 }
@@ -197,6 +210,10 @@ public class Lexer {
                                     } else if (currentChar == '/') {
                                         tokenDataR.add(new Token(Token.OPTokens.DIVIDE, "/"));
                                     } else if (currentChar == '(') {
+                                        if (dataTokensLine.charAt(i1 + 1) == '*') {
+                                            stateIsComment = true;
+                                            continue;
+                                        }
                                         tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
                                     } else {
                                         state = 1;
@@ -236,6 +253,11 @@ public class Lexer {
                             buffer = "";
                         } //removes word buffer.
                         if (currentChar == '(') {
+                            if (dataTokensLine.charAt(i1 + 1) == '*') {
+                                stateIsComment = true;
+                                System.out.println("e");
+                                continue;
+                            }
                             if (!wordBuffer.equals("")) {
                                 if (keyWords.get(wordBuffer) != null) {
                                     tokenDataR.add(keyWords.get(wordBuffer));

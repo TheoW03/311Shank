@@ -34,11 +34,24 @@ public class Parser {
         return r;
     }
 
+
+    /**
+     *
+     */
+    private void RemoveEOLS() {
+        while (true) {
+            Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+            if (e == null) {
+                break;
+            }
+
+        }
+    }
+
     /**
      * @return Node.
      * yep. I brute forced :')
      */
-
     public ArrayList<Node> processConstants() {
         ArrayList<Node> constantList = new ArrayList<>();
         while (true) {
@@ -48,28 +61,16 @@ public class Parser {
             if (constants != null) {
                 if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) { //recode for enums
                     return constantList;
-                } else  {
-                    while (true) {
-                        Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                        if (e == null) {
-                            break;
-                        }
-
-                    }
+                } else {
+                    RemoveEOLS();
                 }
-            Token end = matchAndRemove(Token.OPTokens.BEGIN);
-            if (end != null) {
-                return constantList;
-            }
-            ArrayList<Node> list = varaible(true);
-                while (true) {
-                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                    if (e == null) {
-                        break;
-                    }
-
+                Token end = matchAndRemove(Token.OPTokens.BEGIN);
+                if (end != null) {
+                    return constantList;
                 }
-            constantList.addAll(list); //Im love with lambda coding.
+                ArrayList<Node> list = varaible(true);
+                RemoveEOLS();
+                constantList.addAll(list); //Im love with lambda coding.
 
             }
 
@@ -81,12 +82,7 @@ public class Parser {
         while (true) {
             Token constants = matchAndRemove(Token.OPTokens.ENDOFLINE);
             if (constants != null) {
-                while (true) {
-                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                    if (e == null) {
-                        break;
-                    }
-                }
+                RemoveEOLS();
             }
             Token end = matchAndRemove(Token.OPTokens.BEGIN);
             if (end != null) {
@@ -108,7 +104,7 @@ public class Parser {
 
 
     public Node functionDef() {
-        matchAndRemove(Token.OPTokens.ENDOFLINE);
+        RemoveEOLS();
         Token functionDef = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null;
         if (functionDef != null) {
             if (functionDef.getTokenValue().equals("define")) {
@@ -128,12 +124,7 @@ public class Parser {
                     }
                 }
                 ArrayList<Node> varaibles = new ArrayList<>(); //di vars
-                while (true) {
-                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                    if (e == null) {
-                        break;
-                    }
-                }
+                RemoveEOLS();
                 Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null) ? current
                         : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null; //reminder
                 //doesnt work because we need enums for each keyword.
@@ -156,21 +147,9 @@ public class Parser {
                         throw new UnauthTokenException("parser error");
                     }
                 }
-                while (true) {
-                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                    if (e == null) {
-                        break;
-                    }
-
-                }
+                RemoveEOLS();
                 Token begin = matchAndRemove(Token.OPTokens.BEGIN);
-                while (true) {
-                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                    if (e == null) {
-                        break;
-                    }
-
-                }
+                RemoveEOLS();
                 Token beforeEnd = tokenList.get(0); //for the debugger
                 Token end = matchAndRemove(Token.OPTokens.END);
                 System.out.println("end: " + end);
@@ -183,7 +162,7 @@ public class Parser {
             }
         }
         return null;
-}
+    }
 
     /**
      * @param isConstant
@@ -208,14 +187,7 @@ public class Parser {
         Token a = tokenList.get(0);
         if (type == null) { //if type == null
             while (true) {
-                while (true) {
-                    System.out.println("removing end of lines");
-                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                    if (e == null) {
-                        break;
-                    }
-
-                }
+                RemoveEOLS();
                 if (matchAndRemove(Token.OPTokens.KEY_WORD) != null) {
                     type = current;
                     break;
@@ -233,7 +205,6 @@ public class Parser {
         Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null;
         Node valu = null;
         if (name == null || Lexer.keyWords.get(name.getTokenValue()) != null) {
-//            System.out.println("name is null");
             throw new UnauthTokenException("name is null or key word is name");
         }
         if (matchAndRemove(Token.OPTokens.NUMBER) != null) {
