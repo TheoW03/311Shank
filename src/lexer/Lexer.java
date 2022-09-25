@@ -65,24 +65,23 @@ public class Lexer {
 //                stateIsNum = Pattern.matches("[0-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment WTF phipps.
                 char a = currentChar;
                 //ignore comments
-                if(stateIsComment){
-                    if(currentChar == '*' && dataTokensLine.charAt(i+1) == ')'){
+                if (stateIsComment) {
+                    if (currentChar == '*' && dataTokensLine.charAt(i + 1) == ')') {
                         stateIsComment = false;
                     }
                     continue;
                 }
                 //ooperator.
                 if (currentChar != ' ') {
-                    if (stateIsNum) {
+
                         switch (currentChar) {
-                            case '1', '2', '4', '5', '6', '7', '8', '9', '0', '+', '*', '/', ')', '(', '.', '-' -> { //PHIPPS. >:( U said. REGEX isnt allowed BRUHV
-                                stateIsNum = true;
+                            case '1', '2', '3','4', '5', '6', '7', '8', '9', '0', '+', '*', '/', ')', '(', '.', '-'-> { //PHIPPS. >:( U said. REGEX isnt allowed BRUHV
                             }
                             default -> {
                                 stateIsNum = false;
                             }
                         }
-                    }
+
                     if (stateIsNum) {
                         if (state == 1) { //operator
                             if (!wordBuffer.equals("")) {
@@ -131,7 +130,7 @@ public class Lexer {
                                     buffer += currentChar;
                                 }
                                 case '(' -> {
-                                    if(dataTokensLine.charAt(i1+1) == '*'){
+                                    if (dataTokensLine.charAt(i1 + 1) == '*') {
                                         stateIsComment = true;
                                         continue;
                                     }
@@ -232,6 +231,10 @@ public class Lexer {
                             throw new UnauthTokenException("error");
                         }
                     } else { //clear
+                        if (!buffer.equals("")) {
+                            tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
+                            buffer = "";
+                        } //removes word buffer.
                         if (currentChar == '(') {
                             if (!wordBuffer.equals("")) {
                                 if (keyWords.get(wordBuffer) != null) {

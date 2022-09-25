@@ -26,7 +26,9 @@ public class Parser {
 
     public Node parse() {
         Node r = functionDef();
+        System.out.println(r);
         if (r == null) {
+            System.out.println("Es null");
             throw new UnauthTokenException("error parsing" + current);
         }
         return r;
@@ -36,6 +38,74 @@ public class Parser {
      * @return Node.
      * yep. I brute forced :')
      */
+
+    public ArrayList<Node> processCOnstants() {
+        ArrayList<Node> constantList = new ArrayList<>();
+        while (true) {
+            Token constants = (matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current
+                    : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null)
+                    ? current : null;
+            if (constants != null) {
+                if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) { //recode for enums
+                    return constantList;
+                } else  {
+                    while (true) {
+                        Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                        if (e == null) {
+                            break;
+                        }
+
+                    }
+                }
+            Token end = matchAndRemove(Token.OPTokens.BEGIN);
+            if (end != null) {
+                return constantList;
+            }
+            ArrayList<Node> list = varaible(true);
+                while (true) {
+                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                    if (e == null) {
+                        break;
+                    }
+
+                }
+            constantList.addAll(list); //Im love with lambda coding.
+
+            }
+
+        }
+    }
+
+    public ArrayList<Node> processVaraibles() {
+        ArrayList<Node> varList = new ArrayList<>();
+        while (true) {
+            Token constants = matchAndRemove(Token.OPTokens.ENDOFLINE);
+            if (constants != null) {
+                while (true) {
+                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                    if (e == null) {
+                        break;
+                    }
+                }
+            }
+            Token end = matchAndRemove(Token.OPTokens.BEGIN);
+            if (end != null) {
+                return varList;
+            }
+            while (true) {
+                Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                if (e == null) {
+                    break;
+                }
+
+            }
+            ArrayList<Node> list = varaible(true);
+            varList.addAll(list); //Im love with lambda coding.
+
+
+        }
+    }
+
 
     public Node functionDef() {
         matchAndRemove(Token.OPTokens.ENDOFLINE);
@@ -58,84 +128,68 @@ public class Parser {
                     }
                 }
                 ArrayList<Node> varaibles = new ArrayList<>(); //di vars
-                if (matchAndRemove(Token.OPTokens.BEGIN) != null) {
-//                    while (true) {
-                    while (true) {
-                        Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                        if (e == null) {
-                            break;
-                        }
+//                if (matchAndRemove(Token.OPTokens.BEGIN) != null) {
+////                    while (true) {
 
+//
+//                    }
+                while (true) {
+                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                    if (e == null) {
+                        break;
                     }
-                    Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null) ? current
-                            : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null; //reminder
-                    //doesnt work because we need enums for each keyword.
-                    if (constants != null) {
-                        if (constants.getTokenValue().equals("constants")) {
-                            while (true) {
-                                constants = (matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current
-                                        : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null)
-                                        ? current : null;
-
-                                Token end = matchAndRemove(Token.OPTokens.END);
-                                if (end != null) {
-                                    return new FunctionNode(name.getTokenValue(), params, varaibles);
-                                }
-                                ArrayList<Node> list = varaible(true);
-                                varaibles.addAll(list); //Im love with lambda coding.
-                                if (constants != null) {
-                                    if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) { //recode for enums
-                                        break;
-                                    } else {
-                                        while (true) {
-                                            Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                                            if (e == null) {
-                                                break;
-                                            }
-
-                                        }
-                                    }
-                                }
-
-                            }
-                        }
-                        if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) {
-                            while (true) {
-                                constants = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                                Token end = matchAndRemove(Token.OPTokens.END);
-                                if (end != null) {
-                                    return new FunctionNode(name.getTokenValue(), params, varaibles);
-                                }
-                                ArrayList<Node> list = varaible(true);
-                                varaibles.addAll(list); //Im love with lambda coding.
-                                if (constants != null) {
-                                    while (true) {
-                                        Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
-                                        if (e == null) {
-                                            break;
-                                        }
-
-                                    }
-                                }
-
-                            }
-                        }
-
+                }
+                Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null) ? current
+                        : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null; //reminder
+                //doesnt work because we need enums for each keyword.
+                if (constants != null) {
+                    if (constants.getTokenEnum() == Token.OPTokens.CONSTANTS) {
+                        varaibles.addAll(processCOnstants());
+                    }
+                    if (this.current.getTokenEnum() == Token.OPTokens.VARAIBLES) {
+                        varaibles.addAll(processVaraibles());
+                    }
+                } else {
+                    Token begin = matchAndRemove(Token.OPTokens.BEGIN); //e
+                    Token end = matchAndRemove(Token.OPTokens.END); //e
+                    System.out.println("end: " + end);
+                    System.out.println("constants es null");
+                    System.out.println(end); //end
+                    if (end != null || begin != null) {
+                        return new FunctionNode(name.getTokenValue(), params, varaibles);
                     } else {
                         throw new UnauthTokenException("parser error");
                     }
-                    Token end = matchAndRemove(Token.OPTokens.END); //e
-                    System.out.println("end: " + end);
-                    System.out.println(end); //end
-                    if (end != null) {
-                        return new FunctionNode(name.getTokenValue(), params, varaibles);
+
+                }
+                while (true) {
+                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                    if (e == null) {
+                        break;
                     }
 
                 }
+                Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+                while (true) {
+                    Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
+                    if (e == null) {
+                        break;
+                    }
+
+                }
+                tokenList.get(0);
+                Token end = matchAndRemove(Token.OPTokens.END);
+                System.out.println("end: " + end);
+                tokenList.get(0);
+                System.out.println(end); //end
+                if (end != null) {
+                    return new FunctionNode(name.getTokenValue(), params, varaibles);
+                }
+
             }
         }
         return null;
-    }
+}
 
     /**
      * @param isConstant
@@ -174,6 +228,7 @@ public class Parser {
                 }
                 name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
                 if (name == null) {
+                    System.out.println("reason");
                     throw new UnauthTokenException("error parsing: " + current); //if not existent it crashes.
                 }
                 System.out.println("name: " + name);
@@ -194,7 +249,7 @@ public class Parser {
             varaiblesWithnoType.add(name);
         }
         for (Token token : varaiblesWithnoType) {
-            retList.add(new VaraibleNode(type, valu, token, isConstant,global));
+            retList.add(new VaraibleNode(type, valu, token, isConstant, global));
         }
 
         return retList;
@@ -297,6 +352,7 @@ public class Parser {
         if (token.equals(tokenList.get(0).getTokenEnum())) {
 
             var retVal = this.tokenList.remove(0);
+//            cleanEndOfLine(); //helper function because I need thois
             current = retVal;
 //            System.out.println("matched");
             return retVal;

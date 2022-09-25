@@ -1,9 +1,11 @@
-define TestFunction2(a, b, c:integer, var global:integer) begin
+define TestFunction34(a,b,c:integer)
 constants
-    integer madeItHEre =: 5+8
+ integer FibNumAtN2 := 0
 variables
-    integer madeItPastConsts =: 5+8
-    integer madeItPastFirst =: 5+8
-
-    integer varWithNOmbre3 =: 5+8
+  integer FibNumAtn := 0
+    integer FibNumAtn1 := 0
+  integer FibNumAtn2 := 0
+  integer FibNumAtn3 := 0
+  integer FibNumAtn42 := 0
+begin
 end
