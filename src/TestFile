@@ -1,6 +1,6 @@
 define TestFunction34(a,b,c:integer)
 constants
- integer FibNumAtN2 := 0
+ integer FibNumAtN2 := 0(*comment*)
 variables
   integer FibNumAtn := 0
     integer FibNumAtn1 := 0
@@ -9,3 +9,4 @@ variables
   integer FibNumAtn42 := 0
 begin
 end
+1-'1'

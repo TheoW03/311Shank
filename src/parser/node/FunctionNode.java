@@ -15,7 +15,7 @@ import java.util.*;
 public class FunctionNode extends Node{
     private ArrayList<Node> params,varaibles;
     private String ident;
-    public FunctionNode(String ident, ArrayList<Node> Params, ArrayList<Node> varaibles) {
+    public FunctionNode(String ident, ArrayList<Node> Params, ArrayList<Node> varaibles,ArrayList<Node> statements) {
         this.ident = ident;
         this.params = Params;
         this.varaibles = varaibles;

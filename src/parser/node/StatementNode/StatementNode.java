@@ -1,4 +1,6 @@
-package parser.node;
+package parser.node.StatementNode;
+
+import parser.node.Node;
 
 import java.util.*;
 import java.io.*;
@@ -9,10 +11,7 @@ import java.io.*;
  * ~ project outline here ~
  * @Javadoc
  */
-public class AssignmentNode extends Node{
-    public AssignmentNode(){
-
-    }
+public abstract class StatementNode extends Node {
     @Override
     public String ToString() {
         return null;

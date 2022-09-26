@@ -4,6 +4,7 @@ import lexer.Lexer;
 import lexer.Token;
 import lexer.UnauthTokenException;
 import parser.node.*;
+import parser.node.StatementNode.AssignmentNode;
 
 import java.util.*;
 
@@ -32,6 +33,21 @@ public class Parser {
             throw new UnauthTokenException("error parsing" + current);
         }
         return r;
+    }
+
+    public ArrayList<Node> statements() {
+        Node a = assignments();
+        ArrayList<Node> nodeList = new ArrayList<>();
+        if (a != null) {
+            nodeList.add(a);
+        }
+        return nodeList;
+    }
+
+    public Node assignments() {
+//        Node a = varaible(false);
+
+        return new AssignmentNode(null, null);
     }
 
 
@@ -84,10 +100,13 @@ public class Parser {
             if (constants != null) {
                 RemoveEOLS();
             }
-            Token end = matchAndRemove(Token.OPTokens.BEGIN);
-            if (end != null) {
-                return varList;
+            Token end = bodyFunction();
+            if(end != null){
+                if (end.getTokenEnum() == Token.OPTokens.BEGIN) {
+                    return varList;
+                }
             }
+
             while (true) {
                 Token e = matchAndRemove(Token.OPTokens.ENDOFLINE);
                 if (e == null) {
@@ -100,6 +119,11 @@ public class Parser {
 
 
         }
+    }
+
+    public Token bodyFunction() {
+        return (matchAndRemove(Token.OPTokens.BEGIN) != null) ? current :
+                (matchAndRemove(Token.OPTokens.END) != null) ? current : null;
     }
 
 
@@ -135,30 +159,17 @@ public class Parser {
                     if (this.current.getTokenEnum() == Token.OPTokens.VARAIBLES) {
                         varaibles.addAll(processVaraibles());
                     }
-                } else {
-                    Token begin = matchAndRemove(Token.OPTokens.BEGIN); //e
-                    Token end = matchAndRemove(Token.OPTokens.END); //e
-                    System.out.println("end: " + end);
-                    System.out.println("constants es null");
-                    System.out.println(end); //end
-                    if (end != null || begin != null) {
-                        return new FunctionNode(name.getTokenValue(), params, varaibles);
-                    } else {
-                        throw new UnauthTokenException("parser error");
-                    }
                 }
+                tokenList.get(0); //for debugger
+                varaibles.get(0);
+                Token b = current;
+                Token a = bodyFunction();
                 RemoveEOLS();
-                Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+                ArrayList<Node> statement = statements();
                 RemoveEOLS();
-                Token beforeEnd = tokenList.get(0); //for the debugger
-                Token end = matchAndRemove(Token.OPTokens.END);
-                System.out.println("end: " + end);
-                Token AfterEnd = tokenList.get(0); //for the debugger
-                System.out.println(end); //end
-                if (end != null) {
-                    return new FunctionNode(name.getTokenValue(), params, varaibles);
+                if (bodyFunction().getTokenEnum() == Token.OPTokens.END) {
+                    return new FunctionNode(name.getTokenValue(), params, varaibles, statement);
                 }
-
             }
         }
         return null;

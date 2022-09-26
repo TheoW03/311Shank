@@ -61,9 +61,15 @@ public class Lexer {
         int wordState = 1;
         char currentChar;
         String wordBuffer = "";
+        char esMutiple = '\0';
         boolean stateIsComment = false;
         for (int i1 = 0; i1 < data.size(); i1++) { //loop
             String dataTokensLine = data.get(i1); //token
+
+            //this is an easter egg.
+//            if(dataTokensLine.contains("'1'-1") || dataTokensLine.contains("1-'1'")){
+//                throw new UnauthTokenException("shank >>>> java script");
+//            }
             buffer = ""; //\\
             for (int i = 0; i < dataTokensLine.length(); ++i) {
                 currentChar = dataTokensLine.charAt(i); //each token
@@ -71,11 +77,16 @@ public class Lexer {
 //                stateIsNum = Pattern.matches("[0-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment WTF phipps.
                 char a = currentChar;
                 //ignore comments
+                if(currentChar == '(' && dataTokensLine.charAt(i + 1) == '*'){
+                    stateIsComment = true;
+                }
                 if (stateIsComment) {
-                    System.out.println("e");
-                    if (currentChar == '*' && dataTokensLine.charAt(i + 1) == ')') {
+                    System.out.println("comment: "+currentChar);
+                    if (currentChar == ')' && esMutiple == '*') {
                         stateIsComment = false;
+                        esMutiple = '\0';
                     }
+                    esMutiple = currentChar;
                     continue;
                 }
                 //ooperator.
