@@ -8,5 +8,6 @@ variables
   integer FibNumAtn3 := 0
   integer FibNumAtn42 := 0
 begin
+ FibNumATn2 := 89 (*Idk what else im supposed todo*)
+
 end
-1-'1'

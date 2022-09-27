@@ -3,6 +3,7 @@
 import lexer.Lexer;
 import lexer.Token;
 import parser.Parser;
+import parser.node.FunctionNode;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

@@ -13,12 +13,13 @@ import java.util.*;
  * @Javadoc
  */
 public class FunctionNode extends Node{
-    private ArrayList<Node> params,varaibles;
+    private ArrayList<Node> params,varaibles,statements;
     private String ident;
     public FunctionNode(String ident, ArrayList<Node> Params, ArrayList<Node> varaibles,ArrayList<Node> statements) {
         this.ident = ident;
         this.params = Params;
         this.varaibles = varaibles;
+        this.statements = statements;
 
     }
 
@@ -47,6 +48,15 @@ public class FunctionNode extends Node{
         t.append("]");
         return t.toString();
     }
+    public String getIdent(){
+        return this.ident;
+    }
+    public String vars(){
+        return ArraysToString(varaibles);
+    }
+    public String statemnets(){
+        return ArraysToString(statements);
+    }
 
     /**
      *
@@ -55,6 +65,7 @@ public class FunctionNode extends Node{
      */
     @Override
     public String ToString() {
-        return "name: "+ident+" params: "+ArraysToString(params)+" constants/vars: "+ArraysToString(varaibles);
+        return "name: "+ident+" params: "+ArraysToString(params)+" constants/vars: "+ArraysToString(varaibles)
+                +"statements: "+ArraysToString(statements);
     }
 }

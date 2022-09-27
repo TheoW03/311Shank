@@ -11,11 +11,14 @@ import parser.node.VaraibleNode;
  * @Javadoc j
  */
 public class AssignmentNode extends StatementNode {
-    public AssignmentNode(VaraibleNode var, Node math){
-
+    private VaraibleReferenceNode var;
+    private Node math;
+    public AssignmentNode(VaraibleReferenceNode var, Node math){
+        this.var = var;
+        this.math = math;
     }
     @Override
     public String ToString() {
-        return null;
+        return var.ToString() + " "+math.ToString();
     }
 }

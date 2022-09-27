@@ -5,6 +5,7 @@ import lexer.Token;
 import lexer.UnauthTokenException;
 import parser.node.*;
 import parser.node.StatementNode.AssignmentNode;
+import parser.node.StatementNode.VaraibleReferenceNode;
 
 import java.util.*;
 
@@ -36,18 +37,33 @@ public class Parser {
     }
 
     public ArrayList<Node> statements() {
-        Node a = assignments();
+
         ArrayList<Node> nodeList = new ArrayList<>();
-        if (a != null) {
+        while(true){
+            Node a = assignments();
+            if(a == null){
+                return nodeList;
+            }
             nodeList.add(a);
         }
-        return nodeList;
     }
 
+    //its all of varaible buy
+    //but iwth out use of list?
+    //pretty dumb but works ig
     public Node assignments() {
 //        Node a = varaible(false);
+        Token type = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null; //type
+        Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
+        Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null; //ehat it equals
+        Node assignement = expression(); //assignment
+        RemoveEOLS(); //endof line
+        if (assignement == null || name == null) {
+            return null;
+        }
+        return new AssignmentNode(new VaraibleReferenceNode(name),assignement);
 
-        return new AssignmentNode(null, null);
+//        return new AssignmentNode(, null);
     }
 
 
@@ -101,7 +117,7 @@ public class Parser {
                 RemoveEOLS();
             }
             Token end = bodyFunction();
-            if(end != null){
+            if (end != null) {
                 if (end.getTokenEnum() == Token.OPTokens.BEGIN) {
                     return varList;
                 }
@@ -122,6 +138,7 @@ public class Parser {
     }
 
     public Token bodyFunction() {
+        //epic lambda moment
         return (matchAndRemove(Token.OPTokens.BEGIN) != null) ? current :
                 (matchAndRemove(Token.OPTokens.END) != null) ? current : null;
     }
@@ -150,8 +167,7 @@ public class Parser {
                 ArrayList<Node> varaibles = new ArrayList<>(); //di vars
                 RemoveEOLS();
                 Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null) ? current
-                        : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null; //reminder
-                //doesnt work because we need enums for each keyword.
+                        : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null;
                 if (constants != null) {
                     if (constants.getTokenEnum() == Token.OPTokens.CONSTANTS) {
                         varaibles.addAll(processConstants());
