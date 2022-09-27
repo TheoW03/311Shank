@@ -23,8 +23,9 @@ public class Token {
         BEGIN("begin","begin"),
         END("end","end"), //im adding this just because.
         INTEGER("Int","s"),FLOAT("f","f"),
-        EQUALS("=","s"),
-        CONSTANTS("constants","c"),VARAIBLES("vars","v"), VAR("VAR","Var");
+        EQUALS("=","eq"),
+        CONSTANTS("constants","c"),VARAIBLES("vars","v"), VAR("VAR","Var"),
+        DEFINE("define", "define"), EQUALITY_EUQUALS("==","checks for equality");
         private String s;
         private String value;
         OPTokens(String value,String s) {
@@ -37,6 +38,9 @@ public class Token {
         public String toString() {
             return  this.s;
         }
+    }
+    public enum keywords{
+
     }
     private Token.OPTokens type;
     private String tokenValue;

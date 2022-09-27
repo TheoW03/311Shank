@@ -39,31 +39,35 @@ public class Parser {
     public ArrayList<Node> statements() {
 
         ArrayList<Node> nodeList = new ArrayList<>();
-        while(true){
+        while (true) {
+            System.out.println("the infinite one");
             Node a = assignments();
-            if(a == null){
+            if (a == null) {
                 return nodeList;
             }
             nodeList.add(a);
         }
     }
 
-    //its all of varaible buy
-    //but iwth out use of list?
-    //pretty dumb but works ig
+    /**
+     * @return assignment node
+     */
+
     public Node assignments() {
-//        Node a = varaible(false);
-        Token type = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null; //type
+        System.out.println("the infinite one assign");
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
-        Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null; //ehat it equals
+        Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null; //what it equals
         Node assignement = expression(); //assignment
-        RemoveEOLS(); //endof line
-        if (assignement == null || name == null) {
+        RemoveEOLS();
+        if (assignement == null && name == null) {
             return null;
         }
-        return new AssignmentNode(new VaraibleReferenceNode(name),assignement);
+        if (equals == null || name == null || assignement == null) {
+            throw new UnauthTokenException("Not a real statement");
+        }
 
-//        return new AssignmentNode(, null);
+        return new AssignmentNode(new VaraibleReferenceNode(name), assignement); //return node
+
     }
 
 
@@ -94,24 +98,28 @@ public class Parser {
                 if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) { //recode for enums
                     return constantList;
                 } else {
+                    System.out.println("e");
                     RemoveEOLS();
                 }
-                Token end = matchAndRemove(Token.OPTokens.BEGIN);
-                if (end != null) {
-                    return constantList;
-                }
-                ArrayList<Node> list = varaible(true);
-                RemoveEOLS();
-                constantList.addAll(list); //Im love with lambda coding.
-
             }
+            Token end = matchAndRemove(Token.OPTokens.BEGIN);
+            if (end != null) {
+                return constantList;
+            }
+            ArrayList<Node> list = varaible(true);
+            RemoveEOLS();
+            constantList.addAll(list); //Im love with lambda coding.
 
         }
+
     }
+
+
 
     public ArrayList<Node> processVaraibles() {
         ArrayList<Node> varList = new ArrayList<>();
         while (true) {
+
             Token constants = matchAndRemove(Token.OPTokens.ENDOFLINE);
             if (constants != null) {
                 RemoveEOLS();
@@ -146,7 +154,8 @@ public class Parser {
 
     public Node functionDef() {
         RemoveEOLS();
-        Token functionDef = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null;
+        Token functionDef = (matchAndRemove(Token.OPTokens.DEFINE) != null) ? current : null; //define
+        System.out.println("func def: " + functionDef);
         if (functionDef != null) {
             if (functionDef.getTokenValue().equals("define")) {
                 System.out.println("made it to define");
@@ -209,23 +218,31 @@ public class Parser {
         }
         ArrayList<Token> varaiblesWithnoType = new ArrayList<>();
         ArrayList<Node> retList = new ArrayList<>();
-        Token type = (matchAndRemove(Token.OPTokens.KEY_WORD) != null) ? current : null; //lamda pro here.
+        Token type = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
+                (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current :
+                        null; //lamda pro here.
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         Token a = tokenList.get(0);
-        if (type == null) { //if type == null
+
+        if (type == null) {//if type == null
+            varaiblesWithnoType.add(name);
             while (true) {
                 RemoveEOLS();
-                if (matchAndRemove(Token.OPTokens.KEY_WORD) != null) {
-                    type = current;
+                Token checkForType = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
+                        (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current : null;
+
+                if (checkForType != null) { //use sam lambda
+                    type = checkForType;
                     break;
                 }
                 name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+                varaiblesWithnoType.add(name);
                 if (name == null) {
                     System.out.println("reason");
                     throw new UnauthTokenException("error parsing: " + current); //if not existent it crashes.
                 }
                 System.out.println("name: " + name);
-                varaiblesWithnoType.add(name);
+
             }
         }
         System.out.println(name);

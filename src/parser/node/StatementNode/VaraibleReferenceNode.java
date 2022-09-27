@@ -16,6 +16,11 @@ public class VaraibleReferenceNode extends StatementNode {
 
     }
 
+    /**
+     *
+     * @return name
+     */
+
     @Override
     public String ToString() {
         return name.getTokenValue();

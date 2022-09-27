@@ -17,6 +17,11 @@ public class AssignmentNode extends StatementNode {
         this.var = var;
         this.math = math;
     }
+
+    /**
+     *
+     * @return what it is
+     */
     @Override
     public String ToString() {
         return var.ToString() + " "+math.ToString();

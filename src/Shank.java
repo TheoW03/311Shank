@@ -46,7 +46,11 @@ public class Shank {
     }
     public static void ParserTestMethod(ArrayList<Token> a){
         Parser p = new Parser(a);
-        System.out.println(p.parse().ToString());
+        FunctionNode fn = (FunctionNode) p.parse();
+        System.out.println("name: "+fn.getIdent());
+        System.out.println("params: "+fn.params());
+        System.out.println("vars/constants: "+fn.vars());
+        System.out.println("statemnets: "+fn.statemnets());
 
 //        ArrayList<Node> n = new ArrayList<>();
 

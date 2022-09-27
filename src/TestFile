@@ -1,13 +1,10 @@
 define TestFunction34(a,b,c:integer)
 constants
+ integer Fib:=9+8
  integer FibNumAtN2 := 0(*comment*)
 variables
-  integer FibNumAtn := 0
-    integer FibNumAtn1 := 0
-  integer FibNumAtn2 := 0
-  integer FibNumAtn3 := 0
-  integer FibNumAtn42 := 0
+  integer FibNumAtn := 0 (*hi*)
 begin
- FibNumATn2 := 89 (*Idk what else im supposed todo*)
-
+ FibNumATn2 := 89
+ Fib := 90
 end

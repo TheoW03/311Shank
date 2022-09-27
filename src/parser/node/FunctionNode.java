@@ -15,9 +15,9 @@ import java.util.*;
 public class FunctionNode extends Node{
     private ArrayList<Node> params,varaibles,statements;
     private String ident;
-    public FunctionNode(String ident, ArrayList<Node> Params, ArrayList<Node> varaibles,ArrayList<Node> statements) {
+    public FunctionNode(String ident, ArrayList<Node> params, ArrayList<Node> varaibles,ArrayList<Node> statements) {
         this.ident = ident;
-        this.params = Params;
+        this.params = params;
         this.varaibles = varaibles;
         this.statements = statements;
 
@@ -38,18 +38,32 @@ public class FunctionNode extends Node{
      *
      * @param params2 an array
      * @return
-     * the better version of arrayToString()
+     * the better version of arrayToString() I wrote. to avoid It printing a meme ad
      */
     public String ArraysToString(ArrayList<Node> params2) {
         StringBuilder t = new StringBuilder("[");
-        for(int i = 0; i < params2.size(); i++){
-            t.append(params2.get(i).ToString()).append(",");
+        for (Node node : params2) {
+            t.append(node.ToString()).append(",");
         }
         t.append("]");
         return t.toString();
     }
+
+    /**
+     * (all of them are.
+     * This returns name
+     * @return formated strings for everything. stcictly for debugging pruposes
+     */
     public String getIdent(){
         return this.ident;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String params(){
+        return ArraysToString(params);
     }
     public String vars(){
         return ArraysToString(varaibles);
