@@ -11,14 +11,15 @@ import java.io.*;
  * @Javadoc
  */
 public class IntegerNode extends  Node{
-    private int IntegerANomerul;
+    private int number;
     public Node right;
     public Node left;
+
     public IntegerNode(int integerANomerul) {
-        this.IntegerANomerul=integerANomerul;
+        this.number=integerANomerul;
     }
     public int getIntegerANomerul(){
-        return IntegerANomerul;
+        return number;
     }
 
     @Override

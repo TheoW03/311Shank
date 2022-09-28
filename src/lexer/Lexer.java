@@ -64,7 +64,6 @@ public class Lexer {
         boolean stateIsComment = false;
         for (int i1 = 0; i1 < data.size(); i1++) { //loop
             String dataTokensLine = data.get(i1); //token
-
             //this is an easter egg.
 //            if(dataTokensLine.contains("'1'-1") || dataTokensLine.contains("1-'1'")){
 //                throw new UnauthTokenException("shank >>>> java script");
@@ -266,6 +265,7 @@ public class Lexer {
                             buffer = "";
                         } //removes word buffer.
 
+                        //parenthdid for If and Define
                         if (currentChar == '(') {
                             if (dataTokensLine.charAt(i1 + 1) == '*') {
                                 stateIsComment = true;
@@ -283,7 +283,7 @@ public class Lexer {
                                 tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
                                 wordBuffer = "";
                             }
-
+                            //close paren
                         } else if (currentChar == ')') {
                             if (!wordBuffer.equals("")) {
                                 if (keyWords.get(wordBuffer) != null) {
@@ -296,11 +296,12 @@ public class Lexer {
                                 tokenDataR.add(new Token(Token.OPTokens.RParan, ")"));
                                 wordBuffer = "";
                             }
-                        } else if (Pattern.matches("[A-Za-z0-9]*", String.valueOf(currentChar))) {
-                            if (wordBuffer.equals(",") || wordBuffer.equals(":")) {
+                        } else if (Pattern.matches("[A-Za-z0-9+*/-]*", String.valueOf(currentChar))) { //Had to use a regex
+                            //decreases my line length
+                            if (wordBuffer.equals(",") || wordBuffer.equals(":")) { //destoryes buffer
                                 wordBuffer = "";
                             }
-                            wordBuffer += currentChar;
+                            wordBuffer += currentChar; //add to this
                         }else if (currentChar == '='){
                             wordBuffer += currentChar;
                             stateIsNum = true;
@@ -330,14 +331,10 @@ public class Lexer {
                         }
                         wordBuffer = "";
                         stateIsNum = true;
-//                        wordBuffer += currentChar;
                     }
                 }
-            } //eof
+            } //eol
             if (!wordBuffer.equals("")) {
-                //check if Keyword in hasmap
-                //if it is Return New Keyword token
-                //else return Identifire token.
                 if (keyWords.get(wordBuffer) != null) {
                     tokenDataR.add(keyWords.get(wordBuffer));
                 } else {
@@ -356,15 +353,6 @@ public class Lexer {
         }
         return tokenDataR; //salida
     }
-
-    /**
-     * @param word a
-     * @return im adding this to prevent spaghetti Code.
-     */
-    public Token whatWordIsIt(String word) {
-        return null;
-    }
-
     /**
      * @return string stuff
      * <p>

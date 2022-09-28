@@ -8,6 +8,7 @@ package lexer;
  */
 public class Token {
     //OP state
+    //note: dont forget to move everything over.
     public enum OPTokens{
         ADD("+","PLUS"),
         SUBTRACT("-","SUBTRACT"),
@@ -17,15 +18,24 @@ public class Token {
         LParan(")","Lparenthsis"),
         RParan("(","Rparenthsis"),
         NUMBER("0-9","NUMBER"),
+
+
+        //KEYWORDS
         IDENTIFIER("A-Z","WORD"),
         KEY_WORD("keyword","keyword"),
-
         BEGIN("begin","begin"),
         END("end","end"), //im adding this just because.
         INTEGER("Int","s"),FLOAT("f","f"),
         EQUALS("=","eq"),
         CONSTANTS("constants","c"),VARAIBLES("vars","v"), VAR("VAR","Var"),
-        DEFINE("define", "define"), EQUALITY_EUQUALS("==","checks for equality");
+        DEFINE("define", "define"),
+
+        //EQUAALITY
+        EQUALITY_EUQUALS("==","checks for equality"),
+        GREATER_THAN(">=","GT"),
+        LESS_THAN("<=","LT"),
+        NOT_EQUAL("!=","Not");
+
         private String s;
         private String value;
         OPTokens(String value,String s) {
@@ -39,7 +49,11 @@ public class Token {
             return  this.s;
         }
     }
+    //for later to prevent spaghetti code
     public enum keywords{
+
+    }
+    public enum equality{
 
     }
     private Token.OPTokens type;

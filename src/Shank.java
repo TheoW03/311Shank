@@ -2,6 +2,7 @@
 //pls comment out if problem.
 import lexer.Lexer;
 import lexer.Token;
+import lexer.UnauthTokenException;
 import parser.Parser;
 import parser.node.FunctionNode;
 
@@ -20,7 +21,12 @@ import java.util.ArrayList;
 //compiles. trust me bro ;)
 public class Shank {
     public static void main(String[] args) throws IOException {
-        LexerTestMethod();
+        try{
+            LexerTestMethod();
+        }catch (UnauthTokenException e){
+            System.out.println("lexxer threw exception"); //i read your feedback
+        }
+
         System.out.println("\n");
         System.out.println("sucess");
     }
@@ -28,7 +34,7 @@ public class Shank {
     /**
      *
      * @throws IOException file
-     * method to run becvause I didnt want to overload main
+     * method to run because I didnt want to overload main
      */
     public static void LexerTestMethod() throws IOException {
         String PATH = "src/TestFile";
@@ -44,6 +50,12 @@ public class Shank {
 
 
     }
+
+    /**
+     *
+     * @param a token
+     * parser test method to avoid overloading main
+     */
     public static void ParserTestMethod(ArrayList<Token> a){
         Parser p = new Parser(a);
         FunctionNode fn = (FunctionNode) p.parse();

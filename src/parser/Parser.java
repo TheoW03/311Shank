@@ -26,6 +26,11 @@ public class Parser {
         this.next = tokenList.get(1);
     }
 
+    /**
+     *
+     * @return entry point parserer
+     */
+
     public Node parse() {
         Node r = functionDef();
         System.out.println(r);
@@ -36,16 +41,20 @@ public class Parser {
         return r;
     }
 
+    /**
+     *
+     * @return statement node list for function node
+     */
+
     public ArrayList<Node> statements() {
 
         ArrayList<Node> nodeList = new ArrayList<>();
         while (true) {
-            System.out.println("the infinite one");
             Node a = assignments();
             if (a == null) {
-                return nodeList;
+                return nodeList; //return list
             }
-            nodeList.add(a);
+            nodeList.add(a); //add to list
         }
     }
 
@@ -54,7 +63,6 @@ public class Parser {
      */
 
     public Node assignments() {
-        System.out.println("the infinite one assign");
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
         Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null; //what it equals
         Node assignement = expression(); //assignment
@@ -65,14 +73,13 @@ public class Parser {
         if (equals == null || name == null || assignement == null) {
             throw new UnauthTokenException("Not a real statement");
         }
-
         return new AssignmentNode(new VaraibleReferenceNode(name), assignement); //return node
 
     }
 
 
     /**
-     *
+     * helper function to remove eol's
      */
     private void RemoveEOLS() {
         while (true) {
@@ -98,7 +105,6 @@ public class Parser {
                 if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) { //recode for enums
                     return constantList;
                 } else {
-                    System.out.println("e");
                     RemoveEOLS();
                 }
             }
@@ -114,7 +120,10 @@ public class Parser {
 
     }
 
-
+    /**
+     *
+     * @return array list VARnodes.
+     */
 
     public ArrayList<Node> processVaraibles() {
         ArrayList<Node> varList = new ArrayList<>();
@@ -144,6 +153,11 @@ public class Parser {
 
         }
     }
+
+    /**
+     *
+     * @return ches for begin and end.
+     */
 
     public Token bodyFunction() {
         //epic lambda moment
@@ -185,8 +199,8 @@ public class Parser {
                         varaibles.addAll(processVaraibles());
                     }
                 }
-                tokenList.get(0); //for debugger
-                varaibles.get(0);
+//                tokenList.get(0); //for debugger
+//                varaibles.get(0);
                 Token b = current;
                 Token a = bodyFunction();
                 RemoveEOLS();
