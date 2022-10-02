@@ -25,6 +25,7 @@ public class Shank {
             LexerTestMethod();
         }catch (UnauthTokenException e){
             System.out.println("lexxer threw exception"); //i read your feedback
+            e.printStackTrace();
         }
 
         System.out.println("\n");

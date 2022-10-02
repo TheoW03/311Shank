@@ -18,8 +18,7 @@ public class Token {
         LParan(")","Lparenthsis"),
         RParan("(","Rparenthsis"),
         NUMBER("0-9","NUMBER"),
-
-
+        MOD("mod","%"),
         //KEYWORDS
         IDENTIFIER("A-Z","WORD"),
         KEY_WORD("keyword","keyword"),
@@ -29,7 +28,8 @@ public class Token {
         EQUALS("=","eq"),
         CONSTANTS("constants","c"),VARAIBLES("vars","v"), VAR("VAR","Var"),
         DEFINE("define", "define"),
-
+        IF("if"),
+        FOR("for"),
         //EQUAALITY
         EQUALITY_EUQUALS("==","checks for equality"),
         GREATER_THAN_EQUALS(">=","GTE"),
@@ -43,6 +43,9 @@ public class Token {
         OPTokens(String value,String s) {
             this.s = s;
             this.value=value;
+        }
+        OPTokens(String s){
+            this.s = s;
         }
 
 

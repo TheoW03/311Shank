@@ -35,6 +35,9 @@ public class Lexer {
         keyWords.put(">", new Token(Token.OPTokens.GREATER_THAN, ">")); //this is for the time comes.
         keyWords.put("<=", new Token(Token.OPTokens.LESS_THAN_EQAUALS, "<=")); //this is for the time comes.
         keyWords.put(">=", new Token(Token.OPTokens.GREATER_THAN_EQUALS, ">=")); //this is for the time comes.
+        keyWords.put("mod", new Token(Token.OPTokens.MOD, "mod")); //this is for the time comes.
+        keyWords.put("if", new Token(Token.OPTokens.IF, "if")); //this is for the time comes.
+        keyWords.put("for", new Token(Token.OPTokens.FOR, "for")); //this is for the time comes.
         keyWords.put("var", new Token(Token.OPTokens.VAR, "var"));
 
     }

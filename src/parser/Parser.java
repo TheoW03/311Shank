@@ -27,7 +27,6 @@ public class Parser {
     }
 
     /**
-     *
      * @return entry point parserer
      */
 
@@ -42,7 +41,6 @@ public class Parser {
     }
 
     /**
-     *
      * @return statement node list for function node
      */
 
@@ -64,7 +62,14 @@ public class Parser {
 
     public Node assignments() {
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
-        Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null; //what it equals
+
+        //begin
+        Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current :
+                (matchAndRemove(Token.OPTokens.LESS_THAN) != null) ? current :
+                        (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
+                                (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
+                                        (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current : null; //what it equals
+        //end
         Node assignement = expression(); //assignment
         RemoveEOLS();
         if (assignement == null && name == null) {
@@ -121,7 +126,6 @@ public class Parser {
     }
 
     /**
-     *
      * @return array list VARnodes.
      */
 
@@ -155,7 +159,6 @@ public class Parser {
     }
 
     /**
-     *
      * @return ches for begin and end.
      */
 
@@ -316,7 +319,8 @@ public class Parser {
         System.out.println("=======================");
         Node opNode = this.factor();
         Token op = (matchAndRemove(Token.OPTokens.MULTIPLY) != null) ? current :
-                (matchAndRemove(Token.OPTokens.DIVIDE) != null) ? current : null;
+                (matchAndRemove(Token.OPTokens.DIVIDE) != null) ? current :
+                        (matchAndRemove(Token.OPTokens.MOD) != null) ? current : null;
         if (op != null) {
             //loop.
             Node node = null;
@@ -325,7 +329,8 @@ public class Parser {
             while (true) {
                 if (node != null) {
                     op = (matchAndRemove(Token.OPTokens.MULTIPLY) != null) ? current :
-                            (matchAndRemove(Token.OPTokens.DIVIDE) != null) ? current : null;
+                            (matchAndRemove(Token.OPTokens.DIVIDE) != null) ? current :
+                                    (matchAndRemove(Token.OPTokens.MOD) != null) ? current : null;
                 }
                 if (op == null) {
                     return opNode;
