@@ -32,8 +32,10 @@ public class Token {
 
         //EQUAALITY
         EQUALITY_EUQUALS("==","checks for equality"),
-        GREATER_THAN(">=","GT"),
-        LESS_THAN("<=","LT"),
+        GREATER_THAN_EQUALS(">=","GTE"),
+        LESS_THAN_EQAUALS("<=","LTE"),
+        GREATER_THAN(">","GT"),
+        LESS_THAN("<","LT"),
         NOT_EQUAL("!=","Not");
 
         private String s;

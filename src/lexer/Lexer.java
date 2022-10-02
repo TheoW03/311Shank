@@ -31,6 +31,10 @@ public class Lexer {
         keyWords.put("variables", new Token(Token.OPTokens.VARAIBLES, "variables"));
         keyWords.put(":=", new Token(Token.OPTokens.EQUALS, "="));
         keyWords.put("==", new Token(Token.OPTokens.EQUALITY_EUQUALS, "==")); //this is for the time comes.
+        keyWords.put("<", new Token(Token.OPTokens.LESS_THAN, "<")); //this is for the time comes.
+        keyWords.put(">", new Token(Token.OPTokens.GREATER_THAN, ">")); //this is for the time comes.
+        keyWords.put("<=", new Token(Token.OPTokens.LESS_THAN_EQAUALS, "<=")); //this is for the time comes.
+        keyWords.put(">=", new Token(Token.OPTokens.GREATER_THAN_EQUALS, ">=")); //this is for the time comes.
         keyWords.put("var", new Token(Token.OPTokens.VAR, "var"));
 
     }
@@ -54,13 +58,12 @@ public class Lexer {
         ArrayList<Token> tokenDataR = new ArrayList<>();
         int lineNum = 1;
         String buffer;
-        boolean stateIsWord = false;
         boolean stateIsNum = false;
         int state = 1;
-        int wordState = 1;
         char currentChar;
         String wordBuffer = "";
         char esMutiple = '\0';
+        int wordState = 1;
         boolean stateIsComment = false;
         for (int i1 = 0; i1 < data.size(); i1++) { //loop
             String dataTokensLine = data.get(i1); //token
@@ -71,8 +74,6 @@ public class Lexer {
             buffer = ""; //\\
             for (int i = 0; i < dataTokensLine.length(); ++i) {
                 currentChar = dataTokensLine.charAt(i); //each token
-//                stateIsWord = Pattern.matches("[:=a-zA-Z\",]*", String.valueOf(currentChar)); //regex moment :D
-//                stateIsNum = Pattern.matches("[0-9+*)/(.-]*", String.valueOf(currentChar)); //regex moment WTF phipps.
                 char a = currentChar;
                 //ignore comments
                 if (currentChar == '(' && dataTokensLine.charAt(i + 1) == '*') {
@@ -94,11 +95,9 @@ public class Lexer {
                         case '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '*', '/', ')', '(', '.', '-' -> { //can I regex
                         }
                         default -> {
-                            System.out.println(currentChar);
                             stateIsNum = false;
                         }
                     }
-
                     if (stateIsNum) {
                         if (!wordBuffer.equals("")) {
                             if (keyWords.get(wordBuffer) != null) { //get out of word state
@@ -245,7 +244,7 @@ public class Lexer {
 
                         } else if (state == 4) {
 
-                        } else if (state == 5) { //es decimal .
+                        } else if (state == 5) {
                             buffer += currentChar;
                             switch (currentChar) {
                                 case '+', '-', '*', '/' -> {
@@ -259,67 +258,138 @@ public class Lexer {
                             throw new UnauthTokenException("error");
                         }
                     } else { //clear
-
                         if (!buffer.equals("")) {
                             tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
                             buffer = "";
                         } //removes word buffer.
+                        if (wordState == 1) {
+                            switch (currentChar) {
+                                case ',', ':' -> {
+                                    if(!wordBuffer.equals("")){
+                                        if (keyWords.get(wordBuffer) != null) {
+                                            tokenDataR.add(keyWords.get(wordBuffer));
 
-                        //parenthdid for If and Define
-                        if (currentChar == '(') {
-                            if (dataTokensLine.charAt(i1 + 1) == '*') {
-                                stateIsComment = true;
-                                System.out.println("e");
-                                continue;
-                            }
-                            if (!wordBuffer.equals("")) {
-                                if (keyWords.get(wordBuffer) != null) {
-                                    tokenDataR.add(keyWords.get(wordBuffer));
-
-                                } else {
-                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                        } else {
+                                            tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                        }
+                                    }
+                                    wordBuffer = "";
+                                    wordBuffer += currentChar;
+                                    wordState = 2;
+                                    stateIsNum = true;
                                 }
-                                stateIsNum = true;
-                                tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
-                                wordBuffer = "";
-                            }
-                            //close paren
-                        } else if (currentChar == ')') {
-                            if (!wordBuffer.equals("")) {
-                                if (keyWords.get(wordBuffer) != null) {
-                                    tokenDataR.add(keyWords.get(wordBuffer));
-
-                                } else {
-                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                case '=','<','>' -> {
+                                    stateIsNum = true;
+                                    wordBuffer += currentChar;
+                                    wordState = 3;
                                 }
-                                stateIsNum = true;
-                                tokenDataR.add(new Token(Token.OPTokens.RParan, ")"));
-                                wordBuffer = "";
+                                case '(', ')' -> {
+                                    if(!wordBuffer.equals("")){
+                                        if (keyWords.get(wordBuffer) != null) {
+                                            tokenDataR.add(keyWords.get(wordBuffer));
+
+                                        } else {
+                                            tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                        }
+                                        wordBuffer = "";
+                                    }
+                                    if (currentChar == '(') {
+                                        if (dataTokensLine.charAt(i1 + 1) == '*') {
+                                            stateIsComment = true;
+                                            System.out.println("e");
+                                            continue;
+                                        }
+                                        tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
+                                    } else {
+                                        tokenDataR.add(new Token(Token.OPTokens.RParan, ")"));
+                                    }
+                                    stateIsNum = true;
+                                }
+                                default -> {
+                                  wordBuffer += currentChar;
+                                }
                             }
-                        } else if (Pattern.matches("[A-Za-z0-9+*/-]*", String.valueOf(currentChar))) { //Had to use a regex
-                            //decreases my line length
+
+
+
+                        } else if (wordState == 2) {
+
                             if (wordBuffer.equals(",") || wordBuffer.equals(":")) { //destoryes buffer
-                                wordBuffer = "";
-                            }
-                            wordBuffer += currentChar; //add to this
-                        }else if (currentChar == '='){
-                            wordBuffer += currentChar;
-                            stateIsNum = true;
-                        } else if (currentChar == ':' || currentChar == ',') {
-                            if (!wordBuffer.equals("")) {
-                                if (keyWords.get(wordBuffer) != null) {
-                                    tokenDataR.add(keyWords.get(wordBuffer));
+                                if(currentChar == '='){
+                                    wordBuffer += currentChar; //add to this
+                                    stateIsNum = true;
+                                }else{
+                                    wordBuffer = "";
+                                    wordBuffer += currentChar; //add to this
 
-                                } else {
-                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
                                 }
+                            }else{
+                                wordBuffer += currentChar; //add to this
                             }
+                            wordState = 1;
+                        } else if (wordState == 3) { //==
+                            wordBuffer += currentChar;
+                            wordState = 1;
                             stateIsNum = true;
-                            wordBuffer = "";
-                            wordBuffer += currentChar;
+                        } else if (wordState == 4) {
+                            state = 1;
                         } else {
-                            wordBuffer += currentChar;
+                            state = 1;
                         }
+                        //parenthdid for If and Define
+//                        if (currentChar == '(') {
+//                            if (dataTokensLine.charAt(i1 + 1) == '*') {
+//                                stateIsComment = true;
+//                                System.out.println("e");
+//                                continue;
+//                            }
+//                            if (!wordBuffer.equals("")) {
+//                                if (keyWords.get(wordBuffer) != null) {
+//                                    tokenDataR.add(keyWords.get(wordBuffer));
+//
+//                                } else {
+//                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+//                                }
+//                                stateIsNum = true;
+//                                tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
+//                                wordBuffer = "";
+//                            }
+//                            //close paren
+//                        } else if (currentChar == ')') {
+//                            if (!wordBuffer.equals("")) {
+//                                if (keyWords.get(wordBuffer) != null) {
+//                                    tokenDataR.add(keyWords.get(wordBuffer));
+//
+//                                } else {
+//                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+//                                }
+//                                stateIsNum = true;
+//                                tokenDataR.add(new Token(Token.OPTokens.RParan, ")"));
+//                                wordBuffer = "";
+//                            }
+//                        } else if (Pattern.matches("[A-Za-z0-9+*/-]*", String.valueOf(currentChar))) { //Had to use a regex
+//                            //decreases my line length
+//                            if (wordBuffer.equals(",") || wordBuffer.equals(":")) { //destoryes buffer
+//                                wordBuffer = "";
+//                            }
+//                            wordBuffer += currentChar; //add to this
+//                        }else if (currentChar == '='){
+//                            wordBuffer += currentChar;
+//                            stateIsNum = true;
+//                        } else if (currentChar == ':' || currentChar == ',') {
+//                            if (!wordBuffer.equals("")) {
+//                                if (keyWords.get(wordBuffer) != null) {
+//                                    tokenDataR.add(keyWords.get(wordBuffer));
+//                                } else {
+//                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+//                                }
+//                            }
+//                            stateIsNum = true;
+//                            wordBuffer = "";
+//                            wordBuffer += currentChar;
+//                        } else {
+//                            wordBuffer += currentChar;
+//                        }
 
                     }
                 } else { //space clears buffer
@@ -353,6 +423,7 @@ public class Lexer {
         }
         return tokenDataR; //salida
     }
+
     /**
      * @return string stuff
      * <p>
