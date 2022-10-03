@@ -308,13 +308,36 @@ public class Lexer {
                                     }
                                     stateIsNum = true;
                                 }
+                                case'+','-','*','/'->{
+                                    if(!wordBuffer.equals("")){
+                                        if (keyWords.get(wordBuffer) != null) {
+                                            tokenDataR.add(keyWords.get(wordBuffer));
+
+                                        } else {
+                                            tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                        }
+                                        wordBuffer = "";
+                                    }
+                                    switch (currentChar){
+                                        case '+' ->{
+                                            tokenDataR.add(new Token(Token.OPTokens.ADD,"+"));
+                                        }
+                                        case '-' ->{
+                                            tokenDataR.add(new Token(Token.OPTokens.SUBTRACT,"-"));
+                                        }
+                                        case '*' ->{
+                                            tokenDataR.add(new Token(Token.OPTokens.DIVIDE,"/"));
+                                        }
+                                        case '/' ->{
+                                            tokenDataR.add(new Token(Token.OPTokens.MULTIPLY,"*"));
+                                        }
+                                    }
+                                    stateIsNum = true;
+                                }
                                 default -> {
                                   wordBuffer += currentChar;
                                 }
                             }
-
-
-
                         } else if (wordState == 2) {
 
                             if (wordBuffer.equals(",") || wordBuffer.equals(":")) { //destoryes buffer
@@ -339,61 +362,6 @@ public class Lexer {
                         } else {
                             state = 1;
                         }
-                        //parenthdid for If and Define
-//                        if (currentChar == '(') {
-//                            if (dataTokensLine.charAt(i1 + 1) == '*') {
-//                                stateIsComment = true;
-//                                System.out.println("e");
-//                                continue;
-//                            }
-//                            if (!wordBuffer.equals("")) {
-//                                if (keyWords.get(wordBuffer) != null) {
-//                                    tokenDataR.add(keyWords.get(wordBuffer));
-//
-//                                } else {
-//                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
-//                                }
-//                                stateIsNum = true;
-//                                tokenDataR.add(new Token(Token.OPTokens.LParan, "("));
-//                                wordBuffer = "";
-//                            }
-//                            //close paren
-//                        } else if (currentChar == ')') {
-//                            if (!wordBuffer.equals("")) {
-//                                if (keyWords.get(wordBuffer) != null) {
-//                                    tokenDataR.add(keyWords.get(wordBuffer));
-//
-//                                } else {
-//                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
-//                                }
-//                                stateIsNum = true;
-//                                tokenDataR.add(new Token(Token.OPTokens.RParan, ")"));
-//                                wordBuffer = "";
-//                            }
-//                        } else if (Pattern.matches("[A-Za-z0-9+*/-]*", String.valueOf(currentChar))) { //Had to use a regex
-//                            //decreases my line length
-//                            if (wordBuffer.equals(",") || wordBuffer.equals(":")) { //destoryes buffer
-//                                wordBuffer = "";
-//                            }
-//                            wordBuffer += currentChar; //add to this
-//                        }else if (currentChar == '='){
-//                            wordBuffer += currentChar;
-//                            stateIsNum = true;
-//                        } else if (currentChar == ':' || currentChar == ',') {
-//                            if (!wordBuffer.equals("")) {
-//                                if (keyWords.get(wordBuffer) != null) {
-//                                    tokenDataR.add(keyWords.get(wordBuffer));
-//                                } else {
-//                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
-//                                }
-//                            }
-//                            stateIsNum = true;
-//                            wordBuffer = "";
-//                            wordBuffer += currentChar;
-//                        } else {
-//                            wordBuffer += currentChar;
-//                        }
-
                     }
                 } else { //space clears buffer
                     if (!wordBuffer.equals("")) {

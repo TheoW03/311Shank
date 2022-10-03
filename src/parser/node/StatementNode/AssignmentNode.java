@@ -11,9 +11,9 @@ import parser.node.VaraibleNode;
  * @Javadoc j
  */
 public class AssignmentNode extends StatementNode {
-    private VaraibleReferenceNode var;
+    private Node var;
     private Node math;
-    public AssignmentNode(VaraibleReferenceNode var, Node math){
+    public AssignmentNode(Node var, Node math){
         this.var = var;
         this.math = math;
     }

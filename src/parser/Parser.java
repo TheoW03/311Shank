@@ -26,10 +26,36 @@ public class Parser {
         this.next = tokenList.get(1);
     }
 
+
+    /**
+     *
+     * @return boolean expression node
+     */
+    public Node boolDef() {
+        Node left = expression();
+        Token operator = (matchAndRemove(Token.OPTokens.EQUALITY_EUQUALS) != null) ? current :
+                (matchAndRemove(Token.OPTokens.LESS_THAN) != null) ? current :
+                        (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
+                                (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
+                                        (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current : null;
+        if(left == null && operator == null){
+            return null;
+        }
+        if(operator == null){
+            return left;
+        }
+
+        Node right = expression();
+        return new BooleanNode(right,left,operator);
+    }
+
+    public Node IfDef() {
+        return null;
+    }
+
     /**
      * @return entry point parserer
      */
-
     public Node parse() {
         Node r = functionDef();
         System.out.println(r);
@@ -45,7 +71,6 @@ public class Parser {
      */
 
     public ArrayList<Node> statements() {
-
         ArrayList<Node> nodeList = new ArrayList<>();
         while (true) {
             Node a = assignments();
@@ -62,15 +87,12 @@ public class Parser {
 
     public Node assignments() {
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
-
         //begin
-        Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current :
-                (matchAndRemove(Token.OPTokens.LESS_THAN) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
-                                (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
-                                        (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current : null; //what it equals
+        Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null; //what it equals
         //end
-        Node assignement = expression(); //assignment
+        Node ifBool = boolDef();
+        Node ifExp = expression();
+        Node assignement = (ifBool != null) ? ifBool : ifExp; //assignment
         RemoveEOLS();
         if (assignement == null && name == null) {
             return null;
@@ -360,6 +382,8 @@ public class Parser {
             matchAndRemove(Token.OPTokens.NUMBER);
 //            System.out.println("Node output es Nomeral: " + a);
             return new FloatNode(a);
+        }else if(matchAndRemove(Token.OPTokens.IDENTIFIER) != null) {
+            return new VaraibleReferenceNode(current);
         } else if (matchAndRemove(Token.OPTokens.LParan) != null) {
             Node node = expression();
 //            System.out.println("Node output es Paran: " + node.ToString());

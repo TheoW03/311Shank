@@ -5,7 +5,6 @@ constants
 variables
   integer FibNumAtn := 0 (*hi*)
 begin
- FibNumATn2 := 89 mod 8
- Fib > 90
- Fib := 10 mod 2
+ FibN := Fib == 90
+ FibN := b+2*a
 end
