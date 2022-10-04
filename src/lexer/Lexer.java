@@ -20,7 +20,6 @@ public class Lexer {
     public Lexer(ArrayList<String> data) {
         this.data = data;
         //im just going to add all possible key words so I dont have to worry
-        keyWords.put("integer:", new Token(Token.OPTokens.KEY_WORD, "integer"));
         keyWords.put("integer", new Token(Token.OPTokens.INTEGER, "integer"));
         keyWords.put("float", new Token(Token.OPTokens.FLOAT, "float"));
         keyWords.put("define", new Token(Token.OPTokens.DEFINE, "define"));
@@ -30,16 +29,27 @@ public class Lexer {
         keyWords.put("write", new Token(Token.OPTokens.KEY_WORD, "write"));
         keyWords.put("variables", new Token(Token.OPTokens.VARAIBLES, "variables"));
         keyWords.put(":=", new Token(Token.OPTokens.EQUALS, "="));
-        keyWords.put("==", new Token(Token.OPTokens.EQUALITY_EUQUALS, "==")); //this is for the time comes.
+        keyWords.put("=", new Token(Token.OPTokens.EQUALITY_EUQUALS, "==")); //this is for the time comes.
         keyWords.put("<", new Token(Token.OPTokens.LESS_THAN, "<")); //this is for the time comes.
         keyWords.put(">", new Token(Token.OPTokens.GREATER_THAN, ">")); //this is for the time comes.
         keyWords.put("<=", new Token(Token.OPTokens.LESS_THAN_EQAUALS, "<=")); //this is for the time comes.
         keyWords.put(">=", new Token(Token.OPTokens.GREATER_THAN_EQUALS, ">=")); //this is for the time comes.
         keyWords.put("mod", new Token(Token.OPTokens.MOD, "mod")); //this is for the time comes.
+        //begin if
         keyWords.put("if", new Token(Token.OPTokens.IF, "if")); //this is for the time comes.
+        keyWords.put("then", new Token(Token.OPTokens.THEN, "then"));
+        keyWords.put("elseif", new Token(Token.OPTokens.ELSE_IF, "elseif"));
+        //end
+        //begin for
         keyWords.put("for", new Token(Token.OPTokens.FOR, "for")); //this is for the time comes.
+        keyWords.put("from", new Token(Token.OPTokens.FROM, "from"));
+        keyWords.put("to", new Token(Token.OPTokens.TO, "to"));
         keyWords.put("var", new Token(Token.OPTokens.VAR, "var"));
-
+        //begin while
+        keyWords.put("while", new Token(Token.OPTokens.WHILE, "while"));
+        keyWords.put("repeat", new Token(Token.OPTokens.REPEAT, "repeat"));
+        keyWords.put("until", new Token(Token.OPTokens.UNTIL, "until"));
+        //end
     }
 
     /**
@@ -92,7 +102,7 @@ public class Lexer {
                     continue;
                 }
                 //ooperator.
-                if (currentChar != ' ') {
+                if (currentChar != ' ' && currentChar != '\0' && currentChar != '\t') {
 
                     switch (currentChar) {
                         case '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '+', '*', '/', ')', '(', '.', '-' -> { //can I regex
@@ -261,14 +271,20 @@ public class Lexer {
                             throw new UnauthTokenException("error");
                         }
                     } else { //clear
+                        if(currentChar == ' '){ //space bug in java?
+                            continue;
+                        }
                         if (!buffer.equals("")) {
                             tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
                             buffer = "";
+
                         } //removes word buffer.
+                        int a1 = wordState;
+                        char b1 = currentChar;
                         if (wordState == 1) {
                             switch (currentChar) {
                                 case ',', ':' -> {
-                                    if(!wordBuffer.equals("")){
+                                    if (!wordBuffer.equals("")) {
                                         if (keyWords.get(wordBuffer) != null) {
                                             tokenDataR.add(keyWords.get(wordBuffer));
 
@@ -281,13 +297,22 @@ public class Lexer {
                                     wordState = 2;
                                     stateIsNum = true;
                                 }
-                                case '=','<','>' -> {
+                                case '=', '<', '>' -> {
+                                    if (!wordBuffer.equals("")) {
+                                        if (keyWords.get(wordBuffer) != null) {
+                                            tokenDataR.add(keyWords.get(wordBuffer));
+
+                                        } else {
+                                            tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                        }
+                                        wordBuffer = "";
+                                    }
                                     stateIsNum = true;
                                     wordBuffer += currentChar;
                                     wordState = 3;
                                 }
                                 case '(', ')' -> {
-                                    if(!wordBuffer.equals("")){
+                                    if (!wordBuffer.equals("")) {
                                         if (keyWords.get(wordBuffer) != null) {
                                             tokenDataR.add(keyWords.get(wordBuffer));
 
@@ -308,8 +333,8 @@ public class Lexer {
                                     }
                                     stateIsNum = true;
                                 }
-                                case'+','-','*','/'->{
-                                    if(!wordBuffer.equals("")){
+                                case '+', '-', '*', '/' -> {
+                                    if (!wordBuffer.equals("")) {
                                         if (keyWords.get(wordBuffer) != null) {
                                             tokenDataR.add(keyWords.get(wordBuffer));
 
@@ -318,45 +343,77 @@ public class Lexer {
                                         }
                                         wordBuffer = "";
                                     }
-                                    switch (currentChar){
-                                        case '+' ->{
-                                            tokenDataR.add(new Token(Token.OPTokens.ADD,"+"));
+                                    switch (currentChar) {
+                                        case '+' -> {
+                                            tokenDataR.add(new Token(Token.OPTokens.ADD, "+"));
                                         }
-                                        case '-' ->{
-                                            tokenDataR.add(new Token(Token.OPTokens.SUBTRACT,"-"));
+                                        case '-' -> {
+                                            tokenDataR.add(new Token(Token.OPTokens.SUBTRACT, "-"));
                                         }
-                                        case '*' ->{
-                                            tokenDataR.add(new Token(Token.OPTokens.DIVIDE,"/"));
+                                        case '*' -> {
+                                            tokenDataR.add(new Token(Token.OPTokens.DIVIDE, "/"));
                                         }
-                                        case '/' ->{
-                                            tokenDataR.add(new Token(Token.OPTokens.MULTIPLY,"*"));
+                                        case '/' -> {
+                                            tokenDataR.add(new Token(Token.OPTokens.MULTIPLY, "*"));
                                         }
                                     }
                                     stateIsNum = true;
                                 }
                                 default -> {
-                                  wordBuffer += currentChar;
+                                    wordBuffer += currentChar;
                                 }
                             }
                         } else if (wordState == 2) {
 
                             if (wordBuffer.equals(",") || wordBuffer.equals(":")) { //destoryes buffer
-                                if(currentChar == '='){
+                                if (currentChar == '=') {
                                     wordBuffer += currentChar; //add to this
+                                    wordState = 3;
                                     stateIsNum = true;
-                                }else{
+                                } else {
                                     wordBuffer = "";
                                     wordBuffer += currentChar; //add to this
-
+                                    wordState = 1;
                                 }
-                            }else{
+                            } else {
                                 wordBuffer += currentChar; //add to this
+                                wordState = 1;
                             }
-                            wordState = 1;
+
                         } else if (wordState == 3) { //==
-                            wordBuffer += currentChar;
-                            wordState = 1;
-                            stateIsNum = true;
+                            switch (currentChar) {
+                                case '<', '=', '>' -> {
+
+                                    wordBuffer += currentChar;
+                                    wordState = 1;
+                                    stateIsNum = true;
+                                    if (!wordBuffer.equals("")) {
+                                        if (keyWords.get(wordBuffer) != null) {
+                                            tokenDataR.add(keyWords.get(wordBuffer));
+
+                                        } else {
+                                            tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                        }
+                                        wordBuffer = "";
+                                    }
+                                }
+                                default -> {
+                                    if (!wordBuffer.equals("")) {
+                                        if (keyWords.get(wordBuffer) != null) {
+                                            tokenDataR.add(keyWords.get(wordBuffer));
+
+                                        } else {
+                                            tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                        }
+                                        wordBuffer = "";
+                                    }
+                                    wordBuffer += currentChar;
+                                    wordState = 1;
+                                    stateIsNum = true;
+                                }
+
+                            }
+
                         } else if (wordState == 4) {
                             state = 1;
                         } else {

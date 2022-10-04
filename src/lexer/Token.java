@@ -20,16 +20,26 @@ public class Token {
         NUMBER("0-9","NUMBER"),
         MOD("mod","%"),
         //KEYWORDS
+
         IDENTIFIER("A-Z","WORD"),
         KEY_WORD("keyword","keyword"),
         BEGIN("begin","begin"),
         END("end","end"), //im adding this just because.
+        //vars
         INTEGER("Int","s"),FLOAT("f","f"),
         EQUALS("=","eq"),
         CONSTANTS("constants","c"),VARAIBLES("vars","v"), VAR("VAR","Var"),
+        //define
         DEFINE("define", "define"),
         IF("if"),
         FOR("for"),
+        ELSE_IF("elseif"),
+        FROM("from"),
+        TO("to"),
+        UNTIL("until"),
+        REPEAT("repeat"),
+        THEN("Then"),
+        WHILE("while"),
         //EQUAALITY
         EQUALITY_EUQUALS("==","checks for equality"),
         GREATER_THAN_EQUALS(">=","GTE"),
