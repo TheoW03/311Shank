@@ -44,13 +44,28 @@ public class Parser {
         if(operator == null){
             return left;
         }
-
         Node right = expression();
         return new BooleanNode(right,left,operator);
     }
 
     public Node IfDef() {
-        return null;
+        Node boolExp = boolDef();
+        Token then = matchAndRemove(Token.OPTokens.THEN);
+        if(then == null || boolExp == null){
+            throw new UnauthTokenException("not a real if statement");
+        }
+        RemoveEOLS();
+        Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+        if(begin == null){
+            return null;
+        }
+        ArrayList<Node> statementL = statements();
+        RemoveEOLS();
+        Token end = matchAndRemove(Token.OPTokens.END);
+        if(end == null){
+            throw new UnauthTokenException("where does the if end");
+        }
+        return new ifNode(boolExp,statementL);
     }
 
     /**
@@ -86,6 +101,11 @@ public class Parser {
      */
 
     public Node assignments() {
+        RemoveEOLS();
+        if(matchAndRemove(Token.OPTokens.IF) != null){
+            return IfDef();
+        }
+        RemoveEOLS();
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
         //begin
         Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null; //what it equals

@@ -7,4 +7,12 @@ variables
 begin
   FibN := Fib=90
   FibN := b+2*a
+  if FibN = Fib then
+  begin
+    if FibN = a then
+    begin
+        Fib2 := 0
+    end
+    Fib2 := 1+1
+  end
 end
