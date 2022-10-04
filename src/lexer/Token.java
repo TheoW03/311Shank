@@ -34,6 +34,7 @@ public class Token {
         IF("if"),
         FOR("for"),
         ELSE_IF("elseif"),
+        ELSE("else"),
         FROM("from"),
         TO("to"),
         UNTIL("until"),

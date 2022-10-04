@@ -26,7 +26,18 @@ public class Parser {
         this.next = tokenList.get(1);
     }
 
-
+    /**
+     * @return entry point parserer
+     */
+    public Node parse() {
+        Node r = functionDef();
+        System.out.println(r);
+        if (r == null) {
+            System.out.println("Es null");
+            throw new UnauthTokenException("error parsing" + current);
+        }
+        return r;
+    }
     /**
      *
      * @return boolean expression node
@@ -48,6 +59,50 @@ public class Parser {
         return new BooleanNode(right,left,operator);
     }
 
+    /**
+     *
+     * @return for node. specifically parsing for nodes
+     */
+    public Node forDef(){
+        RemoveEOLS();
+        Token varaibleBeginIn = matchAndRemove(Token.OPTokens.IDENTIFIER);
+        RemoveEOLS();
+        if(matchAndRemove(Token.OPTokens.FROM) == null){
+            throw new UnauthTokenException("syntax error");
+        }
+
+        Token beginV = (matchAndRemove(Token.OPTokens.NUMBER) != null)?current:(matchAndRemove(Token.OPTokens.IDENTIFIER) != null)?current:null;
+        if(matchAndRemove(Token.OPTokens.TO) == null){
+            throw new UnauthTokenException("syntax error"); //funny thing is these are uneeded :laugh:
+        }
+        //so u can have a Var condition if u want/number
+        Token endV = (matchAndRemove(Token.OPTokens.NUMBER) != null)?current:(matchAndRemove(Token.OPTokens.IDENTIFIER) != null)?current:null;
+        RemoveEOLS();
+        Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+        RemoveEOLS();
+        ArrayList<Node> statement = statements();
+        RemoveEOLS();
+        Token end = matchAndRemove(Token.OPTokens.END);
+        RemoveEOLS();
+        if(begin == null || end == null){
+            throw new UnauthTokenException("No begin or end in for loop");
+        }
+        return new ForNode(new VaraibleReferenceNode(varaibleBeginIn),new VaraibleReferenceNode(beginV),new VaraibleReferenceNode(endV),statement);
+    }
+
+    /**
+     * @return while nodes
+     */
+    public Node whileDef(){
+        RemoveEOLS();
+        Node condition = boolDef();
+        return new WhileNode(condition,null);
+    }
+
+    /**
+     *
+     * @return if nodes
+     */
     public Node IfDef() {
         Node boolExp = boolDef();
         Token then = matchAndRemove(Token.OPTokens.THEN);
@@ -68,18 +123,7 @@ public class Parser {
         return new ifNode(boolExp,statementL);
     }
 
-    /**
-     * @return entry point parserer
-     */
-    public Node parse() {
-        Node r = functionDef();
-        System.out.println(r);
-        if (r == null) {
-            System.out.println("Es null");
-            throw new UnauthTokenException("error parsing" + current);
-        }
-        return r;
-    }
+
 
     /**
      * @return statement node list for function node
@@ -102,8 +146,16 @@ public class Parser {
 
     public Node assignments() {
         RemoveEOLS();
-        if(matchAndRemove(Token.OPTokens.IF) != null){
+        if(matchAndRemove(Token.OPTokens.IF) != null
+                || matchAndRemove(Token.OPTokens.ELSE_IF) != null
+                || matchAndRemove(Token.OPTokens.ELSE) != null){
             return IfDef();
+        }
+        if(matchAndRemove(Token.OPTokens.WHILE) != null){
+            return whileDef();
+        }
+        if(matchAndRemove(Token.OPTokens.FOR) != null){
+            return forDef();
         }
         RemoveEOLS();
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
