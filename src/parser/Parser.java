@@ -38,6 +38,11 @@ public class Parser {
         }
         return r;
     }
+
+    /**
+     *
+     * @return returns elseif node
+     */
     public Node ElseIfDef(){
         RemoveEOLS();
         Node condition = boolDef();
@@ -48,20 +53,28 @@ public class Parser {
         RemoveEOLS();
         Token begin = matchAndRemove(Token.OPTokens.BEGIN);
         RemoveEOLS();
-        ArrayList<Node> statement = statements();
+        ArrayList<Node> statement = statements(); //statenents
         RemoveEOLS();
         Token end = matchAndRemove(Token.OPTokens.END);
         RemoveEOLS();
         if(condition == null || statement == null || begin == null || end == null){
             throw new UnauthTokenException("ELse if has no condition");
         }
-        return new ElseNode(condition,statement);
+        return new ElseNode(condition,statement); //else if bide
     }
+
+    /**
+     *
+     * @return else node.
+     */
     public Node ElseDef(){
-        Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+        Token begin = matchAndRemove(Token.OPTokens.BEGIN); //end
         ArrayList<Node> statement = statements();
-        Token end = matchAndRemove(Token.OPTokens.END);
-        return new ElseNode(statement);
+        Token end = matchAndRemove(Token.OPTokens.END); //begin
+        if(begin == null || end == null){
+            throw new UnauthTokenException("syntax error ");
+        }
+        return new ElseNode(statement); //new node
     }
 
     /**
@@ -74,14 +87,14 @@ public class Parser {
                         (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
                                 (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
                                         (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current :
-                                                (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current : null;
-        if (left == null && operator == null) {
+                                                (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current : null; //big block checks for more stuff
+        if (left == null && operator == null) { //if left and right are null
             return null;
         }
-        if (operator == null) {
+        if (operator == null) { //Return the left for recursion
             return left;
         }
-        Node right = expression();
+        Node right = expression(); //REEE :D
         return new BooleanNode(right, left, operator);
     }
 
@@ -113,19 +126,25 @@ public class Parser {
         return new ForNode(new VaraibleReferenceNode(varaibleBeginIn), new VaraibleReferenceNode(beginV), new VaraibleReferenceNode(endV), statement);
     }
 
+    /**
+     *
+     * @return do until
+     */
     public Node DoUntilDef() {
         RemoveEOLS();
         RemoveEOLS();
-        Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+        Token begin = matchAndRemove(Token.OPTokens.BEGIN); //begin
         RemoveEOLS();
-        ArrayList<Node> statements = statements();
+        ArrayList<Node> statements = statements(); //stats
         Token end = matchAndRemove(Token.OPTokens.END);
         RemoveEOLS();
-        matchAndRemove(Token.OPTokens.UNTIL);
+        if( matchAndRemove(Token.OPTokens.UNTIL) == null || end == null || begin == null){
+            throw  new UnauthTokenException("syntax error");
+        }
         RemoveEOLS();
-        Node condition = boolDef();
+        Node condition = boolDef(); //Yk
         RemoveEOLS();
-        return new RepeatNode(statements, condition);
+        return new RepeatNode(statements, condition); //return node
     }
 
     /**
@@ -140,6 +159,9 @@ public class Parser {
         ArrayList<Node> statements = statements();
         RemoveEOLS();
         Token end = matchAndRemove(Token.OPTokens.END);
+        if(begin == null || end == null){
+            throw new UnauthTokenException("syntax error");
+        }
         RemoveEOLS();
         return new WhileNode(condition, statements);
     }
@@ -162,6 +184,7 @@ public class Parser {
         RemoveEOLS();
         Token end = matchAndRemove(Token.OPTokens.END);
         ArrayList<Node> elseIfNode = new ArrayList<Node>();
+        //why a loop. to get chain ELSE IF
         while(true) {
             RemoveEOLS();
             if (matchAndRemove(Token.OPTokens.ELSE_IF) == null) {
@@ -173,7 +196,7 @@ public class Parser {
             RemoveEOLS();
         }
         RemoveEOLS();
-        if(matchAndRemove(Token.OPTokens.ELSE) != null){
+        if(matchAndRemove(Token.OPTokens.ELSE) != null){ //else.
             RemoveEOLS();
             elseIfNode.add(ElseDef());
         }
@@ -191,7 +214,7 @@ public class Parser {
      */
 
     public ArrayList<Node> statements() {
-        ArrayList<Node> nodeList = new ArrayList<>();
+        ArrayList<Node> nodeList = new ArrayList<>(); //STatements.
         while (true) {
             Node a = assignments();
             if (a == null) {

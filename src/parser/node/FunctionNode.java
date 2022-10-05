@@ -60,7 +60,7 @@ public class FunctionNode extends Node{
 
     /**
      *
-     * @return
+     * @return CLean up my ToSTreing a little more
      */
     public String params(){
         return ArraysToString(params);

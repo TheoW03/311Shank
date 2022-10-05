@@ -20,6 +20,12 @@ public class ElseNode extends Node {
         this.statements = statements;
 
     }
+    /**
+     *
+     * @param params2 arrayList
+     * @return String reop.
+     * The reason why I have tis is to dispaly the statement method bc Java.Util.ArrayList.ToString sucks.
+     */
     public String ArraysToString(ArrayList<Node> params2) {
         StringBuilder t = new StringBuilder("[");
         for (Node node : params2) {
