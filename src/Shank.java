@@ -16,7 +16,9 @@ import java.util.ArrayList;
  * @author Theo willis
  * @version 1.0.0
  * ~ project outline here ~
- * @Javadoc
+ * <h3>They seh dem run di streets wen mi pave di road.
+ * this lyric from ninja man makes me love this class (the song he sang this in is called. ninja mi ninja - ninja man. </h3>
+ *
  */
 //compiles. trust me bro ;)
 public class Shank {

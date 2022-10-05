@@ -33,7 +33,7 @@ public class Token {
         DEFINE("define", "define"),
         IF("if"),
         FOR("for"),
-        ELSE_IF("elseif"),
+        ELSE_IF("elsif"),
         ELSE("else"),
         FROM("from"),
         TO("to"),

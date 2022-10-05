@@ -40,7 +40,7 @@ public class Lexer {
         //begin if
         keyWords.put("if", new Token(Token.OPTokens.IF, "if")); //this is for the time comes.
         keyWords.put("then", new Token(Token.OPTokens.THEN, "then"));
-        keyWords.put("elseif", new Token(Token.OPTokens.ELSE_IF, "elseif"));
+        keyWords.put("elsif", new Token(Token.OPTokens.ELSE_IF, "elsif"));
         keyWords.put("else", new Token(Token.OPTokens.ELSE, "else"));
         //end
         //begin for

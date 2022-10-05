@@ -6,26 +6,50 @@ variables
   integer FibNumAtn := 0 (*hi*)
 begin
 Fib := 10
-for i from 1 to 10 (* the for loop *)
+(* for  *)
+for i from 1 to 10
 begin
-   if a=5 then
-   begin
-   	a := 5
-   end
-
-end
-	repeat
+	a := i
+	if a = 20 then
 	begin
-		for j from 0 to 5
-		begin
-			while k < 2
-			begin
-				k:=k+1
-			end
-		end
-		a := a + 1
+	    a := a / 2
 	end
-	until a=6
+	else
+	begin
+	    a := a * 2
+	end
+end
+(* while *)
+while a > 10
+begin
+    a := a + 1
+end
 
+(* if else *)
+if a = 10 then
+begin
+    a := 20
+end
+else
+begin
+    a := a / 3
+end
+
+(*else if *)
+if a = 20 then
+begin
+    a := 30
+end
+elsif a = 30 then
+begin
+    a := 40
+end
+
+(* repeat *)
+repeat
+begin
+	j:=j-1
+end
+until j = 0
 
 end

@@ -9,14 +9,16 @@ import java.io.*;
  * ~ project outline here ~
  * @Javadoc
  */
-public class ifNode extends  Node{
-    private Node boolConditionExp;
+public class ElseNode extends Node {
+    private Node condition;
     private ArrayList<Node> statements;
-    private ArrayList<Node> elseIf;
-    public ifNode(Node boolConditionExp, ArrayList<Node> statements, ArrayList<Node> elseIf) {
-        this.boolConditionExp = boolConditionExp;
+    public ElseNode(Node condition, ArrayList<Node> statements) {
+        this.condition = condition;
         this.statements = statements;
-        this.elseIf = elseIf;
+    }
+    public ElseNode(ArrayList<Node> statements) {
+        this.statements = statements;
+
     }
     public String ArraysToString(ArrayList<Node> params2) {
         StringBuilder t = new StringBuilder("[");
@@ -26,8 +28,12 @@ public class ifNode extends  Node{
         t.append("]");
         return t.toString();
     }
+
     @Override
     public String ToString() {
-        return "if "+boolConditionExp.ToString() + " statemnets: "+ArraysToString(statements) + " else: "+ArraysToString(elseIf);
+        if(condition == null){
+            return ArraysToString(statements);
+        }
+        return "statements: "+ArraysToString(statements) +" condition: "+condition.ToString();
     }
 }

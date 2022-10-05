@@ -38,6 +38,31 @@ public class Parser {
         }
         return r;
     }
+    public Node ElseIfDef(){
+        RemoveEOLS();
+        Node condition = boolDef();
+        RemoveEOLS();
+        if( matchAndRemove(Token.OPTokens.THEN) == null){
+          throw new UnauthTokenException("Missing then");
+        }
+        RemoveEOLS();
+        Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+        RemoveEOLS();
+        ArrayList<Node> statement = statements();
+        RemoveEOLS();
+        Token end = matchAndRemove(Token.OPTokens.END);
+        RemoveEOLS();
+        if(condition == null || statement == null || begin == null || end == null){
+            throw new UnauthTokenException("ELse if has no condition");
+        }
+        return new ElseNode(condition,statement);
+    }
+    public Node ElseDef(){
+        Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+        ArrayList<Node> statement = statements();
+        Token end = matchAndRemove(Token.OPTokens.END);
+        return new ElseNode(statement);
+    }
 
     /**
      * @return boolean expression node
@@ -81,9 +106,7 @@ public class Parser {
         Token begin = matchAndRemove(Token.OPTokens.BEGIN);
         RemoveEOLS();
         ArrayList<Node> statement = statements();
-        RemoveEOLS();
         Token end = matchAndRemove(Token.OPTokens.END);
-        RemoveEOLS();
         if (begin == null || end == null) {
             throw new UnauthTokenException("No begin or end in for loop");
         }
@@ -138,10 +161,28 @@ public class Parser {
         ArrayList<Node> statementL = statements();
         RemoveEOLS();
         Token end = matchAndRemove(Token.OPTokens.END);
+        ArrayList<Node> elseIfNode = new ArrayList<Node>();
+        while(true) {
+            RemoveEOLS();
+            if (matchAndRemove(Token.OPTokens.ELSE_IF) == null) {
+                RemoveEOLS();
+                break;
+            }
+            RemoveEOLS();
+            elseIfNode.add(ElseIfDef());
+            RemoveEOLS();
+        }
+        RemoveEOLS();
+        if(matchAndRemove(Token.OPTokens.ELSE) != null){
+            RemoveEOLS();
+            elseIfNode.add(ElseDef());
+        }
+        RemoveEOLS();
+
         if (end == null) {
             throw new UnauthTokenException("where does the if end");
         }
-        return new ifNode(boolExp, statementL);
+        return new ifNode(boolExp, statementL,elseIfNode);
     }
 
 
@@ -166,9 +207,7 @@ public class Parser {
 
     public Node assignments() {
         RemoveEOLS();
-        if (matchAndRemove(Token.OPTokens.IF) != null
-                || matchAndRemove(Token.OPTokens.ELSE_IF) != null
-                || matchAndRemove(Token.OPTokens.ELSE) != null) {
+        if (matchAndRemove(Token.OPTokens.IF) != null){
             return IfDef();
         }
         if (matchAndRemove(Token.OPTokens.WHILE) != null) {
@@ -494,17 +533,20 @@ public class Parser {
     }
 
     private Token matchAndRemove(Token.OPTokens token) {
-//        System.out.println("param matchh and remove: "+token);
+        try{
+            System.out.println("param matchh and remove: "+token);
 //        System.out.println("head of list: "+tokenList.get(0).getTokenEnum());
-        if (token.equals(tokenList.get(0).getTokenEnum())) {
+            if (token.equals(tokenList.get(0).getTokenEnum())) {
 
-            var retVal = this.tokenList.remove(0);
+                var retVal = this.tokenList.remove(0);
 //            cleanEndOfLine(); //helper function because I need thois
-            current = retVal;
+                current = retVal;
 //            System.out.println("matched");
-            return retVal;
+                return retVal;
+            }
+        }catch (Exception e){
+            return null;
         }
-//        System.out.println("returned null");
         return null;
     }
 
