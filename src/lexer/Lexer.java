@@ -28,12 +28,14 @@ public class Lexer {
         keyWords.put("begin", new Token(Token.OPTokens.BEGIN, "begin"));
         keyWords.put("write", new Token(Token.OPTokens.KEY_WORD, "write"));
         keyWords.put("variables", new Token(Token.OPTokens.VARAIBLES, "variables"));
+        //OP
         keyWords.put(":=", new Token(Token.OPTokens.EQUALS, "="));
-        keyWords.put("=", new Token(Token.OPTokens.EQUALITY_EUQUALS, "==")); //this is for the time comes.
+        keyWords.put("=", new Token(Token.OPTokens.EQUALITY_EUQUALS, "==")); //this is for the time comes. pls change to double ==
         keyWords.put("<", new Token(Token.OPTokens.LESS_THAN, "<")); //this is for the time comes.
         keyWords.put(">", new Token(Token.OPTokens.GREATER_THAN, ">")); //this is for the time comes.
         keyWords.put("<=", new Token(Token.OPTokens.LESS_THAN_EQAUALS, "<=")); //this is for the time comes.
         keyWords.put(">=", new Token(Token.OPTokens.GREATER_THAN_EQUALS, ">=")); //this is for the time comes.
+        keyWords.put("<>", new Token(Token.OPTokens.NOT_EQUAL, "<>")); //Can we change it to ~= or != instead of this.,
         keyWords.put("mod", new Token(Token.OPTokens.MOD, "mod")); //this is for the time comes.
         //begin if
         keyWords.put("if", new Token(Token.OPTokens.IF, "if")); //this is for the time comes.

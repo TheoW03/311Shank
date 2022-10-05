@@ -8,8 +8,24 @@ begin
 Fib := 10
 for i from 1 to 10 (* the for loop *)
 begin
+   if a=5 then
+   begin
+   	a := 5
+   end
 
 end
+	repeat
+	begin
+		for j from 0 to 5
+		begin
+			while k < 2
+			begin
+				k:=k+1
+			end
+		end
+		a := a + 1
+	end
+	until a=6
 
 
 end

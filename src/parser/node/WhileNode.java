@@ -12,12 +12,16 @@ import java.io.*;
  * @Javadoc
  */
 public class WhileNode extends Node{
-    public WhileNode(Node bool,ArrayList<StatementNode> statements) {
+    private Node bool;
+    private ArrayList<Node> sttements;
+    public WhileNode(Node bool,ArrayList<Node> statements) {
+        this.sttements = statements;
+        this.bool = bool;
 
     }
 
     @Override
     public String ToString() {
-        return null;
+        return bool.ToString();
     }
 }

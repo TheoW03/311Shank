@@ -38,8 +38,8 @@ public class Parser {
         }
         return r;
     }
+
     /**
-     *
      * @return boolean expression node
      */
     public Node boolDef() {
@@ -48,35 +48,35 @@ public class Parser {
                 (matchAndRemove(Token.OPTokens.LESS_THAN) != null) ? current :
                         (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
                                 (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
-                                        (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current : null;
-        if(left == null && operator == null){
+                                        (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current :
+                                                (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current : null;
+        if (left == null && operator == null) {
             return null;
         }
-        if(operator == null){
+        if (operator == null) {
             return left;
         }
         Node right = expression();
-        return new BooleanNode(right,left,operator);
+        return new BooleanNode(right, left, operator);
     }
 
     /**
-     *
      * @return for node. specifically parsing for nodes
      */
-    public Node forDef(){
+    public Node forDef() {
         RemoveEOLS();
         Token varaibleBeginIn = matchAndRemove(Token.OPTokens.IDENTIFIER);
         RemoveEOLS();
-        if(matchAndRemove(Token.OPTokens.FROM) == null){
+        if (matchAndRemove(Token.OPTokens.FROM) == null) {
             throw new UnauthTokenException("syntax error");
         }
 
-        Token beginV = (matchAndRemove(Token.OPTokens.NUMBER) != null)?current:(matchAndRemove(Token.OPTokens.IDENTIFIER) != null)?current:null;
-        if(matchAndRemove(Token.OPTokens.TO) == null){
+        Token beginV = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+        if (matchAndRemove(Token.OPTokens.TO) == null) {
             throw new UnauthTokenException("syntax error"); //funny thing is these are uneeded :laugh:
         }
         //so u can have a Var condition if u want/number
-        Token endV = (matchAndRemove(Token.OPTokens.NUMBER) != null)?current:(matchAndRemove(Token.OPTokens.IDENTIFIER) != null)?current:null;
+        Token endV = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         RemoveEOLS();
         Token begin = matchAndRemove(Token.OPTokens.BEGIN);
         RemoveEOLS();
@@ -84,45 +84,65 @@ public class Parser {
         RemoveEOLS();
         Token end = matchAndRemove(Token.OPTokens.END);
         RemoveEOLS();
-        if(begin == null || end == null){
+        if (begin == null || end == null) {
             throw new UnauthTokenException("No begin or end in for loop");
         }
-        return new ForNode(new VaraibleReferenceNode(varaibleBeginIn),new VaraibleReferenceNode(beginV),new VaraibleReferenceNode(endV),statement);
+        return new ForNode(new VaraibleReferenceNode(varaibleBeginIn), new VaraibleReferenceNode(beginV), new VaraibleReferenceNode(endV), statement);
+    }
+
+    public Node DoUntilDef() {
+        RemoveEOLS();
+        RemoveEOLS();
+        Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+        RemoveEOLS();
+        ArrayList<Node> statements = statements();
+        Token end = matchAndRemove(Token.OPTokens.END);
+        RemoveEOLS();
+        matchAndRemove(Token.OPTokens.UNTIL);
+        RemoveEOLS();
+        Node condition = boolDef();
+        RemoveEOLS();
+        return new RepeatNode(statements, condition);
     }
 
     /**
      * @return while nodes
      */
-    public Node whileDef(){
+    public Node whileDef() {
         RemoveEOLS();
         Node condition = boolDef();
-        return new WhileNode(condition,null);
+        RemoveEOLS();
+        Token begin = matchAndRemove(Token.OPTokens.BEGIN);
+        RemoveEOLS();
+        ArrayList<Node> statements = statements();
+        RemoveEOLS();
+        Token end = matchAndRemove(Token.OPTokens.END);
+        RemoveEOLS();
+        return new WhileNode(condition, statements);
     }
 
     /**
-     *
      * @return if nodes
      */
     public Node IfDef() {
         Node boolExp = boolDef();
         Token then = matchAndRemove(Token.OPTokens.THEN);
-        if(then == null || boolExp == null){
+        if (then == null || boolExp == null) {
             throw new UnauthTokenException("not a real if statement");
         }
         RemoveEOLS();
         Token begin = matchAndRemove(Token.OPTokens.BEGIN);
-        if(begin == null){
+        if (begin == null) {
             return null;
         }
         ArrayList<Node> statementL = statements();
         RemoveEOLS();
         Token end = matchAndRemove(Token.OPTokens.END);
-        if(end == null){
+        if (end == null) {
             throw new UnauthTokenException("where does the if end");
         }
-        return new ifNode(boolExp,statementL);
+        return new ifNode(boolExp, statementL);
     }
-
 
 
     /**
@@ -146,16 +166,19 @@ public class Parser {
 
     public Node assignments() {
         RemoveEOLS();
-        if(matchAndRemove(Token.OPTokens.IF) != null
+        if (matchAndRemove(Token.OPTokens.IF) != null
                 || matchAndRemove(Token.OPTokens.ELSE_IF) != null
-                || matchAndRemove(Token.OPTokens.ELSE) != null){
+                || matchAndRemove(Token.OPTokens.ELSE) != null) {
             return IfDef();
         }
-        if(matchAndRemove(Token.OPTokens.WHILE) != null){
+        if (matchAndRemove(Token.OPTokens.WHILE) != null) {
             return whileDef();
         }
-        if(matchAndRemove(Token.OPTokens.FOR) != null){
+        if (matchAndRemove(Token.OPTokens.FOR) != null) {
             return forDef();
+        }
+        if (matchAndRemove(Token.OPTokens.REPEAT) != null) {
+            return DoUntilDef();
         }
         RemoveEOLS();
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
@@ -454,7 +477,7 @@ public class Parser {
             matchAndRemove(Token.OPTokens.NUMBER);
 //            System.out.println("Node output es Nomeral: " + a);
             return new FloatNode(a);
-        }else if(matchAndRemove(Token.OPTokens.IDENTIFIER) != null) {
+        } else if (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) {
             return new VaraibleReferenceNode(current);
         } else if (matchAndRemove(Token.OPTokens.LParan) != null) {
             Node node = expression();
