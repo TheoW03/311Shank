@@ -26,11 +26,10 @@ public class Lexer {
         keyWords.put("constants", new Token(Token.OPTokens.CONSTANTS, "constants"));
         keyWords.put("end", new Token(Token.OPTokens.END, "end"));
         keyWords.put("begin", new Token(Token.OPTokens.BEGIN, "begin"));
-        keyWords.put("write", new Token(Token.OPTokens.KEY_WORD, "write"));
         keyWords.put("variables", new Token(Token.OPTokens.VARAIBLES, "variables"));
         //OP
-        keyWords.put(":=", new Token(Token.OPTokens.EQUALS, "="));
-        keyWords.put("=", new Token(Token.OPTokens.EQUALITY_EUQUALS, "==")); //this is for the time comes. pls change to double ==
+        keyWords.put(":=", new Token(Token.OPTokens.EQUALS, ":="));
+        keyWords.put("=", new Token(Token.OPTokens.EQUALITY_EUQUALS, "=")); //this is for the time comes. pls change to double ==
         keyWords.put("<", new Token(Token.OPTokens.LESS_THAN, "<")); //this is for the time comes.
         keyWords.put(">", new Token(Token.OPTokens.GREATER_THAN, ">")); //this is for the time comes.
         keyWords.put("<=", new Token(Token.OPTokens.LESS_THAN_EQAUALS, "<=")); //this is for the time comes.
@@ -52,7 +51,15 @@ public class Lexer {
         keyWords.put("while", new Token(Token.OPTokens.WHILE, "while"));
         keyWords.put("repeat", new Token(Token.OPTokens.REPEAT, "repeat"));
         keyWords.put("until", new Token(Token.OPTokens.UNTIL, "until"));
-        //ens
+        //end
+        //begin built in functions
+        keyWords.put("write", new Token(Token.OPTokens.WRITE, "write"));
+        keyWords.put("intToFloat", new Token(Token.OPTokens.INT_CON_FLOAT, "intToFloat"));
+        keyWords.put("squareRoot", new Token(Token.OPTokens.SQRT, "sqaureRoot"));
+        keyWords.put("floatToInt", new Token(Token.OPTokens.FLOAT_CON_INT, "floatToInt"));
+        keyWords.put("read", new Token(Token.OPTokens.READ, "read"));
+
+
     }
 
     /**
@@ -81,6 +88,7 @@ public class Lexer {
         char esMutiple = '\0';
         int wordState = 1;
         boolean stateIsComment = false;
+        boolean stateIsString = false;
         for (int i1 = 0; i1 < data.size(); i1++) { //loop
             String dataTokensLine = data.get(i1); //token
             //this is an easter egg.
@@ -94,6 +102,20 @@ public class Lexer {
                 //ignore comments
                 if (currentChar == '(' && dataTokensLine.charAt(i + 1) == '*') {
                     stateIsComment = true;
+                }
+                if(stateIsString){
+                    if(currentChar == '"'){
+                        if (!wordBuffer.equals("")) {
+                            tokenDataR.add(new Token(Token.OPTokens.STRING, wordBuffer));
+                            wordBuffer = "";
+                        }
+
+                        stateIsNum = true;
+                        stateIsString = false;
+                        continue;
+                    }
+                    wordBuffer += currentChar;
+                    continue;
                 }
                 if (stateIsComment) {
                     System.out.println("comment: " + currentChar);
@@ -274,7 +296,17 @@ public class Lexer {
                             throw new UnauthTokenException("error");
                         }
                     } else { //clear
-                        if(currentChar == ' '){ //space bug in java?
+                        if(currentChar == '"'){
+                            if (!wordBuffer.equals("")) {
+                                if (keyWords.get(wordBuffer) != null) {
+                                    tokenDataR.add(keyWords.get(wordBuffer));
+
+                                } else {
+                                    tokenDataR.add(new Token(Token.OPTokens.IDENTIFIER, wordBuffer));
+                                }
+                                wordBuffer = "";
+                            }
+                            stateIsString = true;
                             continue;
                         }
                         if (!buffer.equals("")) {

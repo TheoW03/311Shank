@@ -5,51 +5,5 @@ constants
 variables
   integer FibNumAtn := 0 (*hi*)
 begin
-Fib := 10
-(* for  *)
-for i from 1 to 10
-begin
-	a := i
-	if a = 20 then
-	begin
-	    a := a / 2
-	end
-	else
-	begin
-	    a := a * 2
-	end
-end
-(* while *)
-while a > 10
-begin
-    a := a + 1
-end
-
-(* if else *)
-if a = 10 then
-begin
-    a := 20
-end
-else
-begin
-    a := a / 3
-end
-
-(*else if *)
-if a = 20 then
-begin
-    a := 30
-end
-elsif a = 30 then
-begin
-    a := 40
-end
-
-(* repeat *)
-repeat
-begin
-	j:=j-1
-end
-until j = 0
 
 end
