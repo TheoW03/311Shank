@@ -413,7 +413,7 @@ public class Parser {
         ArrayList<Node> retList = new ArrayList<>();
         Token type = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
                 (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current :
-                        null; //lamda pro here.
+                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current: null; //lamda pro here.
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         Token a = tokenList.get(0);
 
@@ -422,7 +422,7 @@ public class Parser {
             while (true) {
                 RemoveEOLS();
                 Token checkForType = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current : null;
+                        (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current :(matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : null;
 
                 if (checkForType != null) { //use sam lambda
                     type = checkForType;
@@ -444,9 +444,7 @@ public class Parser {
         if (name == null || Lexer.keyWords.get(name.getTokenValue()) != null) {
             throw new UnauthTokenException("name is null or key word is name");
         }
-        if (matchAndRemove(Token.OPTokens.NUMBER) != null) {
-            valu = expression();
-        }
+        valu = expression();
         if (varaiblesWithnoType.size() == 0) {
             varaiblesWithnoType.add(name);
         }
@@ -531,6 +529,10 @@ public class Parser {
 //        System.out.println("call factor ");
 //        System.out.println("=======================");
 //        System.out.println("current: " + current);
+        Token string = matchAndRemove(Token.OPTokens.STRING);
+        if(string != null){
+            return new StringNode(string);
+        }
         if (esNomeralElFloatar(current) != null || matchAndRemove(Token.OPTokens.NUMBER) != null) {
             float a = (float) esNomeralElFloatar(current);
             matchAndRemove(Token.OPTokens.NUMBER);

@@ -27,6 +27,7 @@ public class Lexer {
         keyWords.put("end", new Token(Token.OPTokens.END, "end"));
         keyWords.put("begin", new Token(Token.OPTokens.BEGIN, "begin"));
         keyWords.put("variables", new Token(Token.OPTokens.VARAIBLES, "variables"));
+        keyWords.put("string", new Token(Token.OPTokens.STRING_DT, "String")); //for strings
         //OP
         keyWords.put(":=", new Token(Token.OPTokens.EQUALS, ":="));
         keyWords.put("=", new Token(Token.OPTokens.EQUALITY_EUQUALS, "=")); //this is for the time comes. pls change to double ==

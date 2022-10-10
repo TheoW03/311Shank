@@ -1,9 +1,9 @@
-define TestFunction34(a,b,c:integer)
+define TestFunction34(a,b,c:string)
 constants
- integer Fib:=9+8
- integer FibNumAtN2 := 0(*comment*)
+ string Fib:= "hello world"
+ string FibNumAtN2 := "hello world1"
 variables
-  integer FibNumAtn := 0 (*hi*)
+  string FibNumAtn := "hello world2"
 begin
 
 end
