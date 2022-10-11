@@ -41,7 +41,7 @@ public class Parser {
     }
 
     /**
-     * @return CallableNode
+     * @return Function call node.
      */
     public Node FunctionCall() {
         Token name = current;
@@ -51,11 +51,11 @@ public class Parser {
                 ||name.getTokenEnum() == Token.OPTokens.WRITE
                 ||name.getTokenEnum() == Token.OPTokens.READ
                 ||name.getTokenEnum() == Token.OPTokens.FLOAT_CON_INT
-                ||name.getTokenEnum() == Token.OPTokens.INT_CON_FLOAT;
+                ||name.getTokenEnum() == Token.OPTokens.INT_CON_FLOAT; //Idk if the builtins are supposed to be Keywords
         if(!builtIn && current.getTokenEnum() != Token.OPTokens.IDENTIFIER){
             return null;
         }
-        matchAndRemove(Token.OPTokens.LParan);
+        matchAndRemove(Token.OPTokens.LParan); //() bc i am a C addict. (just wait until winter. Im going to degrade the haskall like shit to the ground)
         ArrayList<Node> params = new ArrayList<>();
         while (true) {
             Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
@@ -66,8 +66,8 @@ public class Parser {
             params.add(new VaraibleReferenceNode(p));
         }
         RemoveEOLS();
-        matchAndRemove(Token.OPTokens.RParan);
-        RemoveEOLS();
+        matchAndRemove(Token.OPTokens.RParan); //L
+        RemoveEOLS(); //im condsidering deleting  this.
         return new FunctionCallNode(name, params,builtIn);
     }
 

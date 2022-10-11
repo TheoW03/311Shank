@@ -17,8 +17,11 @@ import java.util.ArrayList;
  * @version 1.0.0
  * ~ project outline here ~
  * <h3>They seh dem run di streets wen mi pave di road.
- * this lyric from ninja man makes me love this class (the song he sang this in is called. ninja mi ninja - ninja man. </h3>
+ * this lyric from ninja man makes me love this class (the song he sang this in is called. ninja mi ninja - ninja man) </h3>
  *
+ *  69 commits lego.
+ * <p>This feels very uncomplete Idk why. I think its bc Im yet to test Datatype or node. Idk.
+ * it works i think.</p>
  */
 //compiles. trust me bro ;)
 public class Shank {
@@ -46,8 +49,8 @@ public class Shank {
         System.out.println("lexxing..");
         ArrayList<Token> tokenData = obk.lexer();
         System.out.println("lexxing complete");
-        for (int i = 0; i <tokenData.size();i++){
-            System.out.println(tokenData.get(i).toString());
+        for (Token tokenDatum : tokenData) {
+            System.out.println(tokenDatum.toString());
         }
         ParserTestMethod(tokenData);
 
