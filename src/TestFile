@@ -4,5 +4,6 @@ constants
 variables
   integer FibNumAtn := 10
 begin
- write "hello world" (* Yes*)
+ write "hello world" (* hope i got this done correctly. *)
+ getRandom 0,10
 end

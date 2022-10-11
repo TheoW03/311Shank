@@ -45,14 +45,15 @@ public class Parser {
      */
     public Node FunctionCall() {
         Token name = current;
-        boolean builtIn = true;
-        Token.OPTokens a[] = {Token.OPTokens.WRITE,Token.OPTokens.READ, Token.OPTokens.FLOAT_CON_INT, Token.OPTokens.INT_CON_FLOAT
-                                ,Token.OPTokens.SQRT, Token.OPTokens.GET_RANDOM};//i probably can use a hash. But Im choosing this way because why not.
-        if (Token.OPTokens.IDENTIFIER != name.getTokenEnum() && Arrays.binarySearch(a,current.getTokenEnum()) == -1) {
+        boolean builtIn =
+                name.getTokenEnum() == Token.OPTokens.SQRT
+                || name.getTokenEnum() == Token.OPTokens.GET_RANDOM
+                ||name.getTokenEnum() == Token.OPTokens.WRITE
+                ||name.getTokenEnum() == Token.OPTokens.READ
+                ||name.getTokenEnum() == Token.OPTokens.FLOAT_CON_INT
+                ||name.getTokenEnum() == Token.OPTokens.INT_CON_FLOAT;
+        if(!builtIn && current.getTokenEnum() != Token.OPTokens.IDENTIFIER){
             return null;
-        }
-        if(Arrays.binarySearch(a,current.getTokenEnum()) == -1){
-            builtIn = false;
         }
         matchAndRemove(Token.OPTokens.LParan);
         ArrayList<Node> params = new ArrayList<>();
@@ -263,7 +264,7 @@ public class Parser {
         }
         if (matchAndRemove(Token.OPTokens.WRITE) != null
                 || matchAndRemove(Token.OPTokens.SQRT) != null || matchAndRemove(Token.OPTokens.READ) != null
-                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null) {
+                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null || matchAndRemove(Token.OPTokens.GET_RANDOM) != null) {
             return FunctionCall();
         }
         if (matchAndRemove(Token.OPTokens.WHILE) != null) {
