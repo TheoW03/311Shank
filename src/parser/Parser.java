@@ -57,6 +57,7 @@ public class Parser {
         }
         matchAndRemove(Token.OPTokens.LParan); //() bc i am a C addict. (just wait until winter. Im going to degrade the haskall like shit to the ground)
         ArrayList<Node> params = new ArrayList<>();
+        //parese dt.
         while (true) {
             Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
             if (p == null) {
@@ -68,7 +69,7 @@ public class Parser {
         RemoveEOLS();
         matchAndRemove(Token.OPTokens.RParan); //L
         RemoveEOLS(); //im condsidering deleting  this.
-        return new FunctionCallNode(name, params,builtIn);
+        return new FunctionCallNode(name, params,builtIn); //return node.
     }
 
     /**
