@@ -3,6 +3,7 @@ package parser;
 import lexer.Lexer;
 import lexer.Token;
 import lexer.UnauthTokenException;
+import parser.node.FunctionCallNode.FunctionCallNode;
 import parser.node.*;
 import parser.node.StatementNode.AssignmentNode;
 import parser.node.StatementNode.VaraibleReferenceNode;
@@ -37,6 +38,36 @@ public class Parser {
             throw new UnauthTokenException("error parsing" + current);
         }
         return r;
+    }
+
+    /**
+     * @return CallableNode
+     */
+    public Node FunctionCall() {
+        Token name = current;
+        boolean builtIn = true;
+        Token.OPTokens a[] = {Token.OPTokens.WRITE,Token.OPTokens.READ, Token.OPTokens.FLOAT_CON_INT, Token.OPTokens.INT_CON_FLOAT
+                                ,Token.OPTokens.SQRT, Token.OPTokens.GET_RANDOM};//i probably can use a hash. But Im choosing this way because why not.
+        if (Token.OPTokens.IDENTIFIER != name.getTokenEnum() && Arrays.binarySearch(a,current.getTokenEnum()) == -1) {
+            return null;
+        }
+        if(Arrays.binarySearch(a,current.getTokenEnum()) == -1){
+            builtIn = false;
+        }
+        matchAndRemove(Token.OPTokens.LParan);
+        ArrayList<Node> params = new ArrayList<>();
+        while (true) {
+            Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+            if (p == null) {
+                break;
+            }
+            RemoveEOLS();
+            params.add(new VaraibleReferenceNode(p));
+        }
+        RemoveEOLS();
+        matchAndRemove(Token.OPTokens.RParan);
+        RemoveEOLS();
+        return new FunctionCallNode(name, params,builtIn);
     }
 
     /**
@@ -230,6 +261,11 @@ public class Parser {
         if (matchAndRemove(Token.OPTokens.IF) != null) {
             return IfDef();
         }
+        if (matchAndRemove(Token.OPTokens.WRITE) != null
+                || matchAndRemove(Token.OPTokens.SQRT) != null || matchAndRemove(Token.OPTokens.READ) != null
+                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null) {
+            return FunctionCall();
+        }
         if (matchAndRemove(Token.OPTokens.WHILE) != null) {
             return whileDef();
         }
@@ -239,10 +275,15 @@ public class Parser {
         if (matchAndRemove(Token.OPTokens.REPEAT) != null) {
             return DoUntilDef();
         }
+
         RemoveEOLS();
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null; //checks for name
         //begin
         Token equals = (matchAndRemove(Token.OPTokens.EQUALS) != null) ? current : null; //what it equals
+        if (equals == null) {
+            RemoveEOLS();
+            return FunctionCall();
+        }
         //end
         Node ifBool = boolDef();
         Node ifExp = expression();
@@ -413,7 +454,7 @@ public class Parser {
         ArrayList<Node> retList = new ArrayList<>();
         Token type = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
                 (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current: null; //lamda pro here.
+                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : null; //lamda pro here.
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         Token a = tokenList.get(0);
 
@@ -422,7 +463,7 @@ public class Parser {
             while (true) {
                 RemoveEOLS();
                 Token checkForType = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current :(matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : null;
+                        (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current : (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : null;
 
                 if (checkForType != null) { //use sam lambda
                     type = checkForType;
@@ -530,7 +571,7 @@ public class Parser {
 //        System.out.println("=======================");
 //        System.out.println("current: " + current);
         Token string = matchAndRemove(Token.OPTokens.STRING);
-        if(string != null){
+        if (string != null) {
             return new StringNode(string);
         }
         if (esNomeralElFloatar(current) != null || matchAndRemove(Token.OPTokens.NUMBER) != null) {

@@ -59,7 +59,7 @@ public class Lexer {
         keyWords.put("squareRoot", new Token(Token.OPTokens.SQRT, "sqaureRoot"));
         keyWords.put("floatToInt", new Token(Token.OPTokens.FLOAT_CON_INT, "floatToInt"));
         keyWords.put("read", new Token(Token.OPTokens.READ, "read"));
-
+        keyWords.put("getRandom", new Token(Token.OPTokens.GET_RANDOM, "getRandom"));
 
     }
 
@@ -329,7 +329,9 @@ public class Lexer {
                                         }
                                     }
                                     wordBuffer = "";
-                                    wordBuffer += currentChar;
+                                    if(currentChar != ','){
+                                        wordBuffer += currentChar;
+                                    }
                                     wordState = 2;
                                     stateIsNum = true;
                                 }
@@ -410,10 +412,16 @@ public class Lexer {
                                     wordBuffer = "";
                                     wordBuffer += currentChar; //add to this
                                     wordState = 1;
+                                    stateIsNum = true;
                                 }
                             } else {
-                                wordBuffer += currentChar; //add to this
+                                if(currentChar != ','){
+                                    stateIsNum = true;
+                                    wordBuffer += currentChar;
+                                }
+                                //add to this
                                 wordState = 1;
+                                stateIsNum = true;
                             }
 
                         } else if (wordState == 3) { //==

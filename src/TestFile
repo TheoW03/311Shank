@@ -1,10 +1,8 @@
 define TestFunction34(a,b,c:string)
 constants
- string Fib:= "hello world"
- string FibNumAtN2 := "hello world1"
+ integer FibNumAtN2 := 10
 variables
-  string FibNumAtn := "hello world2"
+  integer FibNumAtn := 10
 begin
- FibNumAtN := "hi" + "a"
-
+ write "hello world" (* Yes*)
 end

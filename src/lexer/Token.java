@@ -49,7 +49,7 @@ public class Token {
         LESS_THAN("<", "LT"),
         NOT_EQUAL("!=", "Not"),
         //built in
-        WRITE("wite"), INT_CON_FLOAT("IntToFloat"), SQRT("squareroot"), FLOAT_CON_INT("FloatToInt"), READ("Read");
+        WRITE("wite"), INT_CON_FLOAT("IntToFloat"), SQRT("squareroot"), FLOAT_CON_INT("FloatToInt"), READ("Read"), GET_RANDOM("Random");
         private String s;
         private String value;
 
