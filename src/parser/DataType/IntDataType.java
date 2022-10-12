@@ -18,15 +18,15 @@ public class IntDataType extends DataType{
     public IntDataType(IntegerNode data) {
 
     }
-
-    @Override
-    public String ToString() {
-        return null;
-    }
-
     @Override
     public void FromString(String input) {
         this.data = new IntegerNode(data.getIntegerANomerul());
 
     }
+    @Override
+    public String ToString() {
+        return null;
+    }
+
+
 }

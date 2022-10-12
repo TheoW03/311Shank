@@ -16,6 +16,7 @@ import java.io.*;
 public class FloatDataType extends DataType{
     private FloatNode data;
 
+    //float
     public FloatDataType(FloatNode data) {
 
     }

@@ -22,8 +22,8 @@ public class getRandomNode extends BuiltInFunctionNode {
         Random r = new Random();
         try{
             int min = Integer.parseInt(list.get(0).ToString());
-            int max = Integer.parseInt(list.get(1).ToString());
-            int b = r.nextInt(min)+max; //Idk :')
+//            int max = Integer.parseInt(list.get(1).ToString());
+            int b = r.nextInt(min)+Integer.MAX_VALUE; //may change to be 1 more param
 
         }catch (NumberFormatException e){
             e.printStackTrace();
