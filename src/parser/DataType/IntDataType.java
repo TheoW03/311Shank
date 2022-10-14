@@ -1,6 +1,7 @@
 package parser.DataType;
 
 import parser.node.IntegerNode;
+import parser.node.Node;
 
 import java.util.*;
 import java.io.*;
@@ -15,7 +16,7 @@ import java.io.*;
 public class IntDataType extends DataType{
     private IntegerNode data;
 
-    public IntDataType(IntegerNode data) {
+    public IntDataType(Node data) {
 
     }
     @Override

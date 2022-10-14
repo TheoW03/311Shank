@@ -3,12 +3,16 @@ package parser;
 //pls comment out if problem.
 
 import lexer.Token;
-import parser.node.FloatNode;
-import parser.node.IntegerNode;
-import parser.node.MathOpNode;
-import parser.node.Node;
+import parser.DataType.DataType;
+import parser.DataType.FloatDataType;
+import parser.DataType.IntDataType;
+import parser.node.*;
+import parser.node.FunctionCallNode.FunctionCallNode;
+import parser.node.StatementNode.StatementNode;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
 /**
@@ -63,7 +67,7 @@ public class Interperter {
             float a;
             MathOpNode v;
             v = (MathOpNode) thingYouWantResolved;
-            System.out.println("a: "+v.getOP());
+            System.out.println("a: " + v.getOP());
             switch (v.getOP()) {
                 case "+":
                     float addingNum1 = Resolve(thingYouWantResolved.right);
@@ -91,4 +95,43 @@ public class Interperter {
         return 0;
 
     }
+
+    public void compileMethods(FunctionNode function) {
+        ArrayList<Node> varaibles = function.getVaraibles();
+        ArrayList<Node> params = function.getParams();
+        ArrayList<Node> statements = function.getStatements();
+        HashMap<String, DataType> varP = new HashMap<>();
+        for (int i = 0; i < varaibles.size(); i++) {
+            if (varaibles.get(i) instanceof VaraibleNode) {
+                VaraibleNode varRef = (VaraibleNode) varaibles.get(i);
+                if (varRef.getType() != null) {
+                    if (((VaraibleNode) varaibles.get(i)).getType().getTokenEnum() == Token.OPTokens.INTEGER) {
+                        varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue()));
+                    }else{
+                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue()));
+                    }
+                }
+            }
+        }
+        interpterBlock(statements,varP);
+    }
+    public static void interpterBlock(ArrayList<Node> statetements, HashMap<String, DataType> vars) {
+
+    }
+    //    public static void CompileThis(FunctionNode function){
+//
+//        HashMap<String,DataType> function = new HashMap<>();
+//        if(funct.checkIfDefined()){
+//            for(int i = 0; i < param.size(); i++){
+//                function.put(funct.toString(),param.get(i));
+//            }
+//
+//            //do code if its a built in
+//        }else {
+//
+//        }
+//
+//
+//    }
+
 }

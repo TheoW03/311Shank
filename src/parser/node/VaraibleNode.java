@@ -23,6 +23,15 @@ public class VaraibleNode extends Node{
         this.value = value;
         
     }
+    public Node getValue(){
+        return value;
+    }
+    public Token getName(){
+        return name;
+    }
+    public Token getType(){
+        return type;
+    }
     @Override
     public String ToString() {
         if(value == null){

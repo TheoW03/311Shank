@@ -2,6 +2,7 @@ package parser.DataType;
 
 import parser.node.FloatNode;
 import parser.node.IntegerNode;
+import parser.node.Node;
 
 import java.util.*;
 import java.io.*;
@@ -17,7 +18,7 @@ public class FloatDataType extends DataType{
     private FloatNode data;
 
     //float
-    public FloatDataType(FloatNode data) {
+    public FloatDataType(Node data) {
 
     }
 

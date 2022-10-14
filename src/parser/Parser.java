@@ -47,12 +47,12 @@ public class Parser {
         Token name = current;
         boolean builtIn =
                 name.getTokenEnum() == Token.OPTokens.SQRT
-                || name.getTokenEnum() == Token.OPTokens.GET_RANDOM
-                ||name.getTokenEnum() == Token.OPTokens.WRITE
-                ||name.getTokenEnum() == Token.OPTokens.READ
-                ||name.getTokenEnum() == Token.OPTokens.FLOAT_CON_INT
-                ||name.getTokenEnum() == Token.OPTokens.INT_CON_FLOAT; //Idk if the builtins are supposed to be Keywords
-        if(!builtIn && current.getTokenEnum() != Token.OPTokens.IDENTIFIER){
+                        || name.getTokenEnum() == Token.OPTokens.GET_RANDOM
+                        || name.getTokenEnum() == Token.OPTokens.WRITE
+                        || name.getTokenEnum() == Token.OPTokens.READ
+                        || name.getTokenEnum() == Token.OPTokens.FLOAT_CON_INT
+                        || name.getTokenEnum() == Token.OPTokens.INT_CON_FLOAT; //Idk if the builtins are supposed to be Keywords
+        if (!builtIn && current.getTokenEnum() != Token.OPTokens.IDENTIFIER) {
             return null;
         }
         matchAndRemove(Token.OPTokens.LParan); //() bc i am a C addict. (just wait until winter. Im going to degrade the haskall like shit to the ground)
@@ -60,6 +60,13 @@ public class Parser {
         //parese dt.
         while (true) {
             Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+            if (matchAndRemove(Token.OPTokens.VAR) != null) {
+                Token returnType = matchAndRemove(Token.OPTokens.IDENTIFIER);
+                if (returnType == null) {
+                    throw new UnauthTokenException("function " + name + "needs a return type");
+                }
+                params.add(new VaraibleReferenceNode(returnType));
+            }
             if (p == null) {
                 break;
             }
@@ -69,7 +76,8 @@ public class Parser {
         RemoveEOLS();
         matchAndRemove(Token.OPTokens.RParan); //L
         RemoveEOLS(); //im condsidering deleting  this.
-        return new FunctionCallNode(name, params,builtIn); //return node.
+
+        return new FunctionCallNode(name, params, builtIn); //return node.
     }
 
     /**
@@ -142,7 +150,7 @@ public class Parser {
 
         Token beginV = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         if (matchAndRemove(Token.OPTokens.TO) == null) {
-            throw new UnauthTokenException("syntax error"); //funny thing is these are uneeded :laugh:
+            throw new UnauthTokenException("syntax error"); //funny thing is these are unneeded :laugh:
         }
         //so u can have a Var condition if u want/number
         Token endV = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;

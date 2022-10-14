@@ -82,7 +82,7 @@ public class Lexer {
         ArrayList<Token> tokenDataR = new ArrayList<>();
         int lineNum = 1;
         String buffer;
-        boolean stateIsNum = false;
+        boolean stateIsNum = true;
         int state = 1;
         char currentChar;
         String wordBuffer = "";
@@ -474,6 +474,10 @@ public class Lexer {
                         wordBuffer = "";
                         stateIsNum = true;
                     }
+                    if (!buffer.equals("")) {
+                        tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
+                        buffer = "";
+                    }
                 }
             } //eol
             if (!wordBuffer.equals("")) {
@@ -489,6 +493,7 @@ public class Lexer {
                 tokenDataR.add(new Token(Token.OPTokens.NUMBER, buffer));
                 buffer = "";
             }
+            stateIsNum = true;
             tokenDataR.add(new Token(Token.OPTokens.ENDOFLINE, ";")); //end
             lineNum++;
 

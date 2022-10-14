@@ -22,7 +22,12 @@ public class FunctionNode extends Node{
         this.statements = statements;
 
     }
-
+    public String getName(){
+        return ident;
+    }
+    public ArrayList<Node> getStatements() {
+        return statements;
+    }
     /**
      *
      * @return gets the stuff.

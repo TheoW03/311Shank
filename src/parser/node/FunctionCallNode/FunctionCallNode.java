@@ -27,7 +27,15 @@ public class FunctionCallNode extends CallableNode {
         t.append("]");
         return t.toString();
     }
-
+    public ArrayList<Node> getParams(){
+        return params;
+    }
+    public Token getName(){
+        return name;
+    }
+    public boolean checkIfDefined(){
+        return builtIn;
+    }
     /**
      *
      * @return string.

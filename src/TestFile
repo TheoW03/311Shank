@@ -4,6 +4,6 @@ constants
 variables
   integer FibNumAtn := 10
 begin
+getRandom 0 10 var
  write "hello world" (* hope i got this done correctly. *)
- getRandom 0,10
 end
