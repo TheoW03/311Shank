@@ -8,9 +8,10 @@ import parser.DataType.FloatDataType;
 import parser.DataType.IntDataType;
 import parser.node.*;
 import parser.node.FunctionCallNode.FunctionCallNode;
-import parser.node.StatementNode.StatementNode;
+import parser.node.StatementNode.VaraibleReferenceNode;
+import parser.node.builtInFunctionNode.BuiltInFunctionNode;
+import parser.node.builtInFunctionNode.getRandomNode;
 
-import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -24,6 +25,10 @@ import java.util.HashMap;
 
 public class Interperter {
     private ArrayList<Token> ListToCompare;
+    private HashMap<String, BuiltInFunctionNode> builtIn;
+    public Interperter(){
+
+    }
 
     public void travserse(Node root) {
 
@@ -106,17 +111,42 @@ public class Interperter {
                 VaraibleNode varRef = (VaraibleNode) varaibles.get(i);
                 if (varRef.getType() != null) {
                     if (((VaraibleNode) varaibles.get(i)).getType().getTokenEnum() == Token.OPTokens.INTEGER) {
-                        varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue()));
+                        varP.put(varRef.getName().getTokenValue(), new IntDataType((IntegerNode) varRef.getValue()));
                     }else{
-                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue()));
+                        varP.put(varRef.getName().getTokenValue(), new FloatDataType((FloatNode) varRef.getValue()));
                     }
                 }
             }
         }
         interpterBlock(statements,varP);
     }
-    public static void interpterBlock(ArrayList<Node> statetements, HashMap<String, DataType> vars) {
 
+    /**
+     *
+     *
+     * @param statetements
+     * @param vars
+     */
+    public static void interpterBlock(ArrayList<Node> statetements, HashMap<String, DataType> vars) {
+        for(int i = 0; i < statetements.size();i++){
+            FunctionCallNode callNodeRef = (FunctionCallNode) statetements.get(i);
+            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.GET_RANDOM){
+                ArrayList<Node> params = callNodeRef.getParams();
+                ArrayList<DataType> listOfParams = new ArrayList<>();
+                addToList(params, listOfParams);
+                getRandomNode ran = new getRandomNode(null);
+                ran.execute(listOfParams); //Idk if i can pass by ref but im testing it.
+
+                //what this will do is store the params and everything inside a get random node. and add to the hasmao
+            }
+        }
+
+    }
+    public static void addToList(ArrayList<Node> params, ArrayList<DataType> p){
+        for (int i = 0; i < params.size(); i++){
+            VaraibleReferenceNode f = (VaraibleReferenceNode) params.get(i);
+            p.add(new FloatDataType(f));
+        }
     }
     //    public static void CompileThis(FunctionNode function){
 //

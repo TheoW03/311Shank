@@ -32,6 +32,7 @@ public class VaraibleNode extends Node{
     public Token getType(){
         return type;
     }
+
     @Override
     public String ToString() {
         if(value == null){

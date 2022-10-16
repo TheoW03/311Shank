@@ -1,9 +1,8 @@
 define TestFunction34(a,b,c:string)
 constants
- integer FibNumAtN2 := 10
+ float FibNumAtN2 := 10
 variables
-  integer FibNumAtn := 10
+  float FibNumAtn := 10
 begin
-getRandom 0 10 var
- write "hello world" (* hope i got this done correctly. *)
+getRandom 10 0
 end

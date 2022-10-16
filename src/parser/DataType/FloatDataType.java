@@ -3,6 +3,7 @@ package parser.DataType;
 import parser.node.FloatNode;
 import parser.node.IntegerNode;
 import parser.node.Node;
+import parser.node.StatementNode.VaraibleReferenceNode;
 
 import java.util.*;
 import java.io.*;
@@ -14,21 +15,29 @@ import java.io.*;
  * ~ project outline here ~
  * @Javadoc
  */
-public class FloatDataType extends DataType{
-    private FloatNode data;
+public class FloatDataType extends DataType {
+    private Node data;
 
     //float
     public FloatDataType(Node data) {
+        this.data =  data;
 
+    }
+
+    //    public FloatDataType(VaraibleReferenceNode data) {
+//        this.data = data;
+//
+//    }
+    @Override
+    public void FromString(String input) {
+
+        this.data = new FloatNode(Float.parseFloat(data.ToString()));
     }
 
     @Override
     public String ToString() {
-        return null;
+        return data.ToString();
     }
 
-    @Override
-    public void FromString(String input) {
-        this.data = new FloatNode(data.getValue());
-    }
+
 }

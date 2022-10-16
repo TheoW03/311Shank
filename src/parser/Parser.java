@@ -60,18 +60,22 @@ public class Parser {
         //parese dt.
         while (true) {
             Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+
             if (matchAndRemove(Token.OPTokens.VAR) != null) {
                 Token returnType = matchAndRemove(Token.OPTokens.IDENTIFIER);
                 if (returnType == null) {
                     throw new UnauthTokenException("function " + name + "needs a return type");
                 }
                 params.add(new VaraibleReferenceNode(returnType));
+            }else{
+                if (p == null) {
+                    break;
+                }
+                params.add(new VaraibleReferenceNode(p));
             }
-            if (p == null) {
-                break;
-            }
+
             RemoveEOLS();
-            params.add(new VaraibleReferenceNode(p));
+
         }
         RemoveEOLS();
         matchAndRemove(Token.OPTokens.RParan); //L

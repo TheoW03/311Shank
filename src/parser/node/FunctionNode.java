@@ -82,6 +82,7 @@ public class FunctionNode extends Node{
      * @return everything.
      * Soi libre. Adidos mochacos. gets hit by bus.
      */
+
     @Override
     public String ToString() {
         return "name: "+ident+" params: "+ArraysToString(params)+" constants/vars: "+ArraysToString(varaibles)

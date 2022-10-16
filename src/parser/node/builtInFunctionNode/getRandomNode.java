@@ -14,7 +14,7 @@ import java.util.Random;
  * @Javadoc
  */
 public class getRandomNode extends BuiltInFunctionNode {
-    public getRandomNode(Token name, ArrayList<Node> dataType) {
+    public getRandomNode(ArrayList<Node> dataType) {
 
     }
     @Override
@@ -22,9 +22,10 @@ public class getRandomNode extends BuiltInFunctionNode {
         Random r = new Random();
         try{
             int min = Integer.parseInt(list.get(0).ToString());
+
 //            int max = Integer.parseInt(list.get(1).ToString());
             int b = r.nextInt(min)+Integer.MAX_VALUE; //may change to be 1 more param
-
+            System.out.println(b);
         }catch (NumberFormatException e){
             e.printStackTrace();
             System.out.println("You didnt input a num for params");

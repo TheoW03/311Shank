@@ -3,7 +3,9 @@
 import lexer.Lexer;
 import lexer.Token;
 import lexer.UnauthTokenException;
+import parser.Interperter;
 import parser.Parser;
+import parser.node.FunctionCallNode.CallableNode;
 import parser.node.FunctionNode;
 
 import java.io.IOException;
@@ -11,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Theo willis
@@ -22,9 +25,13 @@ import java.util.ArrayList;
  *  69 commits lego.
  * <p>This feels very uncomplete Idk why. I think its bc Im yet to test Datatype or node. Idk.
  * it works i think.</p>
+ * <p>the diragatory exception messages was my brain. after 5 days of non stop java and burnout.
+ * i just wrote what ever bc I was tired.</p>
  */
+
 //compiles. trust me bro ;)
 public class Shank {
+    public HashMap<String, CallableNode> func;
     public static void main(String[] args) throws IOException {
         try{
             LexerTestMethod();
@@ -69,6 +76,8 @@ public class Shank {
         System.out.println("params: "+fn.params());
         System.out.println("vars/constants: "+fn.vars());
         System.out.println("statemnets: "+fn.statemnets());
+        Interperter i = new Interperter();
+        i.compileMethods(fn);
 
 //        ArrayList<Node> n = new ArrayList<>();
 
