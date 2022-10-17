@@ -10,9 +10,7 @@ import parser.DataType.IntDataType;
 import parser.node.*;
 import parser.node.FunctionCallNode.FunctionCallNode;
 import parser.node.StatementNode.VaraibleReferenceNode;
-import parser.node.builtInFunctionNode.BuiltInFunctionNode;
-import parser.node.builtInFunctionNode.WriteNode;
-import parser.node.builtInFunctionNode.getRandomNode;
+import parser.node.builtInFunctionNode.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,9 +112,9 @@ public class Interperter {
                 VaraibleNode varRef = (VaraibleNode) varaibles.get(i);
                 if (varRef.getType() != null) {
                     if (((VaraibleNode) varaibles.get(i)).getType().getTokenEnum() == Token.OPTokens.INTEGER) {
-                        varP.put(varRef.getName().getTokenValue(), new IntDataType((IntegerNode) varRef.getValue()));
+                        varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue()));
                     } else {
-                        varP.put(varRef.getName().getTokenValue(), new FloatDataType((FloatNode) varRef.getValue()));
+                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue()));
                     }
                 }
             }
@@ -148,6 +146,46 @@ public class Interperter {
                 write.execute(listOfParams); //Idk if i can pass by ref but im testing it.
                 //what this will do is store the params and everything inside a get random node. and add to the hasmao
             }
+            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.READ){
+                ArrayList<Node> params = callNodeRef.getParams();
+                ArrayList<DataType> listOfParams = new ArrayList<>();
+                addToList(params, listOfParams, vars);
+                ReadNode read = new ReadNode();
+                ArrayList<DataType> a = listOfParams;
+                read.execute(listOfParams); //Idk if i can pass by ref but im testing it.
+            }
+            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.SQRT){
+                ArrayList<Node> params = callNodeRef.getParams();
+                ArrayList<DataType> listOfParams = new ArrayList<>();
+                addToList(params, listOfParams, vars);
+                squareRootNode sqrt = new squareRootNode();
+                ArrayList<DataType> a = listOfParams;
+                sqrt.execute(listOfParams); //Idk if i can pass by ref but im testing it.
+            }
+            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT){
+                ArrayList<Node> params = callNodeRef.getParams();
+                ArrayList<DataType> listOfParams = new ArrayList<>();
+                addToList(params, listOfParams, vars);
+                IntToRealNode convert = new IntToRealNode();
+                ArrayList<DataType> a = listOfParams;
+                convert.execute(listOfParams); //Idk if i can pass by ref but im testing it.
+                float n = Float.parseFloat(listOfParams.get(0).ToString());
+                FloatDataType newnum = new FloatDataType(new FloatNode(n));
+                vars.replace(params.get(0).ToString(),newnum);
+            }
+            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.FLOAT_CON_INT){
+                ArrayList<Node> params = callNodeRef.getParams();
+                ArrayList<DataType> listOfParams = new ArrayList<>();
+                addToList(params, listOfParams, vars);
+                RealToIntNode convert = new RealToIntNode();
+                ArrayList<DataType> a = listOfParams;
+                convert.execute(listOfParams); //Idk if i can pass by ref but im testing it.
+                float n = Float.parseFloat(listOfParams.get(0).ToString());
+                int b = (int)n;
+                IntDataType newnum = new IntDataType(new IntegerNode(b));
+                vars.replace(params.get(0).ToString(),newnum);
+//                vars.replace(listOfParams.get(0).ToString(), new IntDataType(listOfParams.get(0).));
+            }
         }
 
     }
@@ -160,10 +198,9 @@ public class Interperter {
                 p.add(new FloatDataType(f));
             } else {
                 if (vars.get(f.ToString()) == null){
-                    throw new UnauthTokenException("failed sentimeatics");
+                    throw new UnauthTokenException(f.ToString() +" doesnt exist as var");
                 }
-                p.add(vars.get(f));
-
+                p.add(vars.get(f.ToString()));
             }
 
 

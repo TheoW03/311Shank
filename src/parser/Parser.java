@@ -277,7 +277,7 @@ public class Parser {
         }
         if (matchAndRemove(Token.OPTokens.WRITE) != null
                 || matchAndRemove(Token.OPTokens.SQRT) != null || matchAndRemove(Token.OPTokens.READ) != null
-                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null || matchAndRemove(Token.OPTokens.GET_RANDOM) != null) {
+                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null ||matchAndRemove(Token.OPTokens.INT_CON_FLOAT) != null  || matchAndRemove(Token.OPTokens.GET_RANDOM) != null) {
             return FunctionCall();
         }
         if (matchAndRemove(Token.OPTokens.WHILE) != null) {
@@ -588,11 +588,19 @@ public class Parser {
         if (string != null) {
             return new StringNode(string);
         }
-        if (esNomeralElFloatar(current) != null || matchAndRemove(Token.OPTokens.NUMBER) != null) {
-            float a = (float) esNomeralElFloatar(current);
-            matchAndRemove(Token.OPTokens.NUMBER);
+        if (isInt(current) != null ||isInt(current) != null|| matchAndRemove(Token.OPTokens.NUMBER) != null) {
+//            float a = (float) isFloat(current);
+            if(isInt(current) != null){
+                int a = (int) isInt(current);
+                matchAndRemove(Token.OPTokens.NUMBER);
+                return new IntegerNode(a);
+            }else if(isFloat(current) != null){
+                float a = (float) isFloat(current);
+                matchAndRemove(Token.OPTokens.NUMBER);
+                return new FloatNode(a);
+            }
 //            System.out.println("Node output es Nomeral: " + a);
-            return new FloatNode(a);
+//            return new FloatNode(a);
         } else if (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) {
             return new VaraibleReferenceNode(current);
         } else if (matchAndRemove(Token.OPTokens.LParan) != null) {
@@ -627,9 +635,17 @@ public class Parser {
      * @param token
      * @return es floatar
      */
-    public Object esNomeralElFloatar(Token token) {
+    public Object isFloat(Token token) {
         try {
             float t = Float.parseFloat(token.getTokenValue());
+            return t;
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+    public Object isInt(Token token){
+        try {
+            int t = Integer.parseInt(token.getTokenValue());
             return t;
         } catch (NumberFormatException e) {
             return null;

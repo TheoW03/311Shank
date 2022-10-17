@@ -23,7 +23,7 @@ public class IntDataType extends DataType{
     }
     @Override
     public void FromString(String input) {
-        this.data = new FloatNode(Integer.parseInt(data.ToString()));
+        this.data = new IntegerNode(Integer.parseInt(input));
     }
 
     @Override

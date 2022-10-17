@@ -1,5 +1,7 @@
 package parser.DataType;
 
+import parser.node.FloatNode;
+
 import java.util.*;
 import java.io.*;
 
@@ -13,5 +15,6 @@ import java.io.*;
 public abstract class DataType {
     public abstract String ToString();
     public abstract void FromString(String input); // sets the value of the data type by parsing the string
+
 
 }

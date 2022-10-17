@@ -2,7 +2,12 @@ define TestFunction34(a,b,c:string)
 constants
  float FibNumAtN2 := 10
 variables
-  float FibNumAtn := 10
+  float FibNumAtn := 32
+  integer b := 10
 begin
-write 1+1 (* interpest *)
+intToFloat b
+squareRoot b,b
+write b (* interpest *)
+floatToInt b
+write b
 end

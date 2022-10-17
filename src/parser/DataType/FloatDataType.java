@@ -31,7 +31,10 @@ public class FloatDataType extends DataType {
     @Override
     public void FromString(String input) {
 
-        this.data = new FloatNode(Float.parseFloat(data.ToString()));
+        this.data = new FloatNode(Float.parseFloat(input));
+    }
+    public Node getData(){
+        return (FloatNode) data;
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @Javadoc
  */
 public class squareRootNode  extends BuiltInFunctionNode {
-    public squareRootNode(Token name, ArrayList<Node> dataType) {
+    public squareRootNode() {
 
     }
 
@@ -25,6 +25,9 @@ public class squareRootNode  extends BuiltInFunctionNode {
     @Override
     public void execute(ArrayList<DataType> list) {
         double a = Math.sqrt(Double.parseDouble(list.get(0).ToString()));
+        if(list.size() >= 2){
+            list.get(1).FromString(String.valueOf(a));
+        }
 
     }
     @Override

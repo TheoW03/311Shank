@@ -15,7 +15,7 @@ import java.util.Scanner;
  * @Javadoc
  */
 public class ReadNode  extends BuiltInFunctionNode {
-    public ReadNode(Token name, ArrayList<Node> dataType) {
+    public ReadNode() {
 
     }
     @Override
