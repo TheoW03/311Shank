@@ -4,5 +4,5 @@ constants
 variables
   float FibNumAtn := 10
 begin
-getRandom 10 0
+write 1+1 (* interpest *)
 end

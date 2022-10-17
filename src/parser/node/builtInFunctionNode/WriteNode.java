@@ -14,14 +14,9 @@ import java.util.ArrayList;
  * @Javadoc
  */
 public class WriteNode  extends BuiltInFunctionNode {
-    public WriteNode(Token name, ArrayList<Node> dataType) {
-
-    }
-
-
-
-
-
+//    public WriteNode(Token name, ArrayList<Node> dataType) {
+//
+//    }
 
     @Override
     public void execute(ArrayList<DataType> list) {

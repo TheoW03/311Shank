@@ -15,6 +15,9 @@ public class VaraibleReferenceNode extends StatementNode {
         this.name = name;
 
     }
+    public Token getName(){
+        return this.name;
+    }
 
 
     /**
