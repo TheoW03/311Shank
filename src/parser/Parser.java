@@ -59,19 +59,21 @@ public class Parser {
         ArrayList<Node> params = new ArrayList<>();
         //parese dt.
         while (true) {
+            RemoveEOLS();
             Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
-
-            if (matchAndRemove(Token.OPTokens.VAR) != null) {
+            if(p != null){
+                params.add(new VaraibleReferenceNode(p));
+            } else if (matchAndRemove(Token.OPTokens.VAR) != null) {
+                RemoveEOLS();
                 Token returnType = matchAndRemove(Token.OPTokens.IDENTIFIER);
+                RemoveEOLS();
                 if (returnType == null) {
                     throw new UnauthTokenException("function " + name + "needs a return type");
                 }
                 params.add(new VaraibleReferenceNode(returnType));
             }else{
-                if (p == null) {
-                    break;
-                }
-                params.add(new VaraibleReferenceNode(p));
+                break;
+
             }
 
             RemoveEOLS();

@@ -1,13 +1,9 @@
 define TestFunction34(a,b,c:string)
 constants
- float FibNumAtN2 := 10
+  float a := 0
 variables
-  float FibNumAtn := 32
-  integer b := 10
+  float b := 9
 begin
-intToFloat b
-squareRoot b,b
-write b (* interpest *)
-floatToInt b
-write b
+squareRoot n a
+write a
 end

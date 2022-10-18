@@ -24,7 +24,7 @@ public class WriteNode  extends BuiltInFunctionNode {
             throw new RuntimeException("Too small");
         }
         for(int i = 0; i < list.size(); i++){
-            System.out.println(list.get(0).ToString());
+            System.out.println(list.get(i).ToString());
         }
     }
     @Override

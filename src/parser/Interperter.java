@@ -161,6 +161,7 @@ public class Interperter {
                 squareRootNode sqrt = new squareRootNode();
                 ArrayList<DataType> a = listOfParams;
                 sqrt.execute(listOfParams); //Idk if i can pass by ref but im testing it.
+                listOfParams.get(0);
             }
             if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT){
                 ArrayList<Node> params = callNodeRef.getParams();
@@ -198,9 +199,14 @@ public class Interperter {
                 p.add(new FloatDataType(f));
             } else {
                 if (vars.get(f.ToString()) == null){
-                    throw new UnauthTokenException(f.ToString() +" doesnt exist as var");
+                    vars.put(f.ToString(),new FloatDataType(new FloatNode(0)));
+                    p.add(vars.get(f.ToString()));
+//
+//                    throw new UnauthTokenException(f.ToString() +" doesnt exist as var");
+                }else {
+                    p.add(vars.get(f.ToString()));
                 }
-                p.add(vars.get(f.ToString()));
+
             }
 
 
