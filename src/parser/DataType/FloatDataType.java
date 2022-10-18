@@ -17,10 +17,12 @@ import java.io.*;
  */
 public class FloatDataType extends DataType {
     private Node data;
+    private boolean constant;
 
     //float
-    public FloatDataType(Node data) {
+    public FloatDataType(Node data, boolean constant) {
         this.data =  data;
+        this.constant = constant;
 
     }
 
@@ -33,6 +35,12 @@ public class FloatDataType extends DataType {
 
         this.data = new FloatNode(Float.parseFloat(input));
     }
+
+    @Override
+    public boolean checkIfCOnst() {
+        return constant;
+    }
+
     public Node getData(){
         return (FloatNode) data;
     }

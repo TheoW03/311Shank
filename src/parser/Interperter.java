@@ -111,10 +111,13 @@ public class Interperter {
             if (varaibles.get(i) instanceof VaraibleNode) {
                 VaraibleNode varRef = (VaraibleNode) varaibles.get(i);
                 if (varRef.getType() != null) {
+                    if(varP.get(varRef.getName().getTokenValue()) != null){
+                        throw new UnauthTokenException("var "+varRef.getName().getTokenValue()+" already declared");
+                    }
                     if (((VaraibleNode) varaibles.get(i)).getType().getTokenEnum() == Token.OPTokens.INTEGER) {
-                        varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue()));
+                        varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
                     } else {
-                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue()));
+                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
                     }
                 }
             }
@@ -137,7 +140,7 @@ public class Interperter {
                 ran.execute(listOfParams); //Idk if i can pass by ref but im testing it.
                 //what this will do is store the params and everything inside a get random node. and add to the hasmao
             }
-            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.WRITE){
+            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.WRITE) {
                 ArrayList<Node> params = callNodeRef.getParams();
                 ArrayList<DataType> listOfParams = new ArrayList<>();
                 addToList(params, listOfParams, vars);
@@ -146,7 +149,7 @@ public class Interperter {
                 write.execute(listOfParams); //Idk if i can pass by ref but im testing it.
                 //what this will do is store the params and everything inside a get random node. and add to the hasmao
             }
-            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.READ){
+            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.READ) {
                 ArrayList<Node> params = callNodeRef.getParams();
                 ArrayList<DataType> listOfParams = new ArrayList<>();
                 addToList(params, listOfParams, vars);
@@ -154,7 +157,7 @@ public class Interperter {
                 ArrayList<DataType> a = listOfParams;
                 read.execute(listOfParams); //Idk if i can pass by ref but im testing it.
             }
-            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.SQRT){
+            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.SQRT) {
                 ArrayList<Node> params = callNodeRef.getParams();
                 ArrayList<DataType> listOfParams = new ArrayList<>();
                 addToList(params, listOfParams, vars);
@@ -163,7 +166,7 @@ public class Interperter {
                 sqrt.execute(listOfParams); //Idk if i can pass by ref but im testing it.
                 listOfParams.get(0);
             }
-            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT){
+            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) {
                 ArrayList<Node> params = callNodeRef.getParams();
                 ArrayList<DataType> listOfParams = new ArrayList<>();
                 addToList(params, listOfParams, vars);
@@ -171,10 +174,10 @@ public class Interperter {
                 ArrayList<DataType> a = listOfParams;
                 convert.execute(listOfParams); //Idk if i can pass by ref but im testing it.
                 float n = Float.parseFloat(listOfParams.get(0).ToString());
-                FloatDataType newnum = new FloatDataType(new FloatNode(n));
-                vars.replace(params.get(0).ToString(),newnum);
+                FloatDataType newnum = new FloatDataType(new FloatNode(n),false);
+                vars.replace(params.get(0).ToString(), newnum);
             }
-            if(callNodeRef.getName().getTokenEnum() == Token.OPTokens.FLOAT_CON_INT){
+            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.FLOAT_CON_INT) {
                 ArrayList<Node> params = callNodeRef.getParams();
                 ArrayList<DataType> listOfParams = new ArrayList<>();
                 addToList(params, listOfParams, vars);
@@ -182,9 +185,9 @@ public class Interperter {
                 ArrayList<DataType> a = listOfParams;
                 convert.execute(listOfParams); //Idk if i can pass by ref but im testing it.
                 float n = Float.parseFloat(listOfParams.get(0).ToString());
-                int b = (int)n;
-                IntDataType newnum = new IntDataType(new IntegerNode(b));
-                vars.replace(params.get(0).ToString(),newnum);
+                int b = (int) n;
+                IntDataType newnum = new IntDataType(new IntegerNode(b),false);
+                vars.replace(params.get(0).ToString(), newnum);
 //                vars.replace(listOfParams.get(0).ToString(), new IntDataType(listOfParams.get(0).));
             }
         }
@@ -196,23 +199,29 @@ public class Interperter {
             //should updtae for var ref node.
             VaraibleReferenceNode f = (VaraibleReferenceNode) params.get(i);
             if (f.getName().getTokenEnum() == Token.OPTokens.NUMBER) {
-                p.add(new FloatDataType(f));
+                p.add(new FloatDataType(f,false));
             } else {
-                if (vars.get(f.ToString()) == null){
-                    vars.put(f.ToString(),new FloatDataType(new FloatNode(0)));
-                    p.add(vars.get(f.ToString()));
-//
-//                    throw new UnauthTokenException(f.ToString() +" doesnt exist as var");
-                }else {
+                if (i == (params.size() - 1)) {
+                    if (vars.get(f.ToString()) == null) {
+                        vars.put(f.ToString(), new FloatDataType(new FloatNode(0),false));
+                        p.add(vars.get(f.ToString()));
+                    }else{
+                        p.add(vars.get(f.ToString()));
+                    }
+                } else {
+                    if (vars.get(f.ToString()) == null) {
+                        throw new UnauthTokenException(f.ToString() + " doesnt exist as var");
+                    }
                     p.add(vars.get(f.ToString()));
                 }
-
+//                   throw new UnauthTokenException(f.ToString() +" doesnt exist as var");
             }
 
-
         }
+
+
     }
-    //    public static void CompileThis(FunctionNode function){
+//    public static void CompileThis(FunctionNode function){
 //
 //        HashMap<String,DataType> function = new HashMap<>();
 //        if(funct.checkIfDefined()){

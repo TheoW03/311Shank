@@ -384,7 +384,7 @@ public class Parser {
                 }
 
             }
-            ArrayList<Node> list = varaible(true);
+            ArrayList<Node> list = varaible(false);
             varList.addAll(list); //Im love with lambda coding.
 
 

@@ -16,11 +16,13 @@ public class VaraibleNode extends Node{
     private Token name;
     private Token type;
     private Node value;
+    private  boolean isConstant;
 
     public VaraibleNode(Token type,Node value, Token name, boolean isConstant,boolean global) {
         this.type=type;
         this.name = name;
         this.value = value;
+        this.isConstant = isConstant;
         
     }
     public Node getValue(){
@@ -32,6 +34,7 @@ public class VaraibleNode extends Node{
     public Token getType(){
         return type;
     }
+    public boolean isConstant(){return  this.isConstant;}
 
     @Override
     public String ToString() {

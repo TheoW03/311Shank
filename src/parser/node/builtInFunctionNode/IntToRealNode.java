@@ -1,6 +1,7 @@
 package parser.node.builtInFunctionNode;
 
 import lexer.Token;
+import lexer.UnauthTokenException;
 import parser.DataType.DataType;
 import parser.node.FloatNode;
 import parser.node.IntegerNode;
@@ -22,6 +23,9 @@ public class IntToRealNode extends BuiltInFunctionNode {
     @Override
     public void execute(ArrayList<DataType> list) {
         try {
+            if(list.get(0).checkIfCOnst()){
+                throw new UnauthTokenException(list.get(0).ToString()+"cant use this as return value");
+            }
             int b = Integer.parseInt(list.get(0).ToString());
             float a = (float) b;
             FloatNode newNum = new FloatNode(a);

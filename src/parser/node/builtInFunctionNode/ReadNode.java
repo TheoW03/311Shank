@@ -2,6 +2,7 @@ package parser.node.builtInFunctionNode;
 
 
 import lexer.Token;
+import lexer.UnauthTokenException;
 import parser.DataType.DataType;
 import parser.node.Node;
 
@@ -22,6 +23,9 @@ public class ReadNode  extends BuiltInFunctionNode {
     public void execute(ArrayList<DataType> list) {
         Scanner input = new Scanner(System.in);
         String inp = input.next();
+        if(list.get(0).checkIfCOnst()){
+            throw new UnauthTokenException(list.get(0).ToString()+"cant use this as return value");
+        }
         list.get(0).FromString(inp);
     }
     @Override

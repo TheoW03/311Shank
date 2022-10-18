@@ -1,9 +1,9 @@
 define TestFunction34(a,b,c:string)
 constants
-  float a := 0
+  float a := 9
 variables
-  float b := 9
+  float b := 10
 begin
-squareRoot n a
-write a
+squareRoot b, m
+write m
 end
