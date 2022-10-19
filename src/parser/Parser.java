@@ -59,7 +59,7 @@ public class Parser {
         ArrayList<Node> params = new ArrayList<>();
         //parese dt.
         while (true) {
-            RemoveEOLS();
+//            RemoveEOLS();
             Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
             if(p != null){
                 params.add(new VaraibleReferenceNode(p));
@@ -76,7 +76,7 @@ public class Parser {
 
             }
 
-            RemoveEOLS();
+//            RemoveEOLS();
 
         }
         RemoveEOLS();

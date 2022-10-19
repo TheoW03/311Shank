@@ -77,7 +77,7 @@ public class Shank {
         System.out.println("vars/constants: "+fn.vars());
         System.out.println("statemnets: "+fn.statemnets());
         Interperter i = new Interperter();
-        i.compileMethods(fn);
+        i.compileMethods(fn,new HashMap<>());
 
 //        ArrayList<Node> n = new ArrayList<>();
 

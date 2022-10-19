@@ -14,7 +14,7 @@ import java.util.Random;
  * @Javadoc
  */
 public class getRandomNode extends BuiltInFunctionNode {
-    public getRandomNode(ArrayList<Node> dataType) {
+    public getRandomNode() {
 
     }
     @Override

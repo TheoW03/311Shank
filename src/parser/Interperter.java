@@ -8,6 +8,7 @@ import parser.DataType.DataType;
 import parser.DataType.FloatDataType;
 import parser.DataType.IntDataType;
 import parser.node.*;
+import parser.node.FunctionCallNode.CallableNode;
 import parser.node.FunctionCallNode.FunctionCallNode;
 import parser.node.StatementNode.VaraibleReferenceNode;
 import parser.node.builtInFunctionNode.*;
@@ -25,9 +26,20 @@ import java.util.HashMap;
 
 public class Interperter {
     private ArrayList<Token> ListToCompare;
-    private HashMap<String, BuiltInFunctionNode> builtIn;
+    private HashMap<Token.OPTokens, BuiltInFunctionNode> builtIn;
+    private HashMap<String, FunctionNode> nonBuiltIns;
+    private HashMap<String, CallableNode> a;
 
     public Interperter() {
+        builtIn = new HashMap<>();
+        nonBuiltIns = new HashMap<>(); //im assuming its like this?
+        builtIn.put(Token.OPTokens.WRITE, new WriteNode());
+        builtIn.put(Token.OPTokens.READ, new ReadNode());
+        builtIn.put(Token.OPTokens.FLOAT_CON_INT, new RealToIntNode());
+        builtIn.put(Token.OPTokens.SQRT, new squareRootNode());
+        builtIn.put(Token.OPTokens.INT_CON_FLOAT, new IntToRealNode());
+        builtIn.put(Token.OPTokens.GET_RANDOM, new getRandomNode());
+
 
     }
 
@@ -50,7 +62,7 @@ public class Interperter {
      * If I have a float, return.
      * If I have a math op, resolve(left) and resolve (right) then do the op and return the value"
      *
-     * @param thingYouWantResolved
+     * @param thingYouWantResolved m
      * @return
      */
     public float Resolve(Node thingYouWantResolved) {
@@ -102,18 +114,32 @@ public class Interperter {
 
     }
 
-    public void compileMethods(FunctionNode function) {
+    public void compileMethods(FunctionNode function, HashMap<String, DataType> vars) {
+        nonBuiltIns.put(function.getIdent(), function);
         ArrayList<Node> varaibles = function.getVaraibles();
         ArrayList<Node> params = function.getParams();
         ArrayList<Node> statements = function.getStatements();
-        HashMap<String, DataType> varP = new HashMap<>();
+        HashMap<String, DataType> varP = vars;
+        for (int i = 0; i < params.size(); i++) {
+            VaraibleNode varRef = (VaraibleNode) params.get(i);
+            if (vars.get(varRef.getName().getTokenValue()) == null) {
+                if (varRef.getType() != null) {
+                    if (varRef.getType().getTokenEnum() == Token.OPTokens.INTEGER) {
+                        varP.put(varRef.getName().getTokenValue(), new IntDataType(null, false));
+                    } else {
+                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(null, false));
+                    }
+                }
+            }
+
+        }
         for (int i = 0; i < varaibles.size(); i++) {
             if (varaibles.get(i) instanceof VaraibleNode) {
                 VaraibleNode varRef = (VaraibleNode) varaibles.get(i);
                 if (varRef.getType() != null) {
-                    if(varP.get(varRef.getName().getTokenValue()) != null){
-                        throw new UnauthTokenException("var "+varRef.getName().getTokenValue()+" already declared");
-                    }
+//                    if (varP.get(varRef.getName().getTokenValue()) != null) {
+//                        throw new UnauthTokenException("var " + varRef.getName().getTokenValue() + " already declared");
+//                    }
                     if (((VaraibleNode) varaibles.get(i)).getType().getTokenEnum() == Token.OPTokens.INTEGER) {
                         varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
                     } else {
@@ -126,72 +152,74 @@ public class Interperter {
     }
 
     /**
-     * @param statetements
-     * @param vars
+     * @param statetements m
+     * @param vars         ,
      */
-    public static void interpterBlock(ArrayList<Node> statetements, HashMap<String, DataType> vars) {
+    public void interpterBlock(ArrayList<Node> statetements, HashMap<String, DataType> vars) {
         for (int i = 0; i < statetements.size(); i++) {
             FunctionCallNode callNodeRef = (FunctionCallNode) statetements.get(i);
-            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.GET_RANDOM) {
+            if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) {
                 ArrayList<Node> params = callNodeRef.getParams();
                 ArrayList<DataType> listOfParams = new ArrayList<>();
                 addToList(params, listOfParams, vars);
-                getRandomNode ran = new getRandomNode(null);
-                ran.execute(listOfParams); //Idk if i can pass by ref but im testing it.
-                //what this will do is store the params and everything inside a get random node. and add to the hasmao
-            }
-            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.WRITE) {
-                ArrayList<Node> params = callNodeRef.getParams();
-                ArrayList<DataType> listOfParams = new ArrayList<>();
-                addToList(params, listOfParams, vars);
-                WriteNode write = new WriteNode();
-                ArrayList<DataType> a = listOfParams;
-                write.execute(listOfParams); //Idk if i can pass by ref but im testing it.
-                //what this will do is store the params and everything inside a get random node. and add to the hasmao
-            }
-            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.READ) {
-                ArrayList<Node> params = callNodeRef.getParams();
-                ArrayList<DataType> listOfParams = new ArrayList<>();
-                addToList(params, listOfParams, vars);
-                ReadNode read = new ReadNode();
-                ArrayList<DataType> a = listOfParams;
-                read.execute(listOfParams); //Idk if i can pass by ref but im testing it.
-            }
-            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.SQRT) {
-                ArrayList<Node> params = callNodeRef.getParams();
-                ArrayList<DataType> listOfParams = new ArrayList<>();
-                addToList(params, listOfParams, vars);
-                squareRootNode sqrt = new squareRootNode();
-                ArrayList<DataType> a = listOfParams;
-                sqrt.execute(listOfParams); //Idk if i can pass by ref but im testing it.
-                listOfParams.get(0);
-            }
-            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) {
-                ArrayList<Node> params = callNodeRef.getParams();
-                ArrayList<DataType> listOfParams = new ArrayList<>();
-                addToList(params, listOfParams, vars);
-                IntToRealNode convert = new IntToRealNode();
-                ArrayList<DataType> a = listOfParams;
-                convert.execute(listOfParams); //Idk if i can pass by ref but im testing it.
-                float n = Float.parseFloat(listOfParams.get(0).ToString());
-                FloatDataType newnum = new FloatDataType(new FloatNode(n),false);
-                vars.replace(params.get(0).ToString(), newnum);
-            }
-            if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.FLOAT_CON_INT) {
-                ArrayList<Node> params = callNodeRef.getParams();
-                ArrayList<DataType> listOfParams = new ArrayList<>();
-                addToList(params, listOfParams, vars);
-                RealToIntNode convert = new RealToIntNode();
-                ArrayList<DataType> a = listOfParams;
-                convert.execute(listOfParams); //Idk if i can pass by ref but im testing it.
-                float n = Float.parseFloat(listOfParams.get(0).ToString());
-                int b = (int) n;
-                IntDataType newnum = new IntDataType(new IntegerNode(b),false);
-                vars.replace(params.get(0).ToString(), newnum);
-//                vars.replace(listOfParams.get(0).ToString(), new IntDataType(listOfParams.get(0).));
+                builtIn.get(callNodeRef.getName().getTokenEnum()).execute(listOfParams);
+                if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) {
+                    float n = Float.parseFloat(listOfParams.get(0).ToString());
+                    FloatDataType newnum = new FloatDataType(new FloatNode(n), false);
+                    vars.replace(params.get(0).ToString(), newnum);
+                } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.FLOAT_CON_INT) {
+                    float n = Float.parseFloat(listOfParams.get(0).ToString());
+                    int b = (int) n;
+                    IntDataType newnum = new IntDataType(new IntegerNode(b), false);
+                    vars.replace(params.get(0).ToString(), newnum);
+                }
+            } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.IDENTIFIER) {
+                if (nonBuiltIns.get(callNodeRef.getName().getTokenValue()) != null) {
+//                    ArrayList<DataType> p = new ArrayList<>();
+//                    addToList(callNodeRef.getParams(), p, vars);
+//                    compileUserDefined(callNodeRef,nonBuiltIns.get(callNodeRef.getName().getTokenValue()),vars );
+                    ArrayList<Node> params = callNodeRef.getParamss();
+                    ArrayList<Node> paramsForFunc = nonBuiltIns.get(callNodeRef.getName().getTokenValue()).getParams();
+                    for (int i3 = 0; i3 < callNodeRef.getParamss().size(); i3++) {
+                        if (params.get(i) instanceof IntegerNode) {
+                            VaraibleNode a = (VaraibleNode) paramsForFunc.get(i);
+                            VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i);
+                            String m = a.getName().getTokenValue();
+//                            VaraibleNode a = ( VaraibleNode) paramsForFunc.get(i);
+                            String deb = a.getName().getTokenValue();
+                            String va = ((VaraibleNode) paramsForFunc.get(i)).getName().getTokenValue();
+                            IntDataType val;
+                            try{
+                                val = new IntDataType(new IntegerNode(Integer.parseInt(c.getName().getTokenValue())), false);
+                            }catch (NumberFormatException e){
+                                IntegerNode in = new IntegerNode(Integer.parseInt(vars.get(c.getName().getTokenValue()).ToString()));
+                                val = new IntDataType(in, false);
+                            }
+
+                            vars.replace(va, val);
+                        } else {
+                            VaraibleNode a = (VaraibleNode) paramsForFunc.get(i3);
+                            VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
+                            String m = a.getName().getTokenValue();
+//                            VaraibleNode a = ( VaraibleNode) paramsForFunc.get(i);
+                            String deb = a.getName().getTokenValue();
+                            String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
+                            FloatDataType val;
+                            try{
+                                val = new FloatDataType(new IntegerNode(Integer.parseInt(c.getName().getTokenValue())), false);
+                            }catch (NumberFormatException e){
+                                FloatNode in = new FloatNode(Float.parseFloat(vars.get(c.getName().getTokenValue()).ToString()));
+                                val = new FloatDataType(in, false);
+                            }
+
+                            vars.replace(va, val);
+                        }
+                    }
+                    compileMethods(nonBuiltIns.get(callNodeRef.getName().getTokenValue()), vars);
+                }
+
             }
         }
-
     }
 
     public static void addToList(ArrayList<Node> params, ArrayList<DataType> p, HashMap<String, DataType> vars) {
@@ -199,13 +227,13 @@ public class Interperter {
             //should updtae for var ref node.
             VaraibleReferenceNode f = (VaraibleReferenceNode) params.get(i);
             if (f.getName().getTokenEnum() == Token.OPTokens.NUMBER) {
-                p.add(new FloatDataType(f,false));
+                p.add(new FloatDataType(f, false));
             } else {
                 if (i == (params.size() - 1)) {
                     if (vars.get(f.ToString()) == null) {
-                        vars.put(f.ToString(), new FloatDataType(new FloatNode(0),false));
+                        vars.put(f.ToString(), new FloatDataType(new FloatNode(0), false));
                         p.add(vars.get(f.ToString()));
-                    }else{
+                    } else {
                         p.add(vars.get(f.ToString()));
                     }
                 } else {

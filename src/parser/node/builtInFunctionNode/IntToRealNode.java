@@ -30,7 +30,7 @@ public class IntToRealNode extends BuiltInFunctionNode {
             float a = (float) b;
             FloatNode newNum = new FloatNode(a);
 //            list.get(0).FromString(b)
-            System.out.println(a);
+
 
         } catch (NumberFormatException e) {
             e.printStackTrace();

@@ -1,9 +1,10 @@
-define TestFunction34(a,b,c:string)
+define TestFunction34(a,b,c:integer)
 constants
   float a := 9
 variables
-  float b := 10
+  float f := 0
 begin
-squareRoot b, m
-write m
+squareRoot a f
+write f
+TestFunction34 10 f 9 (* thank u *)
 end

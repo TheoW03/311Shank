@@ -14,10 +14,15 @@ import java.util.*;
 public class FunctionCallNode extends CallableNode {
     private Token name;
     private boolean builtIn;
+    private ArrayList<Node> params;
     public FunctionCallNode(Token name, ArrayList<Node> params, boolean builtIn) {
         super(params);
         this.name = name;
+        this.params = params;
         this.builtIn = builtIn;
+    }
+    public ArrayList<Node> getParams(){
+        return params;
     }
     public String ArraysToString(ArrayList<Node> params2) {
         StringBuilder t = new StringBuilder("[");
@@ -27,7 +32,7 @@ public class FunctionCallNode extends CallableNode {
         t.append("]");
         return t.toString();
     }
-    public ArrayList<Node> getParams(){
+    public ArrayList<Node> getParamss(){
         return params;
     }
     public Token getName(){

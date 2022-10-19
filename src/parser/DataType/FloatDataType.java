@@ -47,6 +47,9 @@ public class FloatDataType extends DataType {
 
     @Override
     public String ToString() {
+        if(this.data == null){
+            return "null";
+        }
         return data.ToString();
     }
 
