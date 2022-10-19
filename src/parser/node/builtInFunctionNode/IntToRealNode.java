@@ -20,6 +20,12 @@ public class IntToRealNode extends BuiltInFunctionNode {
 //    public IntToRealNode(Token name, ArrayList<Node> dataType) {
 //
 //    }
+
+    /**
+     *
+     * @param list the list u get. another pass by ref
+     *
+     */
     @Override
     public void execute(ArrayList<DataType> list) {
         try {
@@ -28,7 +34,7 @@ public class IntToRealNode extends BuiltInFunctionNode {
             }
             int b = Integer.parseInt(list.get(0).ToString());
             float a = (float) b;
-            FloatNode newNum = new FloatNode(a);
+            FloatNode newNum = new FloatNode(a); //conversion
 //            list.get(0).FromString(b)
 
 

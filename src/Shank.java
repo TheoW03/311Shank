@@ -23,15 +23,15 @@ import java.util.HashMap;
  * this lyric from ninja man makes me love this class (the song he sang this in is called. ninja mi ninja - ninja man) </h3>
  *
  *  69 commits lego.
- * <p>This feels very uncomplete Idk why. I think its bc Im yet to test Datatype or node. Idk.
- * it works i think.</p>
  * <p>the diragatory exception messages was my brain. after 5 days of non stop java and burnout.
  * i just wrote what ever bc I was tired.</p>
+ * <p>there is a bjillon tests Im missing here. but good luck</p>
  */
 
 //compiles. trust me bro ;)
 public class Shank {
-    public HashMap<String, CallableNode> func;
+    //the hashmap of NonBuilt functions is in interpter BTW.
+//    public HashMap<String, CallableNode> func;
     public static void main(String[] args) throws IOException {
         try{
             LexerTestMethod();

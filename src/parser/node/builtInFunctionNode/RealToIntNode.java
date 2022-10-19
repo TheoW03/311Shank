@@ -26,7 +26,7 @@ public class RealToIntNode extends BuiltInFunctionNode {
 //    }
 
     /**
-     * beta code. Its me interrpting the code form 6. Idk if its right but. Judge it.
+     * this adds to the list
      * @param list lis
      */
     @Override
@@ -39,9 +39,6 @@ public class RealToIntNode extends BuiltInFunctionNode {
             int a = (int) b;
             IntegerNode newNum = new IntegerNode(a);
             list.get(0).FromString(newNum.ToString());
-            System.out.println(a);
-//
-//           list.get(0).FromString(newNum.ToString());
 
         } catch (NumberFormatException e) {
             e.printStackTrace();

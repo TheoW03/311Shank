@@ -114,9 +114,15 @@ public class Interperter {
 
     }
 
+    /**
+     *
+     * @param function function def
+     * @param vars current context.
+     */
+
     public void compileMethods(FunctionNode function, HashMap<String, DataType> vars) {
-        nonBuiltIns.put(function.getIdent(), function);
-        ArrayList<Node> varaibles = function.getVaraibles();
+        nonBuiltIns.put(function.getIdent(), function); //Add it to hash map
+        ArrayList<Node> varaibles = function.getVaraibles(); ///works
         ArrayList<Node> params = function.getParams();
         ArrayList<Node> statements = function.getStatements();
         HashMap<String, DataType> varP = vars;
@@ -152,13 +158,14 @@ public class Interperter {
     }
 
     /**
-     * @param statetements m
-     * @param vars         ,
+     * @param statetements list of statements
+     * @param vars
+     * ik u said static. but Im doing this so I can have constructor vars.
      */
     public void interpterBlock(ArrayList<Node> statetements, HashMap<String, DataType> vars) {
         for (int i = 0; i < statetements.size(); i++) {
             FunctionCallNode callNodeRef = (FunctionCallNode) statetements.get(i);
-            if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) {
+            if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) { //buuilt in
                 ArrayList<Node> params = callNodeRef.getParams();
                 ArrayList<DataType> listOfParams = new ArrayList<>();
                 addToList(params, listOfParams, vars);
@@ -171,37 +178,35 @@ public class Interperter {
                     float n = Float.parseFloat(listOfParams.get(0).ToString());
                     int b = (int) n;
                     IntDataType newnum = new IntDataType(new IntegerNode(b), false);
-                    vars.replace(params.get(0).ToString(), newnum);
+                    vars.replace(params.get(0).ToString(), newnum); //replaces.
                 }
-            } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.IDENTIFIER) {
+            } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.IDENTIFIER) { //num func
                 if (nonBuiltIns.get(callNodeRef.getName().getTokenValue()) != null) {
-//                    ArrayList<DataType> p = new ArrayList<>();
-//                    addToList(callNodeRef.getParams(), p, vars);
-//                    compileUserDefined(callNodeRef,nonBuiltIns.get(callNodeRef.getName().getTokenValue()),vars );
                     ArrayList<Node> params = callNodeRef.getParamss();
                     ArrayList<Node> paramsForFunc = nonBuiltIns.get(callNodeRef.getName().getTokenValue()).getParams();
                     for (int i3 = 0; i3 < callNodeRef.getParamss().size(); i3++) {
-                        if (params.get(i) instanceof IntegerNode) {
+                        VaraibleNode b = (VaraibleNode) paramsForFunc.get(i3);
+                        DataType log = vars.get(b.getName().getTokenValue());
+                        if (vars.get(b.getName().getTokenValue()) instanceof IntDataType) {
                             VaraibleNode a = (VaraibleNode) paramsForFunc.get(i);
                             VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i);
-                            String m = a.getName().getTokenValue();
-//                            VaraibleNode a = ( VaraibleNode) paramsForFunc.get(i);
+                            String m = a.getName().getTokenValue(); //the random useless vars with single lets are for the debugger are for the debugge. It lets me se the value of them just ignor ethem
+                            //im not trying to toture u.
                             String deb = a.getName().getTokenValue();
                             String va = ((VaraibleNode) paramsForFunc.get(i)).getName().getTokenValue();
                             IntDataType val;
+                            //if. param is a num it
                             try{
                                 val = new IntDataType(new IntegerNode(Integer.parseInt(c.getName().getTokenValue())), false);
                             }catch (NumberFormatException e){
                                 IntegerNode in = new IntegerNode(Integer.parseInt(vars.get(c.getName().getTokenValue()).ToString()));
                                 val = new IntDataType(in, false);
                             }
-
                             vars.replace(va, val);
                         } else {
                             VaraibleNode a = (VaraibleNode) paramsForFunc.get(i3);
                             VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
                             String m = a.getName().getTokenValue();
-//                            VaraibleNode a = ( VaraibleNode) paramsForFunc.get(i);
                             String deb = a.getName().getTokenValue();
                             String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
                             FloatDataType val;
@@ -222,7 +227,15 @@ public class Interperter {
         }
     }
 
-    public static void addToList(ArrayList<Node> params, ArrayList<DataType> p, HashMap<String, DataType> vars) {
+    /**
+     *
+     * @param params list
+     * @param p Transfer list
+     * @param vars the hash map.
+     *
+     */
+
+    private static void addToList(ArrayList<Node> params, ArrayList<DataType> p, HashMap<String, DataType> vars) {
         for (int i = 0; i < params.size(); i++) {
             //should updtae for var ref node.
             VaraibleReferenceNode f = (VaraibleReferenceNode) params.get(i);
@@ -232,7 +245,7 @@ public class Interperter {
                 if (i == (params.size() - 1)) {
                     if (vars.get(f.ToString()) == null) {
                         vars.put(f.ToString(), new FloatDataType(new FloatNode(0), false));
-                        p.add(vars.get(f.ToString()));
+                        p.add(vars.get(f.ToString())); //adds this to the passed by ref listy.
                     } else {
                         p.add(vars.get(f.ToString()));
                     }
@@ -249,20 +262,6 @@ public class Interperter {
 
 
     }
-//    public static void CompileThis(FunctionNode function){
-//
-//        HashMap<String,DataType> function = new HashMap<>();
-//        if(funct.checkIfDefined()){
-//            for(int i = 0; i < param.size(); i++){
-//                function.put(funct.toString(),param.get(i));
-//            }
-//
-//            //do code if its a built in
-//        }else {
-//
-//        }
-//
-//
-//    }
+
 
 }

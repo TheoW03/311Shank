@@ -21,7 +21,7 @@ public class squareRootNode  extends BuiltInFunctionNode {
 
     /**
      *
-     * @param list
+     * @param list params for mnath.sqrt
      */
     @Override
     public void execute(ArrayList<DataType> list) {

@@ -35,6 +35,9 @@ public class IntDataType extends DataType{
 
     @Override
     public String ToString() {
+        if(data == null){
+            return "null";
+        }
         return data.ToString();
     }
 //    private IntegerNode data;

@@ -19,6 +19,12 @@ public class ReadNode  extends BuiltInFunctionNode {
     public ReadNode() {
 
     }
+
+    /**
+     *
+     * @param list scanner.
+     *             tHis reads the scanner
+     */
     @Override
     public void execute(ArrayList<DataType> list) {
         Scanner input = new Scanner(System.in);

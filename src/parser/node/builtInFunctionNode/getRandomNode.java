@@ -17,12 +17,17 @@ public class getRandomNode extends BuiltInFunctionNode {
     public getRandomNode() {
 
     }
+
+    /**
+     *
+     * @param list list
+     *             the 1st node I perfectedx LOl
+     */
     @Override
     public void execute(ArrayList<DataType> list) {
         Random r = new Random();
         try{
             int min = Integer.parseInt(list.get(0).ToString());
-//            int max = Integer.parseInt(list.get(1).ToString());
             int b = r.nextInt(min)+1; //may change to be 1 more param
             if(list.size() >= 2){
                 if(list.get(1) != null){
@@ -32,7 +37,6 @@ public class getRandomNode extends BuiltInFunctionNode {
 
             list.get(1).ToString();
             }
-//            System.out.println(b);
         }catch (NumberFormatException e){
             e.printStackTrace();
             System.out.println("You didnt input a num for params");
