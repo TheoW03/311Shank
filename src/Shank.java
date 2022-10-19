@@ -41,7 +41,7 @@ public class Shank {
         }
 
         System.out.println("\n");
-        System.out.println("sucess");
+        System.out.println("success");
     }
 
     /**
