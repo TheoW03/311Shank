@@ -4,9 +4,9 @@ constants
 variables
   float n := 0
 begin
-    squareRoot l n
-    floatToInt n
-    write n
+    write x
+    write y
+    write z
 end
 define test34 (d,e,f:integer)
 constants

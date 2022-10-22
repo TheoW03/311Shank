@@ -1,0 +1,32 @@
+package parser.DataType;
+
+import javax.xml.crypto.Data;
+import java.util.*;
+import java.io.*;
+
+/**
+ * @author Theo willis
+ * @version 1.0.0
+ * ~ project outline here ~
+ * @Javadoc
+ */
+public class StringDataType extends DataType {
+    public StringDataType() {
+
+    }
+
+    @Override
+    public String ToString() {
+        return null;
+    }
+
+    @Override
+    public void FromString(String input) {
+
+    }
+
+    @Override
+    public boolean checkIfCOnst() {
+        return false;
+    }
+}

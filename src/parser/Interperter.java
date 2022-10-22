@@ -155,7 +155,6 @@ public class Interperter {
             }
         }
         if(nonBuiltIns.get(name) != null){
-
             interpterBlock(nonBuiltIns.get(name).getStatements(), varP);
         }
 
