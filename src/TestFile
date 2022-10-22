@@ -1,10 +1,31 @@
-define start(a,b,c:integer)
+define test (a,b,c:integer)
+constants
+  float l := 20
+variables
+  float f := 0
+begin
+    squareRoot l f
+    floatToInt f
+    write f
+end
+define test34 (a,b,c:integer)
+constants
+  float l := 20
+variables
+  float f := 0
+begin
+    write c
+    write b
+    write f
+end
+define Start(a,b,c:integer)
 constants
   float l := 9
 variables
   float f := 0
 begin
-squareRoot l f (* 3 *)
+squareRoot l f
 floatToInt f
 write f
+test 10 20 35
 end

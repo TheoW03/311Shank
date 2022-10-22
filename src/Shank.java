@@ -71,13 +71,19 @@ public class Shank {
      */
     public static void ParserTestMethod(ArrayList<Token> a){
         Parser p = new Parser(a);
-        FunctionNode fn = (FunctionNode) p.parse();
-        System.out.println("name: "+fn.getIdent());
-        System.out.println("params: "+fn.params());
-        System.out.println("vars/constants: "+fn.vars());
-        System.out.println("statemnets: "+fn.statemnets());
-        Interperter i = new Interperter();
-        i.compileMethods(fn,new HashMap<>());
+        ArrayList<FunctionNode> fn = p.parse();
+        for(int i = 0; i < fn.size();i++){
+            System.out.println("name: "+fn.get(i).getIdent());
+            System.out.println("params: "+fn.get(i).params());
+            System.out.println("vars/constants: "+fn.get(i).vars());
+            System.out.println("statemnets: "+fn.get(i).statemnets());
+        }
+        Interperter in = new Interperter();
+        for(int i = 0; i < fn.size(); i++){
+            in.compileMethods(fn.get(i),new HashMap<>(),"Start");
+        }
+
+
 
 //        ArrayList<Node> n = new ArrayList<>();
 

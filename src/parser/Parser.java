@@ -30,14 +30,25 @@ public class Parser {
     /**
      * @return entry point parserer
      */
-    public Node parse() {
-        Node r = functionDef();
-        System.out.println(r);
-        if (r == null) {
-            System.out.println("Es null");
-            throw new UnauthTokenException("error parsing" + current);
+    public ArrayList<FunctionNode> parse() {
+        ArrayList<FunctionNode> functions = new ArrayList<>();
+        while(true){
+            FunctionNode r = (FunctionNode) functionDef();
+
+            functions.add(r);
+            if(tokenList.size() == 1){
+                break;
+            }
+            RemoveEOLS();
         }
-        return r;
+        return functions;
+//        Node r = functionDef();
+//        System.out.println(r);
+//        if (r == null) {
+//            System.out.println("Es null");
+//            throw new UnauthTokenException("error parsing" + current);
+//        }
+//        return r;
     }
 
     /**

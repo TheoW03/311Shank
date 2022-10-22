@@ -120,7 +120,7 @@ public class Interperter {
      * @param vars current context.
      */
 
-    public void compileMethods(FunctionNode function, HashMap<String, DataType> vars) {
+    public void compileMethods(FunctionNode function, HashMap<String, DataType> vars,String name) {
         nonBuiltIns.put(function.getIdent(), function); //Add it to hash map
         ArrayList<Node> varaibles = function.getVaraibles(); ///works
         ArrayList<Node> params = function.getParams();
@@ -154,7 +154,10 @@ public class Interperter {
                 }
             }
         }
-        interpterBlock(statements, varP);
+        if(nonBuiltIns.get(name) != null){
+            interpterBlock(nonBuiltIns.get(name).getStatements(), varP);
+        }
+
     }
 
     /**
@@ -188,12 +191,12 @@ public class Interperter {
                         VaraibleNode b = (VaraibleNode) paramsForFunc.get(i3);
                         DataType log = vars.get(b.getName().getTokenValue());
                         if (vars.get(b.getName().getTokenValue()) instanceof IntDataType) {
-                            VaraibleNode a = (VaraibleNode) paramsForFunc.get(i);
-                            VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i);
+                            VaraibleNode a = (VaraibleNode) paramsForFunc.get(i3);
+                            VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
                             String m = a.getName().getTokenValue(); //the random useless vars with single lets are for the debugger are for the debugge. It lets me se the value of them just ignor ethem
                             //im not trying to toture u.
                             String deb = a.getName().getTokenValue();
-                            String va = ((VaraibleNode) paramsForFunc.get(i)).getName().getTokenValue();
+                            String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
                             IntDataType val;
                             //if. param is a num it
                             try{
@@ -220,7 +223,7 @@ public class Interperter {
                             vars.replace(va, val);
                         }
                     }
-                    compileMethods(nonBuiltIns.get(callNodeRef.getName().getTokenValue()), vars);
+                    compileMethods(nonBuiltIns.get(callNodeRef.getName().getTokenValue()), vars,callNodeRef.getName().getTokenValue());
                 }
 
             }
