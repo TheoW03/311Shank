@@ -1,14 +1,14 @@
-define test (a,b,c:integer)
+define test (x,y,z:integer)
 constants
   float l := 20
 variables
-  float f := 0
+  float n := 0
 begin
-    squareRoot l f
-    floatToInt f
-    write f
+    squareRoot l n
+    floatToInt n
+    write n
 end
-define test34 (a,b,c:integer)
+define test34 (d,e,f:integer)
 constants
   float l := 20
 variables
@@ -26,6 +26,6 @@ variables
 begin
 squareRoot l f
 floatToInt f
-write f
 test 10 20 35
+write l
 end
