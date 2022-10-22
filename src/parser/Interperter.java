@@ -155,6 +155,7 @@ public class Interperter {
             }
         }
         if(nonBuiltIns.get(name) != null){
+
             interpterBlock(nonBuiltIns.get(name).getStatements(), varP);
         }
 
@@ -166,7 +167,10 @@ public class Interperter {
      * ik u said static. but Im doing this so I can have constructor vars.
      */
     public void interpterBlock(ArrayList<Node> statetements, HashMap<String, DataType> vars) {
+        //fix this up a bit
+        //including making vars less public by defualt
         for (int i = 0; i < statetements.size(); i++) {
+            String DEFUALT = "Start";
             FunctionCallNode callNodeRef = (FunctionCallNode) statetements.get(i);
             if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) { //buuilt in
                 ArrayList<Node> params = callNodeRef.getParams();
@@ -219,7 +223,6 @@ public class Interperter {
                                 FloatNode in = new FloatNode(Float.parseFloat(vars.get(c.getName().getTokenValue()).ToString()));
                                 val = new FloatDataType(in, false);
                             }
-
                             vars.replace(va, val);
                         }
                     }

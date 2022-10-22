@@ -11,11 +11,9 @@ end
 define test34 (d,e,f:integer)
 constants
   float l := 20
-variables
-  float f := 0
 begin
-    write c
-    write b
+    write d
+    write e
     write f
 end
 define Start(a,b,c:integer)
@@ -26,6 +24,6 @@ variables
 begin
 squareRoot l f
 floatToInt f
-test 10 20 35
-write l
+test 10 20 30
+test34 10 20 30
 end
