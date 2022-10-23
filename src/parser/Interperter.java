@@ -7,6 +7,7 @@ import lexer.UnauthTokenException;
 import parser.DataType.DataType;
 import parser.DataType.FloatDataType;
 import parser.DataType.IntDataType;
+import parser.DataType.StringDataType;
 import parser.node.*;
 import parser.node.FunctionCallNode.CallableNode;
 import parser.node.FunctionCallNode.FunctionCallNode;
@@ -132,8 +133,10 @@ public class Interperter {
                 if (varRef.getType() != null) {
                     if (varRef.getType().getTokenEnum() == Token.OPTokens.INTEGER) {
                         varP.put(varRef.getName().getTokenValue(), new IntDataType(null, false));
-                    } else {
+                    } else if(varRef.getType().getTokenEnum() == Token.OPTokens.FLOAT){
                         varP.put(varRef.getName().getTokenValue(), new FloatDataType(null, false));
+                    }else if(varRef.getType().getTokenEnum() == Token.OPTokens.STRING){
+                        varP.put(varRef.getName().getTokenValue(), new StringDataType(null, false));
                     }
                 }
             }
@@ -146,10 +149,13 @@ public class Interperter {
 //                    if (varP.get(varRef.getName().getTokenValue()) != null) {
 //                        throw new UnauthTokenException("var " + varRef.getName().getTokenValue() + " already declared");
 //                    }
-                    if (((VaraibleNode) varaibles.get(i)).getType().getTokenEnum() == Token.OPTokens.INTEGER) {
+                    Token.OPTokens tok = ((VaraibleNode) varaibles.get(i)).getType().getTokenEnum();
+                    if (tok == Token.OPTokens.INTEGER) {
                         varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
-                    } else {
+                    } else if (tok == Token.OPTokens.FLOAT) {
                         varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
+                    }else if(tok == Token.OPTokens.STRING_DT){
+                        varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), varRef.isConstant()));
                     }
                 }
             }
@@ -169,7 +175,6 @@ public class Interperter {
         //fix this up a bit
         //including making vars less public by defualt
         for (int i = 0; i < statetements.size(); i++) {
-            String DEFUALT = "Start";
             FunctionCallNode callNodeRef = (FunctionCallNode) statetements.get(i);
             if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) { //buuilt in
                 ArrayList<Node> params = callNodeRef.getParams();
@@ -244,13 +249,15 @@ public class Interperter {
         for (int i = 0; i < params.size(); i++) {
             //should updtae for var ref node.
             VaraibleReferenceNode f = (VaraibleReferenceNode) params.get(i);
-            if (f.getName().getTokenEnum() == Token.OPTokens.NUMBER) {
+            if(f.getName().getTokenEnum() == Token.OPTokens.STRING){
+                p.add(new StringDataType(f,false));
+            }else if (f.getName().getTokenEnum() == Token.OPTokens.NUMBER) {
                 p.add(new FloatDataType(f, false));
             } else {
                 if (i == (params.size() - 1)) {
                     if (vars.get(f.ToString()) == null) {
                         vars.put(f.ToString(), new FloatDataType(new FloatNode(0), false));
-                        p.add(vars.get(f.ToString())); //adds this to the passed by ref listy.
+                        p.add(vars.get(f.ToString()));
                     } else {
                         p.add(vars.get(f.ToString()));
                     }
@@ -260,7 +267,6 @@ public class Interperter {
                     }
                     p.add(vars.get(f.ToString()));
                 }
-//                   throw new UnauthTokenException(f.ToString() +" doesnt exist as var");
             }
 
         }

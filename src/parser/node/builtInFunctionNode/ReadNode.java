@@ -28,7 +28,7 @@ public class ReadNode  extends BuiltInFunctionNode {
     @Override
     public void execute(ArrayList<DataType> list) {
         Scanner input = new Scanner(System.in);
-        String inp = input.next();
+        String inp = input.nextLine();
         if(list.get(0).checkIfCOnst()){
             throw new UnauthTokenException(list.get(0).ToString()+"cant use this as return value");
         }

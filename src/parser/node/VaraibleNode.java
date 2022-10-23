@@ -34,7 +34,9 @@ public class VaraibleNode extends Node{
     public Token getType(){
         return type;
     }
-    public boolean isConstant(){return  this.isConstant;}
+    public boolean isConstant(){
+        return  this.isConstant;
+    }
 
     @Override
     public String ToString() {

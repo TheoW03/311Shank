@@ -1,5 +1,9 @@
 package parser.DataType;
 
+import parser.node.IntegerNode;
+import parser.node.Node;
+import parser.node.StringNode;
+
 import javax.xml.crypto.Data;
 import java.util.*;
 import java.io.*;
@@ -11,22 +15,29 @@ import java.io.*;
  * @Javadoc
  */
 public class StringDataType extends DataType {
-    public StringDataType() {
-
-    }
-
-    @Override
-    public String ToString() {
-        return null;
+    private Node data;
+    private final boolean consnat;
+    public StringDataType(Node data, boolean consnat) {
+        this.data =data;
+        this.consnat=consnat;
     }
 
     @Override
     public void FromString(String input) {
-
+        this.data = new StringNode(input);
     }
 
     @Override
     public boolean checkIfCOnst() {
-        return false;
+        return consnat;
+    }
+
+
+    @Override
+    public String ToString() {
+        if(data == null){
+            return "null";
+        }
+        return data.ToString();
     }
 }

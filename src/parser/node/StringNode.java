@@ -13,13 +13,13 @@ import java.io.*;
  * @Javadoc
  */
 public class StringNode extends Node{
-    private Token s;
-    public StringNode(Token s) {
+    private final String  s;
+    public StringNode(String s) {
         this.s = s;
     }
 
     @Override
     public String ToString() {
-        return s.getTokenValue();
+        return s;
     }
 }

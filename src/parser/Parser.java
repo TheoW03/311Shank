@@ -437,12 +437,12 @@ public class Parser {
                 ArrayList<Node> varaibles = new ArrayList<>(); //di vars
                 RemoveEOLS();
                 Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null) ? current
-                        : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null;
+                        :(matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current: (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null;
                 if (constants != null) {
                     if (constants.getTokenEnum() == Token.OPTokens.CONSTANTS) {
                         varaibles.addAll(processConstants());
                     }
-                    if (this.current.getTokenEnum() == Token.OPTokens.VARAIBLES) {
+                    if (constants.getTokenEnum() == Token.OPTokens.VARAIBLES) {
                         varaibles.addAll(processVaraibles());
                     }
                 }
@@ -599,7 +599,7 @@ public class Parser {
 //        System.out.println("current: " + current);
         Token string = matchAndRemove(Token.OPTokens.STRING);
         if (string != null) {
-            return new StringNode(string);
+            return new StringNode(string.getTokenValue());
         }
         if (isInt(current) != null ||isInt(current) != null|| matchAndRemove(Token.OPTokens.NUMBER) != null) {
 //            float a = (float) isFloat(current);

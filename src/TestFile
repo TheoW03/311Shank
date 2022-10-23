@@ -1,29 +1,8 @@
-define test (x,y,z:integer)
-constants
-  float l := 20
-variables
-  float n := 0
-begin
-    write x
-    write y
-    write z
-end
-define test34 (d,e,f:integer)
-constants
-  float l := 20
-begin
-    write d
-    write e
-    write f
-end
 define Start(a,b,c:integer)
-constants
-  float l := 9
 variables
-  float f := 0
+ string k := ""
 begin
-squareRoot l f
-floatToInt f
-test 10 20 30
-test34 10 20 30
+write "whatever u want: "
+read k
+write k
 end

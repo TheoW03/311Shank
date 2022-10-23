@@ -13,9 +13,9 @@ import java.io.*;
  */
 public class WhileNode extends Node{
     private Node bool;
-    private ArrayList<Node> sttements;
+    private ArrayList<Node> statements;
     public WhileNode(Node bool,ArrayList<Node> statements) {
-        this.sttements = statements;
+        this.statements = statements;
         this.bool = bool;
 
     }
