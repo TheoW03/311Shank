@@ -6,7 +6,11 @@ end
 
 define Start(a,b,c:integer)
 variables
- string k := ""
+ string k := "a"
+ string c := "b"
+ float a := 10
 begin
-   test34 "hello world",10
+   a := a + 10
+   write a
+
 end

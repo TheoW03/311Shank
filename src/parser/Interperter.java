@@ -11,6 +11,7 @@ import parser.DataType.StringDataType;
 import parser.node.*;
 import parser.node.FunctionCallNode.CallableNode;
 import parser.node.FunctionCallNode.FunctionCallNode;
+import parser.node.StatementNode.AssignmentNode;
 import parser.node.StatementNode.VaraibleReferenceNode;
 import parser.node.builtInFunctionNode.*;
 
@@ -91,14 +92,14 @@ public class Interperter {
             System.out.println("a: " + v.getOP());
             switch (v.getOP()) {
                 case "+":
-                    float addingNum1 = Resolve(thingYouWantResolved.right, vars);
-                    float addingNum2 = Resolve(thingYouWantResolved.left, vars);
+                    float addingNum1 = (float)Resolve(thingYouWantResolved.right, vars);
+                    float addingNum2 = (float)Resolve(thingYouWantResolved.left, vars);
                     System.out.println("Operand1: " + addingNum1 + " OP2: " + addingNum2);
                     a = addingNum1 + addingNum2;
                     System.out.println("result: " + a);
                     return a;
                 case "*":
-                    a = Resolve(thingYouWantResolved.left, vars) * Resolve(thingYouWantResolved.right, vars);
+                    a = (float) Resolve(thingYouWantResolved.left, vars) * Resolve(thingYouWantResolved.right, vars);
                     return a;
                 case "/":
                     if (Resolve(thingYouWantResolved.right, vars) == 0) {
@@ -145,9 +146,6 @@ public class Interperter {
             if (varaibles.get(i) instanceof VaraibleNode) {
                 VaraibleNode varRef = (VaraibleNode) varaibles.get(i);
                 if (varRef.getType() != null) {
-//                    if (varP.get(varRef.getName().getTokenValue()) != null) {
-//                        throw new UnauthTokenException("var " + varRef.getName().getTokenValue() + " already declared");
-//                    }
                     Token.OPTokens tok = ((VaraibleNode) varaibles.get(i)).getType().getTokenEnum();
                     if (tok == Token.OPTokens.INTEGER) {
                         varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
@@ -173,83 +171,101 @@ public class Interperter {
         //fix this up a bit
         //including making vars less public by defualt
         for (int i = 0; i < statetements.size(); i++) {
-            FunctionCallNode callNodeRef = (FunctionCallNode) statetements.get(i);
-            if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) { //buuilt in
-                ArrayList<Node> params = callNodeRef.getParams();
-                ArrayList<DataType> listOfParams = new ArrayList<>();
-                addToList(params, listOfParams, vars);
-                builtIn.get(callNodeRef.getName().getTokenEnum()).execute(listOfParams);
-                if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) {
-                    float n = Float.parseFloat(listOfParams.get(0).ToString());
-                    FloatDataType newnum = new FloatDataType(new FloatNode(n), false);
-                    vars.replace(params.get(0).ToString(), newnum);
-                } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.FLOAT_CON_INT) {
-                    float n = Float.parseFloat(listOfParams.get(0).ToString());
-                    int b = (int) n;
-                    IntDataType newnum = new IntDataType(new IntegerNode(b), false);
-                    vars.replace(params.get(0).ToString(), newnum); //replaces.
-                }
-            } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.IDENTIFIER) { //num func
-                if (nonBuiltIns.get(callNodeRef.getName().getTokenValue()) != null) {
-                    ArrayList<Node> params = callNodeRef.getParamss();
-                    ArrayList<Node> paramsForFunc = nonBuiltIns.get(callNodeRef.getName().getTokenValue()).getParams();
-//                    for(int i4 = 0; i4 < paramsForFunc.)
-                    for (int i3 = 0; i3 < callNodeRef.getParamss().size(); i3++) {
-                        VaraibleNode b = (VaraibleNode) paramsForFunc.get(i3);
-                        if(vars.get(b.getName().getTokenValue()) == null){
-                            if(((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.INTEGER){
-                                vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(),new IntDataType(null,false));
-                            }
-                            if(((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.FLOAT){
-                                vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(),new FloatDataType(null,false));
-                            }
-                            if(((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.STRING_DT){
-                                vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(),new StringDataType(null,false));
-                            }
-                        }
-                        String k = b.getName().getTokenValue();
-                        DataType log = vars.get(b.getName().getTokenValue());
-                        boolean j = vars.get(b.getName().getTokenValue()) instanceof IntDataType;
-                        boolean z = vars.get(b.getName().getTokenValue()) instanceof StringDataType;
-                        boolean h = vars.get(b.getName().getTokenValue()) instanceof FloatDataType;
-                        if (vars.get(b.getName().getTokenValue()) instanceof IntDataType) {
-                            VaraibleNode a = (VaraibleNode) paramsForFunc.get(i3);
-                            VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
-                            String m = a.getName().getTokenValue(); //the random useless vars with single lets are for the debugger are for the debugge. It lets me se the value of them just ignor ethem
-                            //im not trying to toture u.
-//                            String deb = a.getName().getTokenValue();
-                            String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
-                            IntDataType val;
-                            //if. param is a num it
-                            try {
-                                val = new IntDataType(new IntegerNode(Integer.parseInt(c.getName().getTokenValue())), false);
-                            } catch (NumberFormatException e) {
-                                IntegerNode in = new IntegerNode(Integer.parseInt(vars.get(c.getName().getTokenValue()).ToString()));
-                                val = new IntDataType(in, false);
-                            }
-                            vars.replace(va, val);
-                        } else if (vars.get(b.getName().getTokenValue()) instanceof FloatDataType) {
-                            VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
-                            String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
-                            FloatDataType val;
-                            try {
-                                val = new FloatDataType(new FloatNode(Float.parseFloat(c.getName().getTokenValue())), false);
-                            } catch (NumberFormatException e) {
-                                FloatNode in = new FloatNode(Float.parseFloat(vars.get(c.getName().getTokenValue()).ToString()));
-                                val = new FloatDataType(in, false);
-                            }
-                            vars.replace(va, val);
-                        } else if (vars.get(b.getName().getTokenValue()) instanceof StringDataType) {
-                            VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
-                            String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
-                            StringDataType val = new StringDataType(new StringNode(c.getName().getTokenValue()), false);
-                            vars.replace(va, val);
-                        }
+            Node nodeRef = statetements.get(i);
+            if (nodeRef instanceof FunctionCallNode) {
+                FunctionCallNode callNodeRef = (FunctionCallNode) statetements.get(i);
+//begin
+                if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) { //buuilt in
+                    ArrayList<Node> params = callNodeRef.getParams();
+                    ArrayList<DataType> listOfParams = new ArrayList<>();
+                    addToList(params, listOfParams, vars);
+                    builtIn.get(callNodeRef.getName().getTokenEnum()).execute(listOfParams);
+                    if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) {
+                        float n = Float.parseFloat(listOfParams.get(0).ToString());
+                        FloatDataType newnum = new FloatDataType(new FloatNode(n), false);
+                        vars.replace(params.get(0).ToString(), newnum);
+                    } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.FLOAT_CON_INT) {
+                        float n = Float.parseFloat(listOfParams.get(0).ToString());
+                        int b = (int) n;
+                        IntDataType newnum = new IntDataType(new IntegerNode(b), false);
+                        vars.replace(params.get(0).ToString(), newnum); //replaces.
                     }
-                    compileMethods(nonBuiltIns.get(callNodeRef.getName().getTokenValue()), vars, callNodeRef.getName().getTokenValue());
+                } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.IDENTIFIER) { //num func
+                    if (nonBuiltIns.get(callNodeRef.getName().getTokenValue()) != null) {
+                        ArrayList<Node> params = callNodeRef.getParamss();
+                        ArrayList<Node> paramsForFunc = nonBuiltIns.get(callNodeRef.getName().getTokenValue()).getParams();
+//                    for(int i4 = 0; i4 < paramsForFunc.)
+                        for (int i3 = 0; i3 < callNodeRef.getParamss().size(); i3++) {
+                            VaraibleNode b = (VaraibleNode) paramsForFunc.get(i3);
+                            if (vars.get(b.getName().getTokenValue()) == null) {
+                                if (((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.INTEGER) {
+                                    vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(), new IntDataType(null, false));
+                                }
+                                if (((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.FLOAT) {
+                                    vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(), new FloatDataType(null, false));
+                                }
+                                if (((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.STRING_DT) {
+                                    vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(), new StringDataType(null, false));
+                                }
+                            }
+                            String k = b.getName().getTokenValue();
+                            DataType log = vars.get(b.getName().getTokenValue());
+                            boolean j = vars.get(b.getName().getTokenValue()) instanceof IntDataType;
+                            boolean z = vars.get(b.getName().getTokenValue()) instanceof StringDataType;
+                            boolean h = vars.get(b.getName().getTokenValue()) instanceof FloatDataType;
+                            if (vars.get(b.getName().getTokenValue()) instanceof IntDataType) {
+                                VaraibleNode a = (VaraibleNode) paramsForFunc.get(i3);
+                                VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
+                                String m = a.getName().getTokenValue(); //the random useless vars with single lets are for the debugger are for the debugge. It lets me se the value of them just ignor ethem
+                                //im not trying to toture u.
+//                            String deb = a.getName().getTokenValue();
+                                String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
+                                IntDataType val;
+                                //if. param is a num it
+                                try {
+                                    val = new IntDataType(new IntegerNode(Integer.parseInt(c.getName().getTokenValue())), false);
+                                } catch (NumberFormatException e) {
+                                    IntegerNode in = new IntegerNode(Integer.parseInt(vars.get(c.getName().getTokenValue()).ToString()));
+                                    val = new IntDataType(in, false);
+                                }
+                                vars.replace(va, val);
+                            } else if (vars.get(b.getName().getTokenValue()) instanceof FloatDataType) {
+                                VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
+                                String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
+                                FloatDataType val;
+                                try {
+                                    val = new FloatDataType(new FloatNode(Float.parseFloat(c.getName().getTokenValue())), false);
+                                } catch (NumberFormatException e) {
+                                    FloatNode in = new FloatNode(Float.parseFloat(vars.get(c.getName().getTokenValue()).ToString()));
+                                    val = new FloatDataType(in, false);
+                                }
+                                vars.replace(va, val);
+                            } else if (vars.get(b.getName().getTokenValue()) instanceof StringDataType) {
+                                VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
+                                String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
+                                StringDataType val = new StringDataType(new StringNode(c.getName().getTokenValue()), false);
+                                vars.replace(va, val);
+                            }
+                        }
+                        compileMethods(nonBuiltIns.get(callNodeRef.getName().getTokenValue()), vars, callNodeRef.getName().getTokenValue());
+                    }
+
+                }
+                //end
+            } else if (nodeRef instanceof AssignmentNode) {
+                AssignmentNode assign = (AssignmentNode) statetements.get(i);
+                if (vars.get(assign.getVarName()) != null) {
+                    float b = Resolve(assign.getMath(), vars);
+                    if (vars.get(assign.getVarName()) instanceof IntDataType) {
+                        int answer = (int) b;
+                        vars.get(assign.getVarName()).FromString(Integer.toString(answer));
+                    }else{
+                        vars.get(assign.getVarName()).FromString(Float.toString(b));
+                    }
                 }
 
             }
+
         }
     }
 

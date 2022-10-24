@@ -17,6 +17,17 @@ public class AssignmentNode extends StatementNode {
         this.var = var;
         this.math = math;
     }
+    public Node getVar(){
+        return var;
+
+    }
+    public Node getMath(){
+        return math;
+
+    }
+    public String getVarName(){
+        return ((VaraibleReferenceNode) var).getName().getTokenValue();
+    }
 
     /**
      *
