@@ -512,7 +512,10 @@ public class Parser {
         if (name == null || Lexer.keyWords.get(name.getTokenValue()) != null) {
             throw new UnauthTokenException("name is null or key word is name");
         }
-        valu = expression();
+        if(equals != null){
+            valu = expression();
+        }
+
         if (varaiblesWithnoType.size() == 0) {
             varaiblesWithnoType.add(name);
         }

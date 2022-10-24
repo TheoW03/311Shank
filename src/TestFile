@@ -1,8 +1,12 @@
+define test34(z:string,ps:integer)
+begin
+write z
+write ps
+end
+
 define Start(a,b,c:integer)
 variables
  string k := ""
 begin
-write "whatever u want: "
-read k
-write k
+   test34 "hello world",10
 end
