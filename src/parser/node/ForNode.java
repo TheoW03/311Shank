@@ -14,18 +14,29 @@ import java.io.*;
  */
 
 public class ForNode extends Node {
-    private Node incimantor;
-    private Node begin;
-    private Node end;
+    private VaraibleReferenceNode incimantor;
+    private IntegerNode begin;
+    private IntegerNode end;
     private ArrayList<Node> statements;
-    public ForNode(VaraibleReferenceNode incriminator, Node begin, Node end, ArrayList<Node> statements) {
+    public ForNode(VaraibleReferenceNode incriminator, IntegerNode begin, IntegerNode end, ArrayList<Node> statements) {
         this.begin = begin;
         this.end = end;
         this.statements = statements;
         this.incimantor = incriminator;
-
-
     }
+    public IntegerNode getEnd(){
+        return end;
+    }
+    public IntegerNode getBegining(){
+        return begin;
+    }
+    public ArrayList<Node> getStatements(){
+        return statements;
+    }
+    public String getIncrimatorVal(){
+        return incimantor.getName().getTokenValue();
+    }
+
 
     /**
      * @param params2 an array

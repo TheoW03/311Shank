@@ -88,8 +88,8 @@ public class Interperter {
             v = (MathOpNode) thingYouWantResolved;
             switch (v.getOP()) {
                 case "+":
-                    float addingNum1 = (float)Resolve(thingYouWantResolved.right, vars);
-                    float addingNum2 = (float)Resolve(thingYouWantResolved.left, vars);
+                    float addingNum1 = (float) Resolve(thingYouWantResolved.right, vars);
+                    float addingNum2 = (float) Resolve(thingYouWantResolved.left, vars);
                     a = addingNum1 + addingNum2;
                     return a;
                 case "*":
@@ -112,30 +112,29 @@ public class Interperter {
     }
 
     /**
-     *
      * @param boolExp
      * @param vars
      * @return
      */
-    public boolean evauluateBool(BooleanNode boolExp,HashMap<String,DataType> vars){
+    public boolean evauluateBool(BooleanNode boolExp, HashMap<String, DataType> vars) {
         Token.OPTokens op = boolExp.getCondition();
-        if(op == Token.OPTokens.EQUALITY_EUQUALS){
-            return Resolve(boolExp.left,vars) == Resolve(boolExp.right,vars);
-        }else if(op == Token.OPTokens.NOT_EQUAL){
-            return Resolve(boolExp.left,vars) != Resolve(boolExp.right,vars);
+        if (op == Token.OPTokens.EQUALITY_EUQUALS) {
+            return Resolve(boolExp.left, vars) == Resolve(boolExp.right, vars);
+        } else if (op == Token.OPTokens.NOT_EQUAL) {
+            return Resolve(boolExp.left, vars) != Resolve(boolExp.right, vars);
             //jokes on u java uses != L
-        }else if(op == Token.OPTokens.GREATER_THAN){
-            return Resolve(boolExp.left,vars) > Resolve(boolExp.right,vars);
+        } else if (op == Token.OPTokens.GREATER_THAN) {
+            return Resolve(boolExp.left, vars) > Resolve(boolExp.right, vars);
 
-        }else if(op == Token.OPTokens.LESS_THAN){
-            return Resolve(boolExp.left,vars) < Resolve(boolExp.right,vars);
-        }else if(op == Token.OPTokens.LESS_THAN_EQAUALS){
-            return Resolve(boolExp.left,vars) <= Resolve(boolExp.right,vars);
+        } else if (op == Token.OPTokens.LESS_THAN) {
+            return Resolve(boolExp.left, vars) < Resolve(boolExp.right, vars);
+        } else if (op == Token.OPTokens.LESS_THAN_EQAUALS) {
+            return Resolve(boolExp.left, vars) <= Resolve(boolExp.right, vars);
 
-        }else if(op == Token.OPTokens.GREATER_THAN_EQUALS){
-            return Resolve(boolExp.left,vars) >= Resolve(boolExp.right,vars);
+        } else if (op == Token.OPTokens.GREATER_THAN_EQUALS) {
+            return Resolve(boolExp.left, vars) >= Resolve(boolExp.right, vars);
 
-        }else{
+        } else {
             throw new UnauthTokenException("error");
         }
     }
@@ -281,24 +280,24 @@ public class Interperter {
                     if (vars.get(assign.getVarName()) instanceof IntDataType) {
                         int answer = (int) b;
                         vars.get(assign.getVarName()).FromString(Integer.toString(answer));
-                    }else{
+                    } else {
                         vars.get(assign.getVarName()).FromString(Float.toString(b));
                     }
                 }
 
-            }else if(nodeRef instanceof ifNode){
+            } else if (nodeRef instanceof ifNode) {
                 ifNode ifState = (ifNode) statetements.get(i);
-                if(evauluateBool((BooleanNode)ifState.getBoolConditionExp(),vars)){
-                    interpterBlock(ifState.getStatements(),vars);
-                }else{
-                    if(ifState.getElseIf() != null){
+                if (evauluateBool((BooleanNode) ifState.getBoolConditionExp(), vars)) {
+                    interpterBlock(ifState.getStatements(), vars);
+                } else {
+                    if (ifState.getElseIf() != null) {
                         ArrayList<Node> elseIF = ifState.getElseIf();
                         int in = 0;
-                        while (true){
+                        while (true) {
                             ElseNode elseNodeRef = (ElseNode) elseIF.get(in);
                             BooleanNode conditiob = (BooleanNode) elseNodeRef.getCondition();
-                            if(conditiob == null || evauluateBool(conditiob,vars) || in > elseIF.size()){
-                                interpterBlock(elseNodeRef.getStatements(),vars);
+                            if (conditiob == null || evauluateBool(conditiob, vars) || in > elseIF.size()) {
+                                interpterBlock(elseNodeRef.getStatements(), vars);
                                 break;
                             }
                             in++;
@@ -306,6 +305,15 @@ public class Interperter {
                     }
 
 
+                }
+            } else if (nodeRef instanceof ForNode) {
+                ForNode forLoop = (ForNode) statetements.get(i);
+                int incrimatorVal = (int) Resolve(forLoop.getBegining(), vars);
+                DataType incrimator = new IntDataType(new IntegerNode(incrimatorVal), false);
+                vars.put(forLoop.getIncrimatorVal(), incrimator);
+                for (int i0 = incrimatorVal; i0 < Resolve(forLoop.getEnd(), vars); i0++) {
+                    vars.get(forLoop.getIncrimatorVal()).FromString(Integer.toString(i0));
+                    interpterBlock(forLoop.getStatements(),vars);
                 }
             }
         }

@@ -5,15 +5,13 @@ variables
  string k := "a"
  string c := "b"
  integer a := 3
+ integer i := 1
 begin
-   if a = 10 then
-   begin
-    write "a == 10"
-   end
-   elsif a = 3 then
-   begin
-    write "else if"
-   end
+for i from 0 to 10
+begin
+	write i
+end
+
 
 
 
