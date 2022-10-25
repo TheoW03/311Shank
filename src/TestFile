@@ -6,13 +6,15 @@ variables
  string c := "b"
  integer a := 3
 begin
-   if a = 3 then
+   if a = 10 then
    begin
-    write "hello world in a if"
-    a := a + 10
-    if a = 13 then
-    begin
-       write "nested"
-    end
+    write "a == 10"
    end
+   elsif a = 3 then
+   begin
+    write "else if"
+   end
+
+
+
 end

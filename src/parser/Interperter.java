@@ -290,9 +290,24 @@ public class Interperter {
                 ifNode ifState = (ifNode) statetements.get(i);
                 if(evauluateBool((BooleanNode)ifState.getBoolConditionExp(),vars)){
                     interpterBlock(ifState.getStatements(),vars);
+                }else{
+                    if(ifState.getElseIf() != null){
+                        ArrayList<Node> elseIF = ifState.getElseIf();
+                        int in = 0;
+                        while (true){
+                            ElseNode elseNodeRef = (ElseNode) elseIF.get(in);
+                            BooleanNode conditiob = (BooleanNode) elseNodeRef.getCondition();
+                            if(conditiob == null || evauluateBool(conditiob,vars) || in > elseIF.size()){
+                                interpterBlock(elseNodeRef.getStatements(),vars);
+                                break;
+                            }
+                            in++;
+                        }
+                    }
+
+
                 }
             }
-
         }
     }
 

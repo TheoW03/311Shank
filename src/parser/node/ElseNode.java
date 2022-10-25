@@ -34,6 +34,12 @@ public class ElseNode extends Node {
         t.append("]");
         return t.toString();
     }
+    public Node getCondition(){
+        return condition;
+    }
+    public ArrayList<Node> getStatements(){
+        return statements;
+    }
 
     @Override
     public String ToString() {

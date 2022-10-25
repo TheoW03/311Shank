@@ -21,6 +21,9 @@ public class ifNode extends  Node{
     public ArrayList<Node> getStatements(){
         return statements;
     }
+    public ArrayList<Node> getElseIf(){
+        return elseIf;
+    }
     public Node getBoolConditionExp(){
         return boolConditionExp;
     }
