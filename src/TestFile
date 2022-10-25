@@ -1,16 +1,18 @@
-define test34(z:string,ps:integer)
-begin
-write z
-write ps
-end
+
 
 define Start(a,b,c:integer)
 variables
  string k := "a"
  string c := "b"
- float a := 10
+ integer a := 3
 begin
-   a := a + 10
-   write a
-
+   if a = 3 then
+   begin
+    write "hello world in a if"
+    a := a + 10
+    if a = 13 then
+    begin
+       write "nested"
+    end
+   end
 end

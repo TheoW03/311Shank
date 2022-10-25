@@ -68,10 +68,8 @@ public class Interperter {
      * @return
      */
     public float Resolve(Node thingYouWantResolved, HashMap<String, DataType> vars) {
-        System.out.println(thingYouWantResolved);
-        System.out.println("traverse");
         if (thingYouWantResolved == null) {
-            System.out.println("es ndad :')");
+
             return 0;
         }
 //        Resolve(thingYouWantResolved.right);
@@ -85,18 +83,14 @@ public class Interperter {
             return Float.parseFloat(vars.get(thingYouWantResolved.ToString()).ToString());
         }
         if (thingYouWantResolved instanceof MathOpNode) {
-            System.out.println("e");
             float a;
             MathOpNode v;
             v = (MathOpNode) thingYouWantResolved;
-            System.out.println("a: " + v.getOP());
             switch (v.getOP()) {
                 case "+":
                     float addingNum1 = (float)Resolve(thingYouWantResolved.right, vars);
                     float addingNum2 = (float)Resolve(thingYouWantResolved.left, vars);
-                    System.out.println("Operand1: " + addingNum1 + " OP2: " + addingNum2);
                     a = addingNum1 + addingNum2;
-                    System.out.println("result: " + a);
                     return a;
                 case "*":
                     a = (float) Resolve(thingYouWantResolved.left, vars) * Resolve(thingYouWantResolved.right, vars);
@@ -113,9 +107,37 @@ public class Interperter {
             }
         }
         //if float
-        System.out.println(thingYouWantResolved.ToString());
         return 0;
 
+    }
+
+    /**
+     *
+     * @param boolExp
+     * @param vars
+     * @return
+     */
+    public boolean evauluateBool(BooleanNode boolExp,HashMap<String,DataType> vars){
+        Token.OPTokens op = boolExp.getCondition();
+        if(op == Token.OPTokens.EQUALITY_EUQUALS){
+            return Resolve(boolExp.left,vars) == Resolve(boolExp.right,vars);
+        }else if(op == Token.OPTokens.NOT_EQUAL){
+            return Resolve(boolExp.left,vars) != Resolve(boolExp.right,vars);
+            //jokes on u java uses != L
+        }else if(op == Token.OPTokens.GREATER_THAN){
+            return Resolve(boolExp.left,vars) > Resolve(boolExp.right,vars);
+
+        }else if(op == Token.OPTokens.LESS_THAN){
+            return Resolve(boolExp.left,vars) < Resolve(boolExp.right,vars);
+        }else if(op == Token.OPTokens.LESS_THAN_EQAUALS){
+            return Resolve(boolExp.left,vars) <= Resolve(boolExp.right,vars);
+
+        }else if(op == Token.OPTokens.GREATER_THAN_EQUALS){
+            return Resolve(boolExp.left,vars) >= Resolve(boolExp.right,vars);
+
+        }else{
+            throw new UnauthTokenException("error");
+        }
     }
 
     /**
@@ -264,6 +286,11 @@ public class Interperter {
                     }
                 }
 
+            }else if(nodeRef instanceof ifNode){
+                ifNode ifState = (ifNode) statetements.get(i);
+                if(evauluateBool((BooleanNode)ifState.getBoolConditionExp(),vars)){
+                    interpterBlock(ifState.getStatements(),vars);
+                }
             }
 
         }

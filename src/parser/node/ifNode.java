@@ -18,6 +18,13 @@ public class ifNode extends  Node{
         this.statements = statements;
         this.elseIf = elseIf;
     }
+    public ArrayList<Node> getStatements(){
+        return statements;
+    }
+    public Node getBoolConditionExp(){
+        return boolConditionExp;
+    }
+
 
     /**
      *

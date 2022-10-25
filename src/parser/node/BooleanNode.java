@@ -18,6 +18,9 @@ public class BooleanNode extends  Node{
         this.right = right;
         this.condition = condition;
     }
+    public Token.OPTokens getCondition(){
+        return condition.getTokenEnum();
+    }
 
     @Override
     public String ToString() {
