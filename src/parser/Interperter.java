@@ -306,12 +306,24 @@ public class Interperter {
 
 
                 }
+                //chekcs instsnace for loop
             } else if (nodeRef instanceof ForNode) {
                 ForNode forLoop = (ForNode) statetements.get(i);
-                int incrimatorVal = (int) Resolve(forLoop.getBegining(), vars);
+                int incrimatorVal = 0;
+                if(forLoop.getBegining().getName().getTokenEnum() == Token.OPTokens.NUMBER){
+                    incrimatorVal = Integer.parseInt(forLoop.getBegining().getName().getTokenValue());
+                }else{
+                    incrimatorVal = Integer.parseInt(vars.get(forLoop.getBegining().getName().getTokenValue()).ToString());
+                }
+                int endInc = 0;
+                if(forLoop.getBegining().getName().getTokenEnum() == Token.OPTokens.NUMBER){
+                    endInc = Integer.parseInt(forLoop.getEnd().getName().getTokenValue());
+                }else{
+                    endInc = Integer.parseInt(vars.get(forLoop.getEnd().getName().getTokenValue()).ToString());
+                }
                 DataType incrimator = new IntDataType(new IntegerNode(incrimatorVal), false);
                 vars.put(forLoop.getIncrimatorVal(), incrimator);
-                for (int i0 = incrimatorVal; i0 < Resolve(forLoop.getEnd(), vars); i0++) {
+                for (int i0 = incrimatorVal; i0 < endInc; i0++) {
                     vars.get(forLoop.getIncrimatorVal()).FromString(Integer.toString(i0));
                     interpterBlock(forLoop.getStatements(),vars);
                 }

@@ -181,7 +181,7 @@ public class Parser {
         }
         //checks if number, or var ref
         //so probably do 4 constructors and return types
-        return new ForNode(new VaraibleReferenceNode(varaibleBeginIn), new IntegerNode(0), new IntegerNode(10), statement);
+        return new ForNode(new VaraibleReferenceNode(varaibleBeginIn), new VaraibleReferenceNode(beginV), new VaraibleReferenceNode(endV), statement);
     }
 
     /**
