@@ -122,11 +122,12 @@ public class Interperter {
      */
     public boolean evauluateBool(BooleanNode boolExp, HashMap<String, DataType> vars) {
         Token.OPTokens op = boolExp.getCondition();
+        //cheks
         if (op == Token.OPTokens.EQUALITY_EUQUALS) {
             return Resolve(boolExp.right, vars) == Resolve(boolExp.left, vars);
         } else if (op == Token.OPTokens.NOT_EQUAL) {
             return Resolve(boolExp.right, vars) != Resolve(boolExp.left, vars);
-            //jokes on u java uses != L
+            //jokes on u java uses "!=" L common Old 4chan L LOl.
         } else if (op == Token.OPTokens.GREATER_THAN) {
             return Resolve(boolExp.right, vars) > Resolve(boolExp.left, vars);
 
