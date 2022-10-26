@@ -104,6 +104,10 @@ public class Interperter {
                 case "-":
                     a = Resolve(thingYouWantResolved.left, vars) - Resolve(thingYouWantResolved.right, vars);
                     return a;
+                case "mod":
+                    System.out.println("works");
+                    a = Resolve(thingYouWantResolved.left, vars) % Resolve(thingYouWantResolved.right, vars);
+                    return a;
             }
         }
         //if float
@@ -273,7 +277,7 @@ public class Interperter {
 
                 }
                 //end
-            } else if (nodeRef instanceof AssignmentNode) {
+            } else if (nodeRef instanceof AssignmentNode) { //assignmnet
                 AssignmentNode assign = (AssignmentNode) statetements.get(i);
                 if (vars.get(assign.getVarName()) != null) {
                     float b = Resolve(assign.getMath(), vars);

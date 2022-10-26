@@ -5,10 +5,8 @@ variables
  string k := "a"
  string c := "b"
  integer a := 3
- integer i := 1
+ integer i := 0
 begin
-while i > 10
-begin
-    i := i + 10
-end
+i := 11 mod 2 (* mod works *)
+write i
 end

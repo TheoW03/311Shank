@@ -26,6 +26,7 @@ import java.util.HashMap;
  * <p>the diragatory exception messages was my brain. after 5 days of non stop java and burnout.
  * i just wrote what ever bc I was tired.</p>
  * <p>there is a bjillon tests Im missing here. but good luck</p>
+ * <p>enjoy :D</p>
  */
 
 //compiles. trust me bro ;)
