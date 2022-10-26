@@ -119,20 +119,20 @@ public class Interperter {
     public boolean evauluateBool(BooleanNode boolExp, HashMap<String, DataType> vars) {
         Token.OPTokens op = boolExp.getCondition();
         if (op == Token.OPTokens.EQUALITY_EUQUALS) {
-            return Resolve(boolExp.left, vars) == Resolve(boolExp.right, vars);
+            return Resolve(boolExp.right, vars) == Resolve(boolExp.left, vars);
         } else if (op == Token.OPTokens.NOT_EQUAL) {
-            return Resolve(boolExp.left, vars) != Resolve(boolExp.right, vars);
+            return Resolve(boolExp.right, vars) != Resolve(boolExp.left, vars);
             //jokes on u java uses != L
         } else if (op == Token.OPTokens.GREATER_THAN) {
-            return Resolve(boolExp.left, vars) > Resolve(boolExp.right, vars);
+            return Resolve(boolExp.right, vars) > Resolve(boolExp.left, vars);
 
         } else if (op == Token.OPTokens.LESS_THAN) {
-            return Resolve(boolExp.left, vars) < Resolve(boolExp.right, vars);
+            return Resolve(boolExp.right, vars) < Resolve(boolExp.left, vars);
         } else if (op == Token.OPTokens.LESS_THAN_EQAUALS) {
-            return Resolve(boolExp.left, vars) <= Resolve(boolExp.right, vars);
+            return Resolve(boolExp.right, vars) <= Resolve(boolExp.left, vars);
 
         } else if (op == Token.OPTokens.GREATER_THAN_EQUALS) {
-            return Resolve(boolExp.left, vars) >= Resolve(boolExp.right, vars);
+            return Resolve(boolExp.right, vars) >= Resolve(boolExp.left, vars);
 
         } else {
             throw new UnauthTokenException("error");
@@ -327,6 +327,19 @@ public class Interperter {
                     vars.get(forLoop.getIncrimatorVal()).FromString(Integer.toString(i0));
                     interpterBlock(forLoop.getStatements(),vars);
                 }
+            }
+            else if(nodeRef instanceof WhileNode){
+                WhileNode whileState = (WhileNode) statetements.get(i);
+                while (evauluateBool((BooleanNode) whileState.getBool(),vars)){
+                    interpterBlock(whileState.getStatements(), vars);
+                }
+
+            }
+            else if(nodeRef instanceof RepeatNode){
+                RepeatNode repateState = (RepeatNode) nodeRef;
+                do {
+                    interpterBlock(repateState.getStatement(),vars);
+                }while (!evauluateBool((BooleanNode) repateState.getBoolExp(),vars));
             }
         }
     }

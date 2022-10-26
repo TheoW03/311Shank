@@ -19,6 +19,12 @@ public class RepeatNode extends Node {
         this.boolExp = boolExp;
         this.statement = statemnet;
     }
+    public Node getBoolExp(){
+        return boolExp;
+    }
+    public ArrayList<Node> getStatement(){
+        return statement;
+    }
 
     @Override
     public String ToString() {

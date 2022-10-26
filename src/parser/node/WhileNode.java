@@ -19,6 +19,12 @@ public class WhileNode extends Node{
         this.bool = bool;
 
     }
+    public Node getBool(){
+        return bool;
+    }
+    public ArrayList<Node> getStatements(){
+        return statements;
+    }
 
     @Override
     public String ToString() {

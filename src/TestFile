@@ -7,12 +7,8 @@ variables
  integer a := 3
  integer i := 1
 begin
-for i from 0 to 20
+while i > 10
 begin
-	write i
+    i := i + 10
 end
-
-
-
-
 end
