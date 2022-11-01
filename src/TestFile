@@ -1,12 +1,1 @@
-
-
-define Start(a,b,c:integer)
-variables
- string k := "a"
- string c := "b"
- integer a := 3
- integer i := 0
-begin
-i := 11 mod 2 (* mod works *)
-write i
-end
+true = false or false = true

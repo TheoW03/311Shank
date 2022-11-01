@@ -24,6 +24,9 @@ public class BooleanNode extends  Node{
 
     @Override
     public String ToString() {
-        return left.ToString() + " "+ right.ToString() + " "+condition.getTokenValue();
+        if(condition == null){
+            return this.left.ToString() +" "+this.right.ToString() + " " + condition;
+        }
+        return "";
     }
 }

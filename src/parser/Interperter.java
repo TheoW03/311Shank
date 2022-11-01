@@ -18,6 +18,8 @@ import parser.node.builtInFunctionNode.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static lexer.Token.OPTokens.GREATER_THAN;
+
 
 /**
  * @author Theo willis
@@ -44,13 +46,106 @@ public class Interperter {
 
 
     }
+    public int resolveBooleanExp(Node root){
+        if(root == null){
+            System.out.println("null");
+            return -1;
+        }
+        if(root instanceof IntegerNode){
+            return (int) ((IntegerNode) root).getIntegerANomerul();
+        }
+        if(root instanceof FloatNode){
+            return (int)((FloatNode)root).getValue();
+        }
+        if(root instanceof BooleanWordNode){
+            if(((BooleanWordNode) root).evalu()){
+                return 1;
+            }else{
+                return 0;
+            }
+        }
+//        resolveBooleanExp(root.left);
+//        resolveBooleanExp(root.right);
+        if(root instanceof BooleanNode){
+            switch(((BooleanNode) root).getCondition()){
+                case EQUALITY_EUQUALS ->{
+                    if(resolveBooleanExp(root.right) == resolveBooleanExp(root.left)){
+                        return 1;
+                    }else {
+                        return 0;
+                    }
+                }
+                case GREATER_THAN -> {
+                    if(resolveBooleanExp(root.right) < resolveBooleanExp(root.left)){
+                        return 1;
+                    }else {
+                        return 0;
+                    }
+                }
+                case LESS_THAN -> {
+                    if(resolveBooleanExp(root.right) > resolveBooleanExp(root.left)){
+
+                        return 1;
+                    }else {
+                        return 0;
+                    }
+                }
+                case LESS_THAN_EQAUALS -> {
+                    if(resolveBooleanExp(root.right) <= resolveBooleanExp(root.left)){
+                        return 1;
+                    }else {
+                        return 0;
+                    }
+                }
+                case GREATER_THAN_EQUALS -> {
+                    if(resolveBooleanExp(root.right) >= resolveBooleanExp(root.left)){
+                        return 1;
+                    }else {
+                        return 0;
+                    }
+                }
+                case NOT_EQUAL -> {
+                    if(resolveBooleanExp(root.right) != resolveBooleanExp(root.left)){
+                        return 1;
+                    }else {
+                        return 0;
+                    }
+                }
+                case AND ->{
+                    if(resolveBooleanExp(root.right) == 1 && resolveBooleanExp(root.left) == 1){
+                        return 1;
+                    }else {
+                        return 0;
+                    }
+                }
+                case OR ->{
+                    if(resolveBooleanExp(root.right) == 1 || resolveBooleanExp(root.left) == 1){
+                        return 1;
+                    }else {
+                        return 0;
+                    }
+                }
+            }
+        }
+        System.out.println("doesnt make cut");
+        return -2;
+    }
+    public float traverseBooleanOp(Node root){
+        if(root instanceof IntegerNode){
+            return (float) ((IntegerNode) root).getIntegerANomerul();
+        }
+        if(root instanceof FloatNode){
+            return (float) ((FloatNode) root).getValue();
+        }
+        return -1;
+    }
 
     public void travserse(Node root) {
 
         if (root == null) {
-            System.out.println("j");
             return;
         }
+
         System.out.println(root.ToString());
         travserse(root.left);
         travserse(root.right);
@@ -128,7 +223,7 @@ public class Interperter {
         } else if (op == Token.OPTokens.NOT_EQUAL) {
             return Resolve(boolExp.right, vars) != Resolve(boolExp.left, vars);
             //jokes on u java uses "!=" L common Old 4chan L LOl.
-        } else if (op == Token.OPTokens.GREATER_THAN) {
+        } else if (op == GREATER_THAN) {
             return Resolve(boolExp.right, vars) > Resolve(boolExp.left, vars);
 
         } else if (op == Token.OPTokens.LESS_THAN) {
@@ -284,10 +379,18 @@ public class Interperter {
                     float b = Resolve(assign.getMath(), vars);
                     if (vars.get(assign.getVarName()) instanceof IntDataType) {
                         int answer = (int) b;
+                        if(vars.get(assign.getVarName()) == null){
+                            throw   new UnauthTokenException("doesnt exist");
+                        }
                         vars.get(assign.getVarName()).FromString(Integer.toString(answer));
                     } else {
+                        if(vars.get(assign.getVarName()) == null){
+                            throw   new UnauthTokenException("doesnt exist");
+                        }
                         vars.get(assign.getVarName()).FromString(Float.toString(b));
                     }
+                }else{
+                    throw new UnauthTokenException("var doesnt exist");
                 }
 
             } else if (nodeRef instanceof ifNode) {
