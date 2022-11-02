@@ -31,6 +31,7 @@ public class Lexer {
         keyWords.put("bool", new Token(Token.OPTokens.BOOLEAN_DT, "boolean")); //for strings
         keyWords.put("and", new Token(Token.OPTokens.AND, "and")); //for strings
         keyWords.put("or", new Token(Token.OPTokens.OR, "or")); //for strings
+        keyWords.put("character", new Token(Token.OPTokens.CHARACTER, "char")); //for strings
 
         //OP
         keyWords.put(":=", new Token(Token.OPTokens.EQUALS, ":="));
@@ -402,6 +403,10 @@ public class Lexer {
                                     }
                                     stateIsNum = true;
                                 }
+                                case '\''->{
+                                    System.out.println("e");
+                                    wordState = 4;
+                                }
                                 default -> {
                                     wordBuffer += currentChar;
                                 }
@@ -446,6 +451,9 @@ public class Lexer {
                                         wordBuffer = "";
                                     }
                                 }
+                                case  '\'' ->{
+                                    wordState = 4;
+                                }
                                 default -> {
                                     if (!wordBuffer.equals("")) {
                                         if (keyWords.get(wordBuffer) != null) {
@@ -462,9 +470,19 @@ public class Lexer {
                                 }
 
                             }
-
                         } else if (wordState == 4) {
-                            state = 1;
+                            if(wordBuffer.length() > 1){
+                                throw new UnauthTokenException("Error");
+                            }
+                            if(currentChar == '\''){
+                                stateIsNum = true;
+                                wordBuffer = "";
+
+                                wordState = 1;
+                            }else{
+                                wordBuffer += currentChar;
+                                tokenDataR.add(new Token(Token.OPTokens.CHAR,String.valueOf(currentChar)));
+                            }
                         } else {
                             state = 1;
                         }

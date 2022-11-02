@@ -27,6 +27,6 @@ public class BooleanNode extends  Node{
         if(condition == null){
             return this.left.ToString() +" "+this.right.ToString() + " " + condition;
         }
-        return "";
+        return this.left.ToString() +" "+this.right.ToString();
     }
 }

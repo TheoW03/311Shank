@@ -73,26 +73,27 @@ public class Shank {
      */
     public static void ParserTestMethod(ArrayList<Token> a){
         Parser p = new Parser(a);
-//        ArrayList<FunctionNode> fn = p.parse();
-        Node boolExp = p.parseBooleanNodes();
-        Interperter i = new Interperter();
-        if(i.resolveBooleanExp(boolExp) == 1){
-            System.out.println("true");
-        }else if(i.resolveBooleanExp(boolExp) == 0){
-            System.out.println("false");
-        }else{
-            System.out.println("error");
+        ArrayList<FunctionNode> fn = p.parse();
+//        Node boolExp = p.parseBooleanNodes();
+        Interperter i2 = new Interperter();
+//        i2.travserse(boolExp);
+//        if(i2.resolveBooleanExp(boolExp, new HashMap<>()) == 1){
+//            System.out.println("true");
+//        }else if(i2.resolveBooleanExp(boolExp,new HashMap<>()) == 0){
+//            System.out.println("false");
+//        }else{
+//            System.out.println("error");
+//        }
+        for(int i = 0; i < fn.size();i++){
+            System.out.println("name: "+fn.get(i).getIdent());
+            System.out.println("params: "+fn.get(i).params());
+            System.out.println("vars/constants: "+fn.get(i).vars());
+            System.out.println("statemnets: "+fn.get(i).statemnets());
         }
-//        for(int i = 0; i < fn.size();i++){
-//            System.out.println("name: "+fn.get(i).getIdent());
-//            System.out.println("params: "+fn.get(i).params());
-//            System.out.println("vars/constants: "+fn.get(i).vars());
-//            System.out.println("statemnets: "+fn.get(i).statemnets());
-//        }
-//        Interperter in = new Interperter();
-//        for(int i = 0; i < fn.size(); i++){
-//            in.compileMethods(fn.get(i),new HashMap<>(),"Start");
-//        }
+        Interperter in = new Interperter();
+        for(int i = 0; i < fn.size(); i++){
+            in.compileMethods(fn.get(i),new HashMap<>(),"Start");
+        }
 
 
 

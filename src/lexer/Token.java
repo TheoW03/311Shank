@@ -51,7 +51,7 @@ public class Token {
         //built in
         WRITE("write"), INT_CON_FLOAT("IntToFloat"), SQRT("squareroot"), FLOAT_CON_INT("FloatToInt"), READ("Read"), GET_RANDOM("Random"),
         TRUE("true"),FALSE("false"),
-        BOOLEAN_DT("boolean"),AND("and"),OR("or");
+        BOOLEAN_DT("boolean"),AND("and"),OR("or"), CHARACTER("Charatcer"), CHAR("char");
 
         private String s;
         private String value;

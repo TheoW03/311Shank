@@ -32,11 +32,11 @@ public class Parser {
      */
     public ArrayList<FunctionNode> parse() {
         ArrayList<FunctionNode> functions = new ArrayList<>();
-        while(true){
+        while (true) {
             FunctionNode r = (FunctionNode) functionDef();
 
             functions.add(r);
-            if(tokenList.size() == 1){
+            if (tokenList.size() == 1) {
                 break;
             }
             RemoveEOLS();
@@ -72,7 +72,7 @@ public class Parser {
         while (true) {
 //            RemoveEOLS();
             Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
-            if(p != null){
+            if (p != null) {
                 params.add(new VaraibleReferenceNode(p));
             } else if (matchAndRemove(Token.OPTokens.VAR) != null) {
                 RemoveEOLS();
@@ -82,7 +82,7 @@ public class Parser {
                     throw new UnauthTokenException("function " + name + "needs a return type");
                 }
                 params.add(new VaraibleReferenceNode(returnType));
-            }else{
+            } else {
                 break;
 
             }
@@ -93,9 +93,9 @@ public class Parser {
         RemoveEOLS();
         matchAndRemove(Token.OPTokens.RParan); //L
         RemoveEOLS(); //im condsidering deleting  this.
-
         return new FunctionCallNode(name, params, builtIn); //return node.
     }
+
 
     /**
      * @return returns elseif node
@@ -132,96 +132,102 @@ public class Parser {
         }
         return new ElseNode(statement); //new node
     }
-
-    public Node BooleanExpression(){
-        Node opNode = BooleanTerm();
+    public Node BooleanExpression() {
+        Node opNode = BooleanFactor();
         Token operator = (matchAndRemove(Token.OPTokens.EQUALITY_EUQUALS) != null) ? current :
                 (matchAndRemove(Token.OPTokens.LESS_THAN) != null) ? current :
                         (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
                                 (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
                                         (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current :
                                                 (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current : null;
-
-        if(operator != null){
+        if (operator != null) {
             Node node = null;
-            while (true){
+            while (true) {
                 if (node != null) {
-                    operator =  (matchAndRemove(Token.OPTokens.EQUALITY_EUQUALS) != null) ? current :
+                    operator = (matchAndRemove(Token.OPTokens.EQUALITY_EUQUALS) != null) ? current :
                             (matchAndRemove(Token.OPTokens.LESS_THAN) != null) ? current :
                                     (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
                                             (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
                                                     (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current :
-                                                            (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current : null;
+                                                            (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current :   (matchAndRemove(Token.OPTokens.AND) != null) ? current:   (matchAndRemove(Token.OPTokens.OR) != null) ? current: null;
                 }
+                Node right;
+
                 if (operator == null) {
                     return opNode;
                 }
-                var right = BooleanTerm();
-                opNode = new BooleanNode(opNode, right, operator);
+                if(operator.getTokenEnum() == Token.OPTokens.AND || operator.getTokenEnum() == Token.OPTokens.OR){
+                    right = BooleanExpression();
+                }else{
+                    right = BooleanFactor();
+                }
+                opNode = new BooleanNode(opNode,right , operator);
                 node = opNode;
             }
         }
         return opNode;
 
     }
-    public Node BooleanTerm(){
-        Token operator = (matchAndRemove(Token.OPTokens.AND) != null)?current:(matchAndRemove(Token.OPTokens.OR) != null)?current:null;
+    public Node BooleanTerm() {
+        Token operator = (matchAndRemove(Token.OPTokens.AND) != null) ? current : (matchAndRemove(Token.OPTokens.OR) != null) ? current : null;
         Node opNode = BooleanFactor();
-        if(operator != null){
+        if (operator != null) {
             Node node = null;
-            while (true){
+            while (true) {
                 if (node != null) {
-                    operator = (matchAndRemove(Token.OPTokens.AND) != null)?current:(matchAndRemove(Token.OPTokens.OR) != null)?current:null;
-
+                    operator = (matchAndRemove(Token.OPTokens.AND) != null) ? current : (matchAndRemove(Token.OPTokens.OR) != null) ? current : null;
                 }
                 if (operator == null) {
                     return opNode;
                 }
-                var right = BooleanFactor();
-                opNode = new BooleanNode(opNode, right, operator);
+                opNode = new BooleanNode(opNode, BooleanFactor(), operator);
                 node = opNode;
             }
         }
         return opNode;
 
     }
-    public Node parseBooleanNodes(){
-        return BooleanExpression();
-    }
-    public Node BooleanFactor(){
-        Node opNode = null;
-        Token isWord = (matchAndRemove(Token.OPTokens.TRUE) != null)?current:(matchAndRemove(Token.OPTokens.FALSE) != null)?current:null;
-        if(isWord != null){
+    public Node BooleanFactor() {
+        Token isWord = (matchAndRemove(Token.OPTokens.TRUE) != null) ? current : (matchAndRemove(Token.OPTokens.FALSE) != null) ? current : null;
+        if (isWord != null) {
             return new BooleanWordNode(isWord);
         }
-        if(matchAndRemove(Token.OPTokens.LParan) != null){
-            opNode = BooleanExpression();
+        if (matchAndRemove(Token.OPTokens.LParan) != null) {
+            Node node2 = BooleanExpression();
             matchAndRemove(Token.OPTokens.RParan);
-            return opNode;
-        }else {
+            return node2;
+
+        } else {
             return expression();
         }
     }
+
+    public Node parseBooleanNodes() {
+        return BooleanExpression();
+    }
+
+
 
     /**
      * @return boolean expression node
      */
     public Node boolDef() {
-        Node left = expression();
-        Token operator = (matchAndRemove(Token.OPTokens.EQUALITY_EUQUALS) != null) ? current :
-                (matchAndRemove(Token.OPTokens.LESS_THAN) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
-                                (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
-                                        (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current :
-                                                (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current : null; //big block checks for more stuff
-        if (left == null && operator == null) { //if left and right are null
-            return null;
-        }
-        if (operator == null) { //Return the left for recursion
-            return left;
-        }
-        Node right = expression(); //REEE :D
-        return new BooleanNode(right, left, operator);
+//        Node left = expression();
+//        Token operator = (matchAndRemove(Token.OPTokens.EQUALITY_EUQUALS) != null) ? current :
+//                (matchAndRemove(Token.OPTokens.LESS_THAN) != null) ? current :
+//                        (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
+//                                (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
+//                                        (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current :
+//                                                (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current : null; //big block checks for more stuff
+//        if (left == null && operator == null) { //if left and right are null
+//            return null;
+//        }
+//        if (operator == null) { //Return the left for recursion
+//            return left;
+//        }
+//        Node right = expression(); //REEE :D
+        var a = parseBooleanNodes();
+        return a;
     }
 
     /**
@@ -362,7 +368,7 @@ public class Parser {
         }
         if (matchAndRemove(Token.OPTokens.WRITE) != null
                 || matchAndRemove(Token.OPTokens.SQRT) != null || matchAndRemove(Token.OPTokens.READ) != null
-                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null ||matchAndRemove(Token.OPTokens.INT_CON_FLOAT) != null  || matchAndRemove(Token.OPTokens.GET_RANDOM) != null) {
+                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null || matchAndRemove(Token.OPTokens.INT_CON_FLOAT) != null || matchAndRemove(Token.OPTokens.GET_RANDOM) != null) {
             return FunctionCall();
         }
         if (matchAndRemove(Token.OPTokens.WHILE) != null) {
@@ -509,7 +515,7 @@ public class Parser {
                 ArrayList<Node> varaibles = new ArrayList<>(); //di vars
                 RemoveEOLS();
                 Token constants = (matchAndRemove(Token.OPTokens.CONSTANTS) != null) ? current
-                        :(matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current: (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null;
+                        : (matchAndRemove(Token.OPTokens.VARAIBLES) != null) ? current : (matchAndRemove(Token.OPTokens.ENDOFLINE) != null) ? current : null;
                 if (constants != null) {
                     if (constants.getTokenEnum() == Token.OPTokens.CONSTANTS) {
                         varaibles.addAll(processConstants());
@@ -553,7 +559,7 @@ public class Parser {
         ArrayList<Node> retList = new ArrayList<>();
         Token type = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
                 (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : null; //lamda pro here.
+                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : (matchAndRemove(Token.OPTokens.CHARACTER)!= null)?current : null; //lamda pro here.
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         Token a = tokenList.get(0);
 
@@ -584,7 +590,7 @@ public class Parser {
         if (name == null || Lexer.keyWords.get(name.getTokenValue()) != null) {
             throw new UnauthTokenException("name is null or key word is name");
         }
-        if(equals != null){
+        if (equals != null) {
             valu = expression();
         }
 
@@ -673,16 +679,20 @@ public class Parser {
 //        System.out.println("=======================");
 //        System.out.println("current: " + current);
         Token string = matchAndRemove(Token.OPTokens.STRING);
+        Token isCharacter = matchAndRemove(Token.OPTokens.CHAR);
+        if(isCharacter != null){
+            return new CharacterNode(isCharacter.getTokenValue().charAt(0));
+        }
         if (string != null) {
             return new StringNode(string.getTokenValue());
         }
-        if (isInt(current) != null ||isInt(current) != null|| matchAndRemove(Token.OPTokens.NUMBER) != null) {
+        if (isInt(current) != null || isInt(current) != null || matchAndRemove(Token.OPTokens.NUMBER) != null) {
 //            float a = (float) isFloat(current);
-            if(isInt(current) != null){
-                 int a = (int) isInt(current);
+            if (isInt(current) != null) {
+                int a = (int) isInt(current);
                 matchAndRemove(Token.OPTokens.NUMBER);
                 return new IntegerNode(a);
-            }else if(isFloat(current) != null){
+            } else if (isFloat(current) != null) {
                 float a = (float) isFloat(current);
                 matchAndRemove(Token.OPTokens.NUMBER);
                 return new FloatNode(a);
@@ -731,7 +741,8 @@ public class Parser {
             return null;
         }
     }
-    public Object isInt(Token token){
+
+    public Object isInt(Token token) {
         try {
             int t = Integer.parseInt(token.getTokenValue());
             return t;

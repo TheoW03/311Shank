@@ -1,1 +1,16 @@
-true = false or false = true
+
+
+define Start(a,b,c:integer)
+variables
+ string k := "a"
+ string c := "b"
+ integer a := 3
+ integer i := 1
+ integer z := 32
+begin
+if i = 1 and (a = 1 or z = 32) then
+begin
+    i := 20
+end
+write i
+end

@@ -46,82 +46,87 @@ public class Interperter {
 
 
     }
-    public int resolveBooleanExp(Node root){
-        if(root == null){
+
+    public int resolveBooleanExp(Node root, HashMap<String, DataType> vars) {
+        if (root == null) {
             System.out.println("null");
             return -1;
         }
-        if(root instanceof IntegerNode){
+        if (root instanceof IntegerNode) {
             return (int) ((IntegerNode) root).getIntegerANomerul();
         }
-        if(root instanceof FloatNode){
-            return (int)((FloatNode)root).getValue();
+        if (root instanceof FloatNode) {
+            return (int) ((FloatNode) root).getValue();
         }
-        if(root instanceof BooleanWordNode){
-            if(((BooleanWordNode) root).evalu()){
+        if (root instanceof BooleanWordNode) {
+            if (((BooleanWordNode) root).evalu()) {
                 return 1;
-            }else{
+            } else {
                 return 0;
             }
         }
+        if (root instanceof VaraibleReferenceNode) {
+            return Integer.parseInt(vars.get(root.ToString()).ToString());
+
+        }
 //        resolveBooleanExp(root.left);
 //        resolveBooleanExp(root.right);
-        if(root instanceof BooleanNode){
-            switch(((BooleanNode) root).getCondition()){
-                case EQUALITY_EUQUALS ->{
-                    if(resolveBooleanExp(root.right) == resolveBooleanExp(root.left)){
+        if (root instanceof BooleanNode) {
+            switch (((BooleanNode) root).getCondition()) {
+                case EQUALITY_EUQUALS -> {
+                    if (resolveBooleanExp(root.right,vars) == resolveBooleanExp(root.left,vars)) {
                         return 1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
                 case GREATER_THAN -> {
-                    if(resolveBooleanExp(root.right) < resolveBooleanExp(root.left)){
+                    if (resolveBooleanExp(root.right,vars) < resolveBooleanExp(root.left,vars)) {
                         return 1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
                 case LESS_THAN -> {
-                    if(resolveBooleanExp(root.right) > resolveBooleanExp(root.left)){
+                    if (resolveBooleanExp(root.right,vars) > resolveBooleanExp(root.left,vars)) {
 
                         return 1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
                 case LESS_THAN_EQAUALS -> {
-                    if(resolveBooleanExp(root.right) <= resolveBooleanExp(root.left)){
+                    if (resolveBooleanExp(root.right,vars) >= resolveBooleanExp(root.left,vars)) {
                         return 1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
                 case GREATER_THAN_EQUALS -> {
-                    if(resolveBooleanExp(root.right) >= resolveBooleanExp(root.left)){
+                    if (resolveBooleanExp(root.right,vars) <= resolveBooleanExp(root.left,vars)) {
                         return 1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
                 case NOT_EQUAL -> {
-                    if(resolveBooleanExp(root.right) != resolveBooleanExp(root.left)){
+                    if (resolveBooleanExp(root.right,vars) != resolveBooleanExp(root.left,vars)) {
                         return 1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
-                case AND ->{
-                    if(resolveBooleanExp(root.right) == 1 && resolveBooleanExp(root.left) == 1){
+                case AND -> {
+                    if (resolveBooleanExp(root.right,vars) == 1 && resolveBooleanExp(root.left,vars) == 1) {
                         return 1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
-                case OR ->{
-                    if(resolveBooleanExp(root.right) == 1 || resolveBooleanExp(root.left) == 1){
+                case OR -> {
+                    if (resolveBooleanExp(root.right,vars) == 1 || resolveBooleanExp(root.left,vars) == 1) {
                         return 1;
-                    }else {
+                    } else {
                         return 0;
                     }
                 }
@@ -130,11 +135,12 @@ public class Interperter {
         System.out.println("doesnt make cut");
         return -2;
     }
-    public float traverseBooleanOp(Node root){
-        if(root instanceof IntegerNode){
+
+    public float traverseBooleanOp(Node root) {
+        if (root instanceof IntegerNode) {
             return (float) ((IntegerNode) root).getIntegerANomerul();
         }
-        if(root instanceof FloatNode){
+        if (root instanceof FloatNode) {
             return (float) ((FloatNode) root).getValue();
         }
         return -1;
@@ -216,27 +222,36 @@ public class Interperter {
      * @return
      */
     public boolean evauluateBool(BooleanNode boolExp, HashMap<String, DataType> vars) {
-        Token.OPTokens op = boolExp.getCondition();
-        //cheks
-        if (op == Token.OPTokens.EQUALITY_EUQUALS) {
-            return Resolve(boolExp.right, vars) == Resolve(boolExp.left, vars);
-        } else if (op == Token.OPTokens.NOT_EQUAL) {
-            return Resolve(boolExp.right, vars) != Resolve(boolExp.left, vars);
-            //jokes on u java uses "!=" L common Old 4chan L LOl.
-        } else if (op == GREATER_THAN) {
-            return Resolve(boolExp.right, vars) > Resolve(boolExp.left, vars);
-
-        } else if (op == Token.OPTokens.LESS_THAN) {
-            return Resolve(boolExp.right, vars) < Resolve(boolExp.left, vars);
-        } else if (op == Token.OPTokens.LESS_THAN_EQAUALS) {
-            return Resolve(boolExp.right, vars) <= Resolve(boolExp.left, vars);
-
-        } else if (op == Token.OPTokens.GREATER_THAN_EQUALS) {
-            return Resolve(boolExp.right, vars) >= Resolve(boolExp.left, vars);
-
+        int r = resolveBooleanExp(boolExp,vars);
+        System.out.println(r);
+        if (r == 1) {
+            return true;
+        } else if (r == 0) {
+            return false;
         } else {
             throw new UnauthTokenException("error");
         }
+//        Token.OPTokens op = boolExp.getCondition();
+//        //cheks
+//        if (op == Token.OPTokens.EQUALITY_EUQUALS) {
+//            return Resolve(boolExp.right, vars) == Resolve(boolExp.left, vars);
+//        } else if (op == Token.OPTokens.NOT_EQUAL) {
+//            return Resolve(boolExp.right, vars) != Resolve(boolExp.left, vars);
+//            //jokes on u java uses "!=" L common Old 4chan L LOl.
+//        } else if (op == GREATER_THAN) {
+//            return Resolve(boolExp.right, vars) > Resolve(boolExp.left, vars);
+//
+//        } else if (op == Token.OPTokens.LESS_THAN) {
+//            return Resolve(boolExp.right, vars) < Resolve(boolExp.left, vars);
+//        } else if (op == Token.OPTokens.LESS_THAN_EQAUALS) {
+//            return Resolve(boolExp.right, vars) <= Resolve(boolExp.left, vars);
+//
+//        } else if (op == Token.OPTokens.GREATER_THAN_EQUALS) {
+//            return Resolve(boolExp.right, vars) >= Resolve(boolExp.left, vars);
+//
+//        } else {
+//            throw new UnauthTokenException("error");
+//        }
     }
 
     /**
@@ -258,6 +273,11 @@ public class Interperter {
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.FLOAT) {
                     varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), false));
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.STRING_DT) {
+                    varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
+                }else if (varRef.getType().getTokenEnum() == Token.OPTokens.CHARACTER) {
+                    if(varRef.getValue() instanceof StringNode){
+                        throw new UnauthTokenException("to many characters");
+                    }
                     varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
                 }
             }
@@ -379,17 +399,17 @@ public class Interperter {
                     float b = Resolve(assign.getMath(), vars);
                     if (vars.get(assign.getVarName()) instanceof IntDataType) {
                         int answer = (int) b;
-                        if(vars.get(assign.getVarName()) == null){
-                            throw   new UnauthTokenException("doesnt exist");
+                        if (vars.get(assign.getVarName()) == null) {
+                            throw new UnauthTokenException("doesnt exist");
                         }
                         vars.get(assign.getVarName()).FromString(Integer.toString(answer));
                     } else {
-                        if(vars.get(assign.getVarName()) == null){
-                            throw   new UnauthTokenException("doesnt exist");
+                        if (vars.get(assign.getVarName()) == null) {
+                            throw new UnauthTokenException("doesnt exist");
                         }
                         vars.get(assign.getVarName()).FromString(Float.toString(b));
                     }
-                }else{
+                } else {
                     throw new UnauthTokenException("var doesnt exist");
                 }
 
@@ -402,6 +422,9 @@ public class Interperter {
                         ArrayList<Node> elseIF = ifState.getElseIf();
                         int in = 0;
                         while (true) {
+                            if(elseIF.size() == 0){
+                                break;
+                            }
                             ElseNode elseNodeRef = (ElseNode) elseIF.get(in);
                             BooleanNode conditiob = (BooleanNode) elseNodeRef.getCondition();
                             if (conditiob == null || evauluateBool(conditiob, vars) || in > elseIF.size()) {
@@ -418,36 +441,34 @@ public class Interperter {
             } else if (nodeRef instanceof ForNode) {
                 ForNode forLoop = (ForNode) statetements.get(i);
                 int incrimatorVal = 0;
-                if(forLoop.getBegining().getName().getTokenEnum() == Token.OPTokens.NUMBER){
+                if (forLoop.getBegining().getName().getTokenEnum() == Token.OPTokens.NUMBER) {
                     incrimatorVal = Integer.parseInt(forLoop.getBegining().getName().getTokenValue());
-                }else{
+                } else {
                     incrimatorVal = Integer.parseInt(vars.get(forLoop.getBegining().getName().getTokenValue()).ToString());
                 }
                 int endInc = 0;
-                if(forLoop.getBegining().getName().getTokenEnum() == Token.OPTokens.NUMBER){
+                if (forLoop.getBegining().getName().getTokenEnum() == Token.OPTokens.NUMBER) {
                     endInc = Integer.parseInt(forLoop.getEnd().getName().getTokenValue());
-                }else{
+                } else {
                     endInc = Integer.parseInt(vars.get(forLoop.getEnd().getName().getTokenValue()).ToString());
                 }
                 DataType incrimator = new IntDataType(new IntegerNode(incrimatorVal), false);
                 vars.put(forLoop.getIncrimatorVal(), incrimator);
                 for (int i0 = incrimatorVal; i0 < endInc; i0++) {
                     vars.get(forLoop.getIncrimatorVal()).FromString(Integer.toString(i0));
-                    interpterBlock(forLoop.getStatements(),vars);
+                    interpterBlock(forLoop.getStatements(), vars);
                 }
-            }
-            else if(nodeRef instanceof WhileNode){
+            } else if (nodeRef instanceof WhileNode) {
                 WhileNode whileState = (WhileNode) statetements.get(i);
-                while (evauluateBool((BooleanNode) whileState.getBool(),vars)){
+                while (evauluateBool((BooleanNode) whileState.getBool(), vars)) {
                     interpterBlock(whileState.getStatements(), vars);
                 }
 
-            }
-            else if(nodeRef instanceof RepeatNode){
+            } else if (nodeRef instanceof RepeatNode) {
                 RepeatNode repateState = (RepeatNode) nodeRef;
                 do {
-                    interpterBlock(repateState.getStatement(),vars);
-                }while (!evauluateBool((BooleanNode) repateState.getBoolExp(),vars));
+                    interpterBlock(repateState.getStatement(), vars);
+                } while (!evauluateBool((BooleanNode) repateState.getBoolExp(), vars));
             }
         }
     }
