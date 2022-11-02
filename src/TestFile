@@ -1,5 +1,3 @@
-
-
 define Start(a,b,c:integer)
 variables
  string k := "a"

@@ -47,16 +47,27 @@ public class Interperter {
 
     }
 
-    public int resolveBooleanExp(Node root, HashMap<String, DataType> vars) {
+    /**
+     *
+     * @param root is the tree
+     * @param vars varaibles
+     * @return 1 or 0 or num factor
+     *
+     * this works  just like resolve for booleans like
+     * true and false or true or
+     * 1 = 2 and 2 = 1 or 3 = 4
+     */
+
+    public float resolveBooleanExp(Node root, HashMap<String, DataType> vars) {
         if (root == null) {
-            System.out.println("null");
             return -1;
         }
+        //checks if boolean word
         if (root instanceof IntegerNode) {
-            return (int) ((IntegerNode) root).getIntegerANomerul();
+            return (float) ((IntegerNode) root).getIntegerANomerul();
         }
         if (root instanceof FloatNode) {
-            return (int) ((FloatNode) root).getValue();
+            return ((FloatNode) root).getValue();
         }
         if (root instanceof BooleanWordNode) {
             if (((BooleanWordNode) root).evalu()) {
@@ -132,7 +143,6 @@ public class Interperter {
                 }
             }
         }
-        System.out.println("doesnt make cut");
         return -2;
     }
 
@@ -145,6 +155,12 @@ public class Interperter {
         }
         return -1;
     }
+
+    /**
+     *
+     * @param root a
+     *             just a debug method
+     */
 
     public void travserse(Node root) {
 
@@ -166,7 +182,7 @@ public class Interperter {
      * If I have a math op, resolve(left) and resolve (right) then do the op and return the value"
      *
      * @param thingYouWantResolved m
-     * @return
+     * @return a number
      */
     public float Resolve(Node thingYouWantResolved, HashMap<String, DataType> vars) {
         if (thingYouWantResolved == null) {
@@ -217,12 +233,14 @@ public class Interperter {
     }
 
     /**
-     * @param boolExp
+     * @param boolExp the node
      * @param vars
+     * bc resolve boolean returns 1 and 0 (and I was to lazy to refactor Lol)
+     * this translates into true/false
      * @return
      */
     public boolean evauluateBool(BooleanNode boolExp, HashMap<String, DataType> vars) {
-        int r = resolveBooleanExp(boolExp,vars);
+        float r = resolveBooleanExp(boolExp,vars);
         if (r == 1) {
             return true;
         } else if (r == 0) {
