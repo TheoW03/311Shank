@@ -223,7 +223,6 @@ public class Interperter {
      */
     public boolean evauluateBool(BooleanNode boolExp, HashMap<String, DataType> vars) {
         int r = resolveBooleanExp(boolExp,vars);
-        System.out.println(r);
         if (r == 1) {
             return true;
         } else if (r == 0) {

@@ -7,10 +7,12 @@ variables
  integer a := 3
  integer i := 1
  integer z := 32
+ integer j := 0
 begin
-if i = 1 and (a = 1 or z = 32) then
+(* i added multiple conditions *)
+while j < 5 and i = 0
 begin
-    i := 20
+	j:=j+1
+	write j
 end
-write i
 end
