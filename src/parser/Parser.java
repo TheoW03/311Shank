@@ -71,7 +71,14 @@ public class Parser {
         //parese dt.
         while (true) {
 //            RemoveEOLS();
+//            Node exp = expression();
+//            if(exp == null) {
+//                break;
+//            }
+//            params.add(exp);
+//            RemoveEOLS();
             Token p = (matchAndRemove(Token.OPTokens.NUMBER) != null) ? current : (matchAndRemove(Token.OPTokens.STRING) != null) ? current : (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
+
             if (p != null) {
                 params.add(new VaraibleReferenceNode(p));
             } else if (matchAndRemove(Token.OPTokens.VAR) != null) {
@@ -87,7 +94,7 @@ public class Parser {
 
             }
 
-//            RemoveEOLS();
+            RemoveEOLS();
 
         }
         RemoveEOLS();
@@ -132,6 +139,10 @@ public class Parser {
         }
         return new ElseNode(statement); //new node
     }
+
+    /**
+     * @return new boolean node
+     */
     public Node BooleanExpression() {
         Node opNode = BooleanFactor();
         Token operator = (matchAndRemove(Token.OPTokens.EQUALITY_EUQUALS) != null) ? current :
@@ -149,25 +160,28 @@ public class Parser {
                                     (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
                                             (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
                                                     (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current :
-                                                            (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current :   (matchAndRemove(Token.OPTokens.AND) != null) ? current:   (matchAndRemove(Token.OPTokens.OR) != null) ? current: null;
+                                                            (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current :
+                                                                    (matchAndRemove(Token.OPTokens.AND) != null) ? current :
+                                                                            (matchAndRemove(Token.OPTokens.OR) != null) ? current : null;
                 }
                 Node right;
 
                 if (operator == null) {
                     return opNode;
                 }
-                if(operator.getTokenEnum() == Token.OPTokens.AND || operator.getTokenEnum() == Token.OPTokens.OR){
+                if (operator.getTokenEnum() == Token.OPTokens.AND || operator.getTokenEnum() == Token.OPTokens.OR) {
                     right = BooleanExpression();
-                }else{
+                } else {
                     right = BooleanFactor();
                 }
-                opNode = new BooleanNode(opNode,right , operator);
+                opNode = new BooleanNode(opNode, right, operator);
                 node = opNode;
             }
         }
         return opNode;
 
     }
+
     public Node BooleanTerm() {
         Token operator = (matchAndRemove(Token.OPTokens.AND) != null) ? current : (matchAndRemove(Token.OPTokens.OR) != null) ? current : null;
         Node opNode = BooleanFactor();
@@ -187,6 +201,7 @@ public class Parser {
         return opNode;
 
     }
+
     public Node BooleanFactor() {
         Token isWord = (matchAndRemove(Token.OPTokens.TRUE) != null) ? current : (matchAndRemove(Token.OPTokens.FALSE) != null) ? current : null;
         if (isWord != null) {
@@ -205,7 +220,6 @@ public class Parser {
     public Node parseBooleanNodes() {
         return BooleanExpression();
     }
-
 
 
     /**
@@ -559,7 +573,7 @@ public class Parser {
         ArrayList<Node> retList = new ArrayList<>();
         Token type = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
                 (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : (matchAndRemove(Token.OPTokens.CHARACTER)!= null)?current : null; //lamda pro here.
+                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : (matchAndRemove(Token.OPTokens.CHARACTER) != null) ? current : null; //lamda pro here.
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         Token a = tokenList.get(0);
 
@@ -680,7 +694,7 @@ public class Parser {
 //        System.out.println("current: " + current);
         Token string = matchAndRemove(Token.OPTokens.STRING);
         Token isCharacter = matchAndRemove(Token.OPTokens.CHAR);
-        if(isCharacter != null){
+        if (isCharacter != null) {
             return new CharacterNode(isCharacter.getTokenValue().charAt(0));
         }
         if (string != null) {

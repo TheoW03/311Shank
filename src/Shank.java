@@ -74,7 +74,7 @@ public class Shank {
     public static void ParserTestMethod(ArrayList<Token> a){
         Parser p = new Parser(a);
         ArrayList<FunctionNode> fn = p.parse();
-//        Node boolExp = p.parseBooleanNodes();
+        Node boolExp = p.parseBooleanNodes();
         Interperter i2 = new Interperter();
 //        i2.travserse(boolExp);
 //        if(i2.resolveBooleanExp(boolExp, new HashMap<>()) == 1){
