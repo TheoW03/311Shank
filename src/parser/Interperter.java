@@ -4,10 +4,7 @@ package parser;
 
 import lexer.Token;
 import lexer.UnauthTokenException;
-import parser.DataType.DataType;
-import parser.DataType.FloatDataType;
-import parser.DataType.IntDataType;
-import parser.DataType.StringDataType;
+import parser.DataType.*;
 import parser.node.*;
 import parser.node.FunctionCallNode.CallableNode;
 import parser.node.FunctionCallNode.FunctionCallNode;
@@ -48,11 +45,10 @@ public class Interperter {
     }
 
     /**
-     *
      * @param root is the tree
      * @param vars varaibles
      * @return 1 or 0 or num factor
-     *
+     * <p>
      * this works  just like resolve for booleans like
      * true and false or true or
      * 1 = 2 and 2 = 1 or 3 = 4
@@ -85,21 +81,21 @@ public class Interperter {
         if (root instanceof BooleanNode) {
             switch (((BooleanNode) root).getCondition()) {
                 case EQUALITY_EUQUALS -> {
-                    if (resolveBooleanExp(root.right,vars) == resolveBooleanExp(root.left,vars)) {
+                    if (resolveBooleanExp(root.right, vars) == resolveBooleanExp(root.left, vars)) {
                         return 1;
                     } else {
                         return 0;
                     }
                 }
                 case GREATER_THAN -> {
-                    if (resolveBooleanExp(root.right,vars) < resolveBooleanExp(root.left,vars)) {
+                    if (resolveBooleanExp(root.right, vars) < resolveBooleanExp(root.left, vars)) {
                         return 1;
                     } else {
                         return 0;
                     }
                 }
                 case LESS_THAN -> {
-                    if (resolveBooleanExp(root.right,vars) > resolveBooleanExp(root.left,vars)) {
+                    if (resolveBooleanExp(root.right, vars) > resolveBooleanExp(root.left, vars)) {
 
                         return 1;
                     } else {
@@ -107,35 +103,35 @@ public class Interperter {
                     }
                 }
                 case LESS_THAN_EQAUALS -> {
-                    if (resolveBooleanExp(root.right,vars) >= resolveBooleanExp(root.left,vars)) {
+                    if (resolveBooleanExp(root.right, vars) >= resolveBooleanExp(root.left, vars)) {
                         return 1;
                     } else {
                         return 0;
                     }
                 }
                 case GREATER_THAN_EQUALS -> {
-                    if (resolveBooleanExp(root.right,vars) <= resolveBooleanExp(root.left,vars)) {
+                    if (resolveBooleanExp(root.right, vars) <= resolveBooleanExp(root.left, vars)) {
                         return 1;
                     } else {
                         return 0;
                     }
                 }
                 case NOT_EQUAL -> {
-                    if (resolveBooleanExp(root.right,vars) != resolveBooleanExp(root.left,vars)) {
+                    if (resolveBooleanExp(root.right, vars) != resolveBooleanExp(root.left, vars)) {
                         return 1;
                     } else {
                         return 0;
                     }
                 }
                 case AND -> {
-                    if (resolveBooleanExp(root.right,vars) == 1 && resolveBooleanExp(root.left,vars) == 1) {
+                    if (resolveBooleanExp(root.right, vars) == 1 && resolveBooleanExp(root.left, vars) == 1) {
                         return 1;
                     } else {
                         return 0;
                     }
                 }
                 case OR -> {
-                    if (resolveBooleanExp(root.right,vars) == 1 || resolveBooleanExp(root.left,vars) == 1) {
+                    if (resolveBooleanExp(root.right, vars) == 1 || resolveBooleanExp(root.left, vars) == 1) {
                         return 1;
                     } else {
                         return 0;
@@ -157,7 +153,6 @@ public class Interperter {
     }
 
     /**
-     *
      * @param root a
      *             just a debug method
      */
@@ -234,13 +229,12 @@ public class Interperter {
 
     /**
      * @param boolExp the node
-     * @param vars
-     * bc resolve boolean returns 1 and 0 (and I was to lazy to refactor Lol)
-     * this translates into true/false
+     * @param vars    bc resolve boolean returns 1 and 0 (and I was to lazy to refactor Lol)
+     *                this translates into true/false
      * @return
      */
     public boolean evauluateBool(BooleanNode boolExp, HashMap<String, DataType> vars) {
-        float r = resolveBooleanExp(boolExp,vars);
+        float r = resolveBooleanExp(boolExp, vars);
         if (r == 1) {
             return true;
         } else if (r == 0) {
@@ -291,8 +285,8 @@ public class Interperter {
                     varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), false));
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.STRING_DT) {
                     varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
-                }else if (varRef.getType().getTokenEnum() == Token.OPTokens.CHARACTER) {
-                    if(varRef.getValue() instanceof StringNode){
+                } else if (varRef.getType().getTokenEnum() == Token.OPTokens.CHARACTER) {
+                    if (varRef.getValue() instanceof StringNode) {
                         throw new UnauthTokenException("to many characters");
                     }
                     varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
@@ -311,6 +305,8 @@ public class Interperter {
                         varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
                     } else if (tok == Token.OPTokens.STRING_DT) {
                         varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), varRef.isConstant()));
+                    }else if (tok == Token.OPTokens.BOOLEAN_DT){
+                        varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
                     }
                 }
             }
@@ -364,6 +360,9 @@ public class Interperter {
                                 }
                                 if (((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.STRING_DT) {
                                     vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(), new StringDataType(null, false));
+                                }
+                                if (((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.BOOLEAN_DT) {
+                                    vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(), new BooleanDataType(null, false));
                                 }
                             }
                             String k = b.getName().getTokenValue();
@@ -439,7 +438,7 @@ public class Interperter {
                         ArrayList<Node> elseIF = ifState.getElseIf();
                         int in = 0;
                         while (true) {
-                            if(elseIF.size() == 0){
+                            if (elseIF.size() == 0) {
                                 break;
                             }
                             ElseNode elseNodeRef = (ElseNode) elseIF.get(in);
@@ -504,7 +503,9 @@ public class Interperter {
                 p.add(new StringDataType(f, false));
             } else if (f.getName().getTokenEnum() == Token.OPTokens.NUMBER) {
                 p.add(new FloatDataType(f, false));
-            } else { //checks if Varef
+            } else if(f.getName().getTokenEnum() == Token.OPTokens.TRUE ||f.getName().getTokenEnum() == Token.OPTokens.FALSE ) {
+                p.add(new BooleanDataType(f, false));
+            } else{ //checks if Varef
                 if (i == (params.size() - 1)) { //this adds it to the last thing
                     if (vars.get(f.ToString()) == null) {
                         vars.put(f.ToString(), new FloatDataType(new FloatNode(0), false));

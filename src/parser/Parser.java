@@ -573,7 +573,7 @@ public class Parser {
         ArrayList<Node> retList = new ArrayList<>();
         Token type = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
                 (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : (matchAndRemove(Token.OPTokens.CHARACTER) != null) ? current : null; //lamda pro here.
+                        (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : (matchAndRemove(Token.OPTokens.CHARACTER) != null) ? current :(matchAndRemove(Token.OPTokens.BOOLEAN_DT) != null) ? current  : null; //lamda pro here.
         Token name = (matchAndRemove(Token.OPTokens.IDENTIFIER) != null) ? current : null;
         Token a = tokenList.get(0);
 
@@ -582,7 +582,7 @@ public class Parser {
             while (true) {
                 RemoveEOLS();
                 Token checkForType = (matchAndRemove(Token.OPTokens.INTEGER) != null) ? current :
-                        (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current : (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current : null;
+                        (matchAndRemove(Token.OPTokens.FLOAT) != null) ? current : (matchAndRemove(Token.OPTokens.STRING_DT) != null) ? current :(matchAndRemove(Token.OPTokens.BOOLEAN_DT) != null) ? current: null;
 
                 if (checkForType != null) { //use sam lambda
                     type = checkForType;
@@ -605,7 +605,14 @@ public class Parser {
             throw new UnauthTokenException("name is null or key word is name");
         }
         if (equals != null) {
-            valu = expression();
+            Node exp = expression();
+            Node boolExp = boolDef();
+            if(exp == null){
+                valu = boolExp;
+            }else{
+                valu = exp;
+            }
+
         }
 
         if (varaiblesWithnoType.size() == 0) {

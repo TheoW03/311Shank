@@ -28,7 +28,7 @@ public class Lexer {
         keyWords.put("begin", new Token(Token.OPTokens.BEGIN, "begin"));
         keyWords.put("variables", new Token(Token.OPTokens.VARAIBLES, "variables"));
         keyWords.put("string", new Token(Token.OPTokens.STRING_DT, "String")); //for strings
-        keyWords.put("bool", new Token(Token.OPTokens.BOOLEAN_DT, "boolean")); //for strings
+        keyWords.put("boolean", new Token(Token.OPTokens.BOOLEAN_DT, "boolean")); //for strings
         keyWords.put("and", new Token(Token.OPTokens.AND, "and")); //for strings
         keyWords.put("or", new Token(Token.OPTokens.OR, "or")); //for strings
         keyWords.put("character", new Token(Token.OPTokens.CHARACTER, "char")); //for strings

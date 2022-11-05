@@ -1,4 +1,5 @@
-1. doesnt parse return/var for some reason
-2. scope
-3. parse boolean expressions
-4.
+1. doesnt parse return/var for some reason -> havent started
+2. scope -> havent started
+3. add an interpt section for booleans  -> 30%
+4. add strings to assignment -> 0%
+

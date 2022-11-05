@@ -4,16 +4,9 @@ begin
 end
 define Start(a,b,c:integer)
 variables
- string k := "a"
- string c := "b"
- integer a := 3
- integer i := 0
- integer z := 32
- float a := 0
+string k := "hello world"
 begin
-    vectors 10,10,10
-    write a
-    write x
-    write y
-    write z
+k := "s"
+write k
+
 end
