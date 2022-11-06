@@ -7,8 +7,9 @@ define Start(a,b,c:integer)
 variables
 var string s := "hello world"
 string k := "hello world"
+integer test := 10
 begin
-vectors 10 20 30
+
 write k
 
 end

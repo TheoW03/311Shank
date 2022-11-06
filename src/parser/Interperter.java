@@ -15,6 +15,8 @@ import parser.node.builtInFunctionNode.*;
 import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.Random;
 
 import static lexer.Token.OPTokens.GREATER_THAN;
 
@@ -45,6 +47,42 @@ public class Interperter {
         global = new HashMap<>();
 
 
+    }
+
+    public String resolveString(Node root, HashMap<String, DataType> vars) {
+        if (root == null) {
+            return "null";
+        }
+        //fix later
+//        if (root instanceof StringNode) {
+//            return  ((StringNode) root).ToString();
+//        } else if (root instanceof FloatNode) {
+//            return Float.toString(((FloatNode) root).getValue());
+//        } else if (root instanceof VaraibleReferenceNode) {
+//            return  Float.toString(((FloatNode) root).getValue());
+//        }
+        if (root instanceof MathOpNode) {
+            MathOpNode v;
+            v = (MathOpNode) root;
+            switch (v.getOP()) {
+                case "+" -> {
+                    return resolveString(root.left, vars) + resolveString(root.right, vars);
+                }
+                default -> {
+                    Random r = new Random();
+                    int n = r.nextInt(2);
+                    if (n == 1) {
+                        throw new UnauthTokenException("this aint javascript Son. " +
+                                "we do concation the right way. none of that fancy Convert to int stuff");
+
+                    } else {
+                        throw new UnauthTokenException("-,/,* isn't accepted tokens for String concatenation");
+                    }
+
+                }
+            }
+        }
+        return "";
     }
 
     /**
@@ -184,7 +222,6 @@ public class Interperter {
      */
     public float Resolve(Node thingYouWantResolved, HashMap<String, DataType> vars) {
         if (thingYouWantResolved == null) {
-
             return 0;
         }
 //        Resolve(thingYouWantResolved.right);
@@ -289,29 +326,32 @@ public class Interperter {
                         varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), false));
                     }
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.FLOAT) {
-                    if(varRef.isGlobal()){
+                    if (varRef.isGlobal()) {
+                        global.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), false));
 
-                    }else{
+                    } else {
+                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), false));
 
                     }
-                    varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), false));
+//                    varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), false));
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.STRING_DT) {
-                    if(varRef.isGlobal()){
+                    if (varRef.isGlobal()) {
+                        global.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
 
-                    }else{
-
+                    } else {
+                        varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
                     }
-                    varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.CHARACTER) {
-                    if(varRef.isGlobal()){
-
-                    }else{
-
-                    }
                     if (varRef.getValue() instanceof StringNode) {
                         throw new UnauthTokenException("to many characters");
                     }
-                    varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
+                    if (varRef.isGlobal()) {
+                        global.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
+
+                    } else {
+                        varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
+
+                    }
                 }
             }
 
@@ -464,28 +504,56 @@ public class Interperter {
             } else if (nodeRef instanceof AssignmentNode) { //assignmnet
                 AssignmentNode assign = (AssignmentNode) statetements.get(i);
                 if (vars.get(assign.getVarName()) != null) {
-                    float b = Resolve(assign.getMath(), vars);
+//                    if(assign.getVarName())
+
                     if (vars.get(assign.getVarName()) instanceof IntDataType) {
-                        int answer = (int) b;
-                        if (vars.get(assign.getVarName()) == null || global.get(assign.getVarName()) == null) {
+                        int answer = (int) Resolve(assign.getMath(), vars);
+                        if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
-                        vars.get(assign.getVarName()).FromString(Integer.toString(answer));
+                        String a = assign.getVarName();
+                        if (global.get(a) == null) {
+                            vars.get(a).FromString(Integer.toString(answer));
+                        } else {
+                            global.get(a).FromString(Integer.toString(answer));
+                        }
+//                        Objects.requireNonNullElse(global, vars).get(assign.getVarName()).FromString(Integer.toString(answer));
+//                        vars.get(assign.getVarName()).FromString(Integer.toString(answer));
                     } else if (vars.get(assign.getVarName()) instanceof FloatDataType) {
-                        if (vars.get(assign.getVarName()) == null) {
+                        float b = Resolve(assign.getMath(), vars);
+                        if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
-                        vars.get(assign.getVarName()).FromString(Float.toString(b));
+                        String a = assign.getVarName();
+                        if (global.get(a) == null) {
+                            vars.get(a).FromString(Float.toString(b));
+                        } else {
+                            global.get(a).FromString(Float.toString(b));
+                        }
+//                        Objects.requireNonNullElse(global, vars).get(assign.getVarName()).FromString(Float.toString(b));
+
                     } else if (vars.get(assign.getVarName()) instanceof StringDataType) {
-                        if (vars.get(assign.getVarName()) == null) {
+                        String b = resolveString(assign.getMath(), vars);
+                        String a = assign.getVarName();
+                        if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
-                        vars.get(assign.getVarName()).FromString(String.valueOf(b));
+                        if (global.get(a) == null) {
+                            vars.get(a).FromString(b);
+                        } else {
+                            global.get(a).FromString(b);
+                        }
                     } else if (vars.get(assign.getVarName()) instanceof BooleanDataType) {
-                        if (vars.get(assign.getVarName()) == null) {
+                        float b = resolveBooleanExp(assign.getMath(), vars);
+                        String a = assign.getVarName();
+                        if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
-                        vars.get(assign.getVarName()).FromString(String.valueOf(b));
+                        if (global.get(a) == null) {
+                            vars.get(a).FromString(Float.toString(b));
+                        } else {
+                            global.get(a).FromString(Float.toString(b));
+                        }
                     }
                 } else {
                     throw new UnauthTokenException("var doesnt exist");
