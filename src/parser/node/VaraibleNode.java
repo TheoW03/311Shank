@@ -17,17 +17,19 @@ public class VaraibleNode extends Node{
     private Token type;
     private Node value;
     private  boolean isConstant;
-
+    private  boolean isGlobal;
     public VaraibleNode(Token type,Node value, Token name, boolean isConstant,boolean global) {
         this.type=type;
         this.name = name;
         this.value = value;
         this.isConstant = isConstant;
+        this.isGlobal = global;
         
     }
     public Node getValue(){
         return value;
     }
+    public boolean isGlobal(){return isGlobal;}
     public Token getName(){
         return name;
     }

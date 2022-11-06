@@ -12,6 +12,7 @@ import parser.node.StatementNode.AssignmentNode;
 import parser.node.StatementNode.VaraibleReferenceNode;
 import parser.node.builtInFunctionNode.*;
 
+import javax.xml.crypto.Data;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -30,7 +31,7 @@ public class Interperter {
     private HashMap<Token.OPTokens, BuiltInFunctionNode> builtIn;
     private HashMap<String, FunctionNode> nonBuiltIns;
     private HashMap<String, CallableNode> a;
-
+    private HashMap<String, DataType> global;
     public Interperter() {
         builtIn = new HashMap<>();
         nonBuiltIns = new HashMap<>(); //im assuming its like this?
@@ -40,6 +41,7 @@ public class Interperter {
         builtIn.put(Token.OPTokens.SQRT, new squareRootNode());
         builtIn.put(Token.OPTokens.INT_CON_FLOAT, new IntToRealNode());
         builtIn.put(Token.OPTokens.GET_RANDOM, new getRandomNode());
+        global = new HashMap<>();
 
 
     }
@@ -300,12 +302,33 @@ public class Interperter {
                 if (varRef.getType() != null) {
                     Token.OPTokens tok = ((VaraibleNode) varaibles.get(i)).getType().getTokenEnum();
                     if (tok == Token.OPTokens.INTEGER) {
+                        //will put here bc i dont want togo through my spagehhti code D:
+                        if(varRef.isGlobal()){
+
+                        }else{
+
+                        }
                         varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
                     } else if (tok == Token.OPTokens.FLOAT) {
+                        if(varRef.isGlobal()){
+
+                        }else{
+
+                        }
                         varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
                     } else if (tok == Token.OPTokens.STRING_DT) {
+                        if(varRef.isGlobal()){
+
+                        }else{
+
+                        }
                         varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), varRef.isConstant()));
                     }else if (tok == Token.OPTokens.BOOLEAN_DT){
+                        if(varRef.isGlobal()){
+
+                        }else{
+
+                        }
                         varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
                     }
                 }
@@ -419,11 +442,21 @@ public class Interperter {
                             throw new UnauthTokenException("doesnt exist");
                         }
                         vars.get(assign.getVarName()).FromString(Integer.toString(answer));
-                    } else {
+                    } else if (vars.get(assign.getVarName()) instanceof FloatDataType){
                         if (vars.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
                         vars.get(assign.getVarName()).FromString(Float.toString(b));
+                    }else if(vars.get(assign.getVarName()) instanceof StringDataType) {
+                        if (vars.get(assign.getVarName()) == null) {
+                            throw new UnauthTokenException("doesnt exist");
+                        }
+                        vars.get(assign.getVarName()).FromString(String.valueOf(b));
+                    }else if(vars.get(assign.getVarName()) instanceof BooleanDataType) {
+                        if (vars.get(assign.getVarName()) == null) {
+                            throw new UnauthTokenException("doesnt exist");
+                        }
+                        vars.get(assign.getVarName()).FromString(String.valueOf(b));
                     }
                 } else {
                     throw new UnauthTokenException("var doesnt exist");
