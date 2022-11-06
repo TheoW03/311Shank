@@ -1,12 +1,14 @@
 define vectors(x,y,z:integer)
 begin
-    write "hello world"
+write s
+write x
 end
 define Start(a,b,c:integer)
 variables
+var string s := "hello world"
 string k := "hello world"
 begin
-k := "s"
+vectors 10 20 30
 write k
 
 end

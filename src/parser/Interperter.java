@@ -32,6 +32,7 @@ public class Interperter {
     private HashMap<String, FunctionNode> nonBuiltIns;
     private HashMap<String, CallableNode> a;
     private HashMap<String, DataType> global;
+
     public Interperter() {
         builtIn = new HashMap<>();
         nonBuiltIns = new HashMap<>(); //im assuming its like this?
@@ -282,12 +283,31 @@ public class Interperter {
             VaraibleNode varRef = (VaraibleNode) params.get(i);
             if (vars.get(varRef.getName().getTokenValue()) == null) {
                 if (varRef.getType().getTokenEnum() == Token.OPTokens.INTEGER) {
-                    varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), false));
+                    if (varRef.isGlobal()) {
+                        global.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), false));
+                    } else {
+                        varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), false));
+                    }
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.FLOAT) {
+                    if(varRef.isGlobal()){
+
+                    }else{
+
+                    }
                     varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), false));
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.STRING_DT) {
+                    if(varRef.isGlobal()){
+
+                    }else{
+
+                    }
                     varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
                 } else if (varRef.getType().getTokenEnum() == Token.OPTokens.CHARACTER) {
+                    if(varRef.isGlobal()){
+
+                    }else{
+
+                    }
                     if (varRef.getValue() instanceof StringNode) {
                         throw new UnauthTokenException("to many characters");
                     }
@@ -303,33 +323,36 @@ public class Interperter {
                     Token.OPTokens tok = ((VaraibleNode) varaibles.get(i)).getType().getTokenEnum();
                     if (tok == Token.OPTokens.INTEGER) {
                         //will put here bc i dont want togo through my spagehhti code D:
-                        if(varRef.isGlobal()){
-
-                        }else{
+                        if (varRef.isGlobal()) {
+                            global.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
+                        } else {
+                            varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
 
                         }
-                        varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
+//                        varP.put(varRef.getName().getTokenValue(), new IntDataType(varRef.getValue(), varRef.isConstant()));
                     } else if (tok == Token.OPTokens.FLOAT) {
-                        if(varRef.isGlobal()){
+                        if (varRef.isGlobal()) {
+                            global.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
 
-                        }else{
+                        } else {
+                            varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
 
                         }
-                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
+//                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
                     } else if (tok == Token.OPTokens.STRING_DT) {
-                        if(varRef.isGlobal()){
-
-                        }else{
-
+                        if (varRef.isGlobal()) {
+                            global.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), varRef.isConstant()));
+                        } else {
+                            varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), varRef.isConstant()));
                         }
-                        varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), varRef.isConstant()));
-                    }else if (tok == Token.OPTokens.BOOLEAN_DT){
-                        if(varRef.isGlobal()){
-
-                        }else{
-
+//                        varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), varRef.isConstant()));
+                    } else if (tok == Token.OPTokens.BOOLEAN_DT) {
+                        if (varRef.isGlobal()) {
+                            global.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
+                        } else {
+                            varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
                         }
-                        varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
+//                        varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
                     }
                 }
             }
@@ -368,6 +391,7 @@ public class Interperter {
                         vars.replace(params.get(0).ToString(), newnum); //replaces.
                     }
                 } else if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.IDENTIFIER) { //num func
+                    HashMap<String, DataType> scope2 = new HashMap<>();
                     if (nonBuiltIns.get(callNodeRef.getName().getTokenValue()) != null) {
                         ArrayList<Node> params = callNodeRef.getParamss();
                         ArrayList<Node> paramsForFunc = nonBuiltIns.get(callNodeRef.getName().getTokenValue()).getParams();
@@ -393,6 +417,7 @@ public class Interperter {
                             boolean j = vars.get(b.getName().getTokenValue()) instanceof IntDataType;
                             boolean z = vars.get(b.getName().getTokenValue()) instanceof StringDataType;
                             boolean h = vars.get(b.getName().getTokenValue()) instanceof FloatDataType;
+
                             if (vars.get(b.getName().getTokenValue()) instanceof IntDataType) {
                                 VaraibleNode a = (VaraibleNode) paramsForFunc.get(i3);
                                 VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
@@ -408,7 +433,9 @@ public class Interperter {
                                     IntegerNode in = new IntegerNode(Integer.parseInt(vars.get(c.getName().getTokenValue()).ToString()));
                                     val = new IntDataType(in, false);
                                 }
-                                vars.replace(va, val);
+                                scope2.put(va, val);
+//                                vars.replace(va, val);
+
                             } else if (vars.get(b.getName().getTokenValue()) instanceof FloatDataType) {
                                 VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
                                 String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
@@ -419,15 +446,17 @@ public class Interperter {
                                     FloatNode in = new FloatNode(Float.parseFloat(vars.get(c.getName().getTokenValue()).ToString()));
                                     val = new FloatDataType(in, false);
                                 }
-                                vars.replace(va, val);
+                                scope2.put(va, val);
+//                                vars.replace(va, val);
                             } else if (vars.get(b.getName().getTokenValue()) instanceof StringDataType) {
                                 VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
                                 String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
                                 StringDataType val = new StringDataType(new StringNode(c.getName().getTokenValue()), false);
-                                vars.replace(va, val);
+                                scope2.put(va, val);
+//                                vars.replace(va, val);
                             }
                         }
-                        compileMethods(nonBuiltIns.get(callNodeRef.getName().getTokenValue()), vars, callNodeRef.getName().getTokenValue());
+                        compileMethods(nonBuiltIns.get(callNodeRef.getName().getTokenValue()), scope2, callNodeRef.getName().getTokenValue());
                     }
 
                 }
@@ -438,21 +467,21 @@ public class Interperter {
                     float b = Resolve(assign.getMath(), vars);
                     if (vars.get(assign.getVarName()) instanceof IntDataType) {
                         int answer = (int) b;
-                        if (vars.get(assign.getVarName()) == null) {
+                        if (vars.get(assign.getVarName()) == null || global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
                         vars.get(assign.getVarName()).FromString(Integer.toString(answer));
-                    } else if (vars.get(assign.getVarName()) instanceof FloatDataType){
+                    } else if (vars.get(assign.getVarName()) instanceof FloatDataType) {
                         if (vars.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
                         vars.get(assign.getVarName()).FromString(Float.toString(b));
-                    }else if(vars.get(assign.getVarName()) instanceof StringDataType) {
+                    } else if (vars.get(assign.getVarName()) instanceof StringDataType) {
                         if (vars.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
                         vars.get(assign.getVarName()).FromString(String.valueOf(b));
-                    }else if(vars.get(assign.getVarName()) instanceof BooleanDataType) {
+                    } else if (vars.get(assign.getVarName()) instanceof BooleanDataType) {
                         if (vars.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
                         }
@@ -536,9 +565,9 @@ public class Interperter {
                 p.add(new StringDataType(f, false));
             } else if (f.getName().getTokenEnum() == Token.OPTokens.NUMBER) {
                 p.add(new FloatDataType(f, false));
-            } else if(f.getName().getTokenEnum() == Token.OPTokens.TRUE ||f.getName().getTokenEnum() == Token.OPTokens.FALSE ) {
+            } else if (f.getName().getTokenEnum() == Token.OPTokens.TRUE || f.getName().getTokenEnum() == Token.OPTokens.FALSE) {
                 p.add(new BooleanDataType(f, false));
-            } else{ //checks if Varef
+            } else { //checks if Varef
                 if (i == (params.size() - 1)) { //this adds it to the last thing
                     if (vars.get(f.ToString()) == null) {
                         vars.put(f.ToString(), new FloatDataType(new FloatNode(0), false));
