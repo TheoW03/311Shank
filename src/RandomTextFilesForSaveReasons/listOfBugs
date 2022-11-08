@@ -1,5 +1,3 @@
 1. doesnt parse return/var for some reason -> havent started
-2. scope -> havent started
-3. add an interpt section for booleans  -> 30%
-4. add strings to assignment -> 0%
-5. add resolve strings to parser -> 0^
+2. intergrate global more -> 30%
+

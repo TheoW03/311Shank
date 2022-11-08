@@ -93,11 +93,7 @@ public class Parser {
                 break;
 
             }
-
-            RemoveEOLS();
-
         }
-        RemoveEOLS();
         matchAndRemove(Token.OPTokens.RParan); //L
         RemoveEOLS(); //im condsidering deleting  this.
         return new FunctionCallNode(name, params, builtIn); //return node.

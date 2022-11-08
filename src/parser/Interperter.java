@@ -54,13 +54,15 @@ public class Interperter {
             return "null";
         }
         //fix later
-//        if (root instanceof StringNode) {
-//            return  ((StringNode) root).ToString();
-//        } else if (root instanceof FloatNode) {
-//            return Float.toString(((FloatNode) root).getValue());
-//        } else if (root instanceof VaraibleReferenceNode) {
-//            return  Float.toString(((FloatNode) root).getValue());
-//        }
+        if (root instanceof StringNode) {
+            return ((StringNode) root).ToString();
+        } else if (root instanceof FloatNode) {
+            return Float.toString(((FloatNode) root).getValue());
+        } else if (root instanceof IntegerNode) {
+            return Integer.toString(((IntegerNode) root).getIntegerANomerul());
+        } else if (root instanceof VaraibleReferenceNode) {
+            return vars.get(root.ToString()).ToString();
+        }
         if (root instanceof MathOpNode) {
             MathOpNode v;
             v = (MathOpNode) root;
@@ -72,8 +74,7 @@ public class Interperter {
                     Random r = new Random();
                     int n = r.nextInt(2);
                     if (n == 1) {
-                        throw new UnauthTokenException("this aint javascript Son. " +
-                                "we do concation the right way. none of that fancy Convert to int stuff");
+                        throw new UnauthTokenException("jS aN eLeGaNt pEaCe oF hUmAn eNgInEeRiNg. :D"); //JS is complete garbage #cancelJS
 
                     } else {
                         throw new UnauthTokenException("-,/,* isn't accepted tokens for String concatenation");
@@ -114,8 +115,11 @@ public class Interperter {
             }
         }
         if (root instanceof VaraibleReferenceNode) {
-            return Integer.parseInt(vars.get(root.ToString()).ToString());
-
+            if(global.get(root.ToString()) != null){
+                return Float.parseFloat(global.get(root.ToString()).ToString());
+            }else{
+                return Float.parseFloat(vars.get(root.ToString()).ToString());
+            }
         }
 //        resolveBooleanExp(root.left);
 //        resolveBooleanExp(root.right);
@@ -232,7 +236,11 @@ public class Interperter {
         } else if (thingYouWantResolved instanceof FloatNode) {
             return ((FloatNode) thingYouWantResolved).getValue();
         } else if (thingYouWantResolved instanceof VaraibleReferenceNode) {
-            return Float.parseFloat(vars.get(thingYouWantResolved.ToString()).ToString());
+            if(global.get(thingYouWantResolved.ToString()).ToString() != null){
+                return Float.parseFloat(global.get(thingYouWantResolved.ToString()).ToString());
+            }else{
+                return Float.parseFloat(vars.get(thingYouWantResolved.ToString()).ToString());
+            }
         }
         if (thingYouWantResolved instanceof MathOpNode) {
             float a;
@@ -376,7 +384,6 @@ public class Interperter {
 
                         } else {
                             varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
-
                         }
 //                        varP.put(varRef.getName().getTokenValue(), new FloatDataType(varRef.getValue(), varRef.isConstant()));
                     } else if (tok == Token.OPTokens.STRING_DT) {
@@ -418,7 +425,7 @@ public class Interperter {
                 if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) { //buuilt in
                     ArrayList<Node> params = callNodeRef.getParams();
                     ArrayList<DataType> listOfParams = new ArrayList<>();
-                    addToList(params, listOfParams, vars);
+                    addToList(params, listOfParams, vars,global);
                     builtIn.get(callNodeRef.getName().getTokenEnum()).execute(listOfParams);
                     if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) {
                         float n = Float.parseFloat(listOfParams.get(0).ToString());
@@ -503,10 +510,9 @@ public class Interperter {
                 //end
             } else if (nodeRef instanceof AssignmentNode) { //assignmnet
                 AssignmentNode assign = (AssignmentNode) statetements.get(i);
-                if (vars.get(assign.getVarName()) != null) {
+                if (vars.get(assign.getVarName()) != null || global.get(assign.getVarName()) != null) {
 //                    if(assign.getVarName())
-
-                    if (vars.get(assign.getVarName()) instanceof IntDataType) {
+                    if (vars.get(assign.getVarName()) instanceof IntDataType || global.get(assign.getVarName()) instanceof IntDataType) {
                         int answer = (int) Resolve(assign.getMath(), vars);
                         if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
@@ -519,7 +525,7 @@ public class Interperter {
                         }
 //                        Objects.requireNonNullElse(global, vars).get(assign.getVarName()).FromString(Integer.toString(answer));
 //                        vars.get(assign.getVarName()).FromString(Integer.toString(answer));
-                    } else if (vars.get(assign.getVarName()) instanceof FloatDataType) {
+                    } else if (vars.get(assign.getVarName()) instanceof FloatDataType || global.get(assign.getVarName()) instanceof FloatDataType) {
                         float b = Resolve(assign.getMath(), vars);
                         if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
@@ -532,7 +538,7 @@ public class Interperter {
                         }
 //                        Objects.requireNonNullElse(global, vars).get(assign.getVarName()).FromString(Float.toString(b));
 
-                    } else if (vars.get(assign.getVarName()) instanceof StringDataType) {
+                    } else if (vars.get(assign.getVarName()) instanceof StringDataType || global.get(assign.getVarName()) instanceof StringDataType) {
                         String b = resolveString(assign.getMath(), vars);
                         String a = assign.getVarName();
                         if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
@@ -543,7 +549,7 @@ public class Interperter {
                         } else {
                             global.get(a).FromString(b);
                         }
-                    } else if (vars.get(assign.getVarName()) instanceof BooleanDataType) {
+                    } else if (vars.get(assign.getVarName()) instanceof BooleanDataType || global.get(assign.getVarName()) instanceof BooleanDataType) {
                         float b = resolveBooleanExp(assign.getMath(), vars);
                         String a = assign.getVarName();
                         if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
@@ -625,7 +631,7 @@ public class Interperter {
      * @param vars   the hash map.
      */
 
-    private static void addToList(ArrayList<Node> params, ArrayList<DataType> p, HashMap<String, DataType> vars) {
+    private static void addToList(ArrayList<Node> params, ArrayList<DataType> p, HashMap<String, DataType> vars, HashMap<String,DataType> globals) {
         for (int i = 0; i < params.size(); i++) {
             //should updtae for var ref node.
             VaraibleReferenceNode f = (VaraibleReferenceNode) params.get(i);
@@ -634,20 +640,27 @@ public class Interperter {
             } else if (f.getName().getTokenEnum() == Token.OPTokens.NUMBER) {
                 p.add(new FloatDataType(f, false));
             } else if (f.getName().getTokenEnum() == Token.OPTokens.TRUE || f.getName().getTokenEnum() == Token.OPTokens.FALSE) {
-                p.add(new BooleanDataType(f, false));
+                p.add(new BooleanDataType(f, false)); //remeber to add char.
             } else { //checks if Varef
                 if (i == (params.size() - 1)) { //this adds it to the last thing
-                    if (vars.get(f.ToString()) == null) {
+                    if (vars.get(f.ToString()) == null &&globals.get(f.ToString()) == null) {
                         vars.put(f.ToString(), new FloatDataType(new FloatNode(0), false));
                         p.add(vars.get(f.ToString()));
                     } else {
-                        p.add(vars.get(f.ToString()));
+                        DataType add = (globals.get(f.ToString()) != null) ? globals.get(f.ToString()):
+                                (vars.get(f.ToString()) != null)?vars.get(f.ToString()):null;
+                        if(add == null){
+                            throw new UnauthTokenException("var doesnt exist");
+                        }
+                        p.add(add);
                     }
                 } else {
-                    if (vars.get(f.ToString()) == null) {
-                        throw new UnauthTokenException(f.ToString() + " doesnt exist as var");
+                    DataType add = (globals.get(f.ToString()) != null) ? globals.get(f.ToString()):
+                            (vars.get(f.ToString()) != null)?vars.get(f.ToString()):null;
+                    if(add == null){
+                        throw new UnauthTokenException("var doesnt exist");
                     }
-                    p.add(vars.get(f.ToString()));
+                    p.add(add);
                 }
             }
 

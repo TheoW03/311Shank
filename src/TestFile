@@ -1,6 +1,5 @@
 define vectors(x,y,z:integer)
 begin
-write s
 write x
 end
 define Start(a,b,c:integer)
@@ -9,7 +8,13 @@ var string s := "hello world"
 string k := "hello world"
 integer test := 10
 begin
+if test = 10 then
+begin
+    write "hello world"
+    test := 20
+end
 
-write k
+write test
+test := 30
 
 end
