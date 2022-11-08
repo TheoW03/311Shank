@@ -2,6 +2,7 @@ package parser;
 //custom imports for I have my code in different dir's
 //pls comment out if problem.
 
+import jdk.jfr.DataAmount;
 import lexer.Token;
 import lexer.UnauthTokenException;
 import parser.DataType.*;
@@ -44,6 +45,9 @@ public class Interperter {
         builtIn.put(Token.OPTokens.SQRT, new squareRootNode());
         builtIn.put(Token.OPTokens.INT_CON_FLOAT, new IntToRealNode());
         builtIn.put(Token.OPTokens.GET_RANDOM, new getRandomNode());
+        builtIn.put(Token.OPTokens.SUB_STRING, new subString());
+        builtIn.put(Token.OPTokens.CHAR_AT, new charAt());
+        builtIn.put(Token.OPTokens.STR_LEN, new strlength());
         global = new HashMap<>();
 
 
@@ -94,9 +98,12 @@ public class Interperter {
      * this works  just like resolve for booleans like
      * true and false or true or
      * 1 = 2 and 2 = 1 or 3 = 4
+     *
+     *
+     * java moment when u have to use the wrappers :')
      */
 
-    public float resolveBooleanExp(Node root, HashMap<String, DataType> vars) {
+    public Object resolveBooleanExp(Node root, HashMap<String, DataType> vars) {
         if (root == null) {
             return -1;
         }
@@ -109,74 +116,127 @@ public class Interperter {
         }
         if (root instanceof BooleanWordNode) {
             if (((BooleanWordNode) root).evalu()) {
-                return 1;
+                return 1.0f;
             } else {
-                return 0;
+                return 0.0f;
             }
         }
+        if (root instanceof StringNode) {
+            return root.ToString();
+        }
+        if(root instanceof MathOpNode){
+            return Resolve(root,vars);
+        }
         if (root instanceof VaraibleReferenceNode) {
-            if(global.get(root.ToString()) != null){
-                return Float.parseFloat(global.get(root.ToString()).ToString());
-            }else{
-                return Float.parseFloat(vars.get(root.ToString()).ToString());
+            if (global.get(root.ToString()) != null) {
+                try{
+                    return Float.parseFloat(global.get(root.ToString()).ToString());
+                }catch (NumberFormatException e){
+                    if(vars.get(root.ToString()).ToString() == "false"){
+                        return 1.0f;
+                    }else{
+                        return 0.0f;
+                    }
+//                    return global.get(root.ToString()).ToString();
+                }
+            } else {
+                try{
+                    return Float.parseFloat(vars.get(root.ToString()).ToString());
+                }catch (NumberFormatException e){
+                    if(vars.get(root.ToString()) instanceof BooleanDataType){
+                        if(vars.get(root.ToString()).ToString() == "true"){
+                            return 1.0f;
+                        }else{
+                            return 0.0f;
+                        }
+
+                    }
+                    return vars.get(root.ToString()).ToString();
+                }
             }
         }
 //        resolveBooleanExp(root.left);
 //        resolveBooleanExp(root.right);
         if (root instanceof BooleanNode) {
+            Object left = resolveBooleanExp(root.left, vars);
+            Object right = resolveBooleanExp(root.right, vars);
             switch (((BooleanNode) root).getCondition()) {
                 case EQUALITY_EUQUALS -> {
-                    if (resolveBooleanExp(root.right, vars) == resolveBooleanExp(root.left, vars)) {
-                        return 1;
-                    } else {
-                        return 0;
+                    if (left instanceof Number && right instanceof Number) {
+                        if (((Number) right).floatValue() == ((Number) left).floatValue()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    } else if (left instanceof String && right instanceof String) {
+                        if (right.equals(left)) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
                     }
                 }
                 case GREATER_THAN -> {
-                    if (resolveBooleanExp(root.right, vars) < resolveBooleanExp(root.left, vars)) {
-                        return 1;
-                    } else {
-                        return 0;
+                    if (left instanceof Number && right instanceof Number) {
+                        if (((Number) right).floatValue() < ((Number) left).floatValue()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
                     }
+
                 }
                 case LESS_THAN -> {
-                    if (resolveBooleanExp(root.right, vars) > resolveBooleanExp(root.left, vars)) {
-
-                        return 1;
-                    } else {
-                        return 0;
+                    if (left instanceof Number && right instanceof Number) {
+                        if (((Number) right).floatValue() > ((Number) left).floatValue()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
                     }
                 }
                 case LESS_THAN_EQAUALS -> {
-                    if (resolveBooleanExp(root.right, vars) >= resolveBooleanExp(root.left, vars)) {
-                        return 1;
-                    } else {
-                        return 0;
+                    if (left instanceof Number && right instanceof Number) {
+                        if (((Number) right).floatValue() >= ((Number) left).floatValue()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
                     }
                 }
                 case GREATER_THAN_EQUALS -> {
-                    if (resolveBooleanExp(root.right, vars) <= resolveBooleanExp(root.left, vars)) {
-                        return 1;
-                    } else {
-                        return 0;
+                    if (left instanceof Number && right instanceof Number) {
+                        if (((Number) right).floatValue() <= ((Number) left).floatValue()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
                     }
                 }
                 case NOT_EQUAL -> {
-                    if (resolveBooleanExp(root.right, vars) != resolveBooleanExp(root.left, vars)) {
-                        return 1;
-                    } else {
-                        return 0;
+                    if (left instanceof Number && right instanceof Number) {
+                        if (((Number) right).floatValue() != ((Number) left).floatValue()) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
+                    } else if (left instanceof String) {
+                        if (!right.equals(left)) {
+                            return 1;
+                        } else {
+                            return 0;
+                        }
                     }
                 }
                 case AND -> {
-                    if (resolveBooleanExp(root.right, vars) == 1 && resolveBooleanExp(root.left, vars) == 1) {
+                    if (((Number) right).floatValue() == 1.0f && ((Number) left).floatValue() == 1.0f) {
                         return 1;
                     } else {
                         return 0;
                     }
                 }
                 case OR -> {
-                    if (resolveBooleanExp(root.right, vars) == 1 || resolveBooleanExp(root.left, vars) == 1) {
+                    if (((Number) right).floatValue() == 1.0f || ((Number) left).floatValue() == 1.0f) {
                         return 1;
                     } else {
                         return 0;
@@ -185,6 +245,87 @@ public class Interperter {
             }
         }
         return -2;
+    }
+
+    public String StringNodeEval(Node root, HashMap<String, DataType> vars) {
+        if (root == null || root instanceof IntegerNode || root instanceof FloatNode) {
+            System.out.println("error");
+            return "-2";
+        }
+
+        switch (((BooleanNode) root).getCondition()) {
+            case EQUALITY_EUQUALS -> {
+//                    System.out.println(StringNodeEval(root.right, vars));
+//                    System.out.println(StringNodeEval(root.left, vars));
+//                    return "w";
+                if (root.ToString().equals(StringNodeEval(root.left, vars))) {
+                    return "1";
+                } else {
+                    return "0";
+                }
+            }
+        }
+
+//            case GREATER_THAN -> {
+//                if (resolveBooleanExp(root.right, vars) < resolveBooleanExp(root.left, vars)) {
+//                    return 1;
+//                } else {
+//                    return 0;
+//                }
+//            }
+//            case LESS_THAN -> {
+//                if (resolveBooleanExp(root.right, vars) > resolveBooleanExp(root.left, vars)) {
+//
+//                    return 1;
+//                } else {
+//                    return 0;
+//                }
+//            }
+//            case LESS_THAN_EQAUALS -> {
+//                if (resolveBooleanExp(root.right, vars) >= resolveBooleanExp(root.left, vars)) {
+//                    return 1;
+//                } else {
+//                    return 0;
+//                }
+//            }
+//            case GREATER_THAN_EQUALS -> {
+//                if (resolveBooleanExp(root.right, vars) <= resolveBooleanExp(root.left, vars)) {
+//                    return 1;
+//                } else {
+//                    return 0;
+//                }
+//            }
+//            case NOT_EQUAL -> {
+//                if (resolveBooleanExp(root.right, vars) != resolveBooleanExp(root.left, vars)) {
+//                    return 1;
+//                } else {
+//                    return 0;
+//                }
+//            }
+//            case AND -> {
+//                if (resolveBooleanExp(root.right, vars) == 1 && resolveBooleanExp(root.left, vars) == 1) {
+//                    return 1;
+//                } else {
+//                    return 0;
+//                }
+//            }
+//            case OR -> {
+//                if (resolveBooleanExp(root.right, vars) == 1 || resolveBooleanExp(root.left, vars) == 1) {
+//                    return 1;
+//                } else {
+//                    return 0;
+//                }
+//            }
+
+
+        if (root instanceof StringNode) {
+            System.out.println(root.ToString());
+            return root.ToString();
+        }
+        System.out.println("2error");
+
+        return "-3";
+
     }
 
     public float traverseBooleanOp(Node root) {
@@ -236,9 +377,9 @@ public class Interperter {
         } else if (thingYouWantResolved instanceof FloatNode) {
             return ((FloatNode) thingYouWantResolved).getValue();
         } else if (thingYouWantResolved instanceof VaraibleReferenceNode) {
-            if(global.get(thingYouWantResolved.ToString()).ToString() != null){
+            if (global.get(thingYouWantResolved.ToString()).ToString() != null) {
                 return Float.parseFloat(global.get(thingYouWantResolved.ToString()).ToString());
-            }else{
+            } else {
                 return Float.parseFloat(vars.get(thingYouWantResolved.ToString()).ToString());
             }
         }
@@ -281,11 +422,11 @@ public class Interperter {
      *                this translates into true/false
      * @return
      */
-    public boolean evauluateBool(BooleanNode boolExp, HashMap<String, DataType> vars) {
-        float r = resolveBooleanExp(boolExp, vars);
-        if (r == 1) {
+    public boolean evauluateBool(Node boolExp, HashMap<String, DataType> vars) {
+        Object r = (Number)resolveBooleanExp(boolExp, vars);
+        if (((Number)r).floatValue() == 1.0f) {
             return true;
-        } else if (r == 0) {
+        } else if (((Number)r).floatValue() == 0.0f) {
             return false;
         } else {
             throw new UnauthTokenException("error");
@@ -425,7 +566,7 @@ public class Interperter {
                 if (builtIn.get(callNodeRef.getName().getTokenEnum()) != null) { //buuilt in
                     ArrayList<Node> params = callNodeRef.getParams();
                     ArrayList<DataType> listOfParams = new ArrayList<>();
-                    addToList(params, listOfParams, vars,global);
+                    addToList(params, listOfParams, vars, global);
                     builtIn.get(callNodeRef.getName().getTokenEnum()).execute(listOfParams);
                     if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) {
                         float n = Float.parseFloat(listOfParams.get(0).ToString());
@@ -550,7 +691,8 @@ public class Interperter {
                             global.get(a).FromString(b);
                         }
                     } else if (vars.get(assign.getVarName()) instanceof BooleanDataType || global.get(assign.getVarName()) instanceof BooleanDataType) {
-                        float b = resolveBooleanExp(assign.getMath(), vars);
+                        Object d = resolveBooleanExp(assign.getMath(), vars);
+                        float b = ((Number)d).floatValue();
                         String a = assign.getVarName();
                         if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
@@ -567,7 +709,7 @@ public class Interperter {
 
             } else if (nodeRef instanceof ifNode) {
                 ifNode ifState = (ifNode) statetements.get(i);
-                if (evauluateBool((BooleanNode) ifState.getBoolConditionExp(), vars)) {
+                if (evauluateBool(ifState.getBoolConditionExp(), vars)) {
                     interpterBlock(ifState.getStatements(), vars);
                 } else {
                     if (ifState.getElseIf() != null) {
@@ -631,7 +773,7 @@ public class Interperter {
      * @param vars   the hash map.
      */
 
-    private static void addToList(ArrayList<Node> params, ArrayList<DataType> p, HashMap<String, DataType> vars, HashMap<String,DataType> globals) {
+    private static void addToList(ArrayList<Node> params, ArrayList<DataType> p, HashMap<String, DataType> vars, HashMap<String, DataType> globals) {
         for (int i = 0; i < params.size(); i++) {
             //should updtae for var ref node.
             VaraibleReferenceNode f = (VaraibleReferenceNode) params.get(i);
@@ -643,21 +785,21 @@ public class Interperter {
                 p.add(new BooleanDataType(f, false)); //remeber to add char.
             } else { //checks if Varef
                 if (i == (params.size() - 1)) { //this adds it to the last thing
-                    if (vars.get(f.ToString()) == null &&globals.get(f.ToString()) == null) {
+                    if (vars.get(f.ToString()) == null && globals.get(f.ToString()) == null) {
                         vars.put(f.ToString(), new FloatDataType(new FloatNode(0), false));
                         p.add(vars.get(f.ToString()));
                     } else {
-                        DataType add = (globals.get(f.ToString()) != null) ? globals.get(f.ToString()):
-                                (vars.get(f.ToString()) != null)?vars.get(f.ToString()):null;
-                        if(add == null){
+                        DataType add = (globals.get(f.ToString()) != null) ? globals.get(f.ToString()) :
+                                (vars.get(f.ToString()) != null) ? vars.get(f.ToString()) : null;
+                        if (add == null) {
                             throw new UnauthTokenException("var doesnt exist");
                         }
                         p.add(add);
                     }
                 } else {
-                    DataType add = (globals.get(f.ToString()) != null) ? globals.get(f.ToString()):
-                            (vars.get(f.ToString()) != null)?vars.get(f.ToString()):null;
-                    if(add == null){
+                    DataType add = (globals.get(f.ToString()) != null) ? globals.get(f.ToString()) :
+                            (vars.get(f.ToString()) != null) ? vars.get(f.ToString()) : null;
+                    if (add == null) {
                         throw new UnauthTokenException("var doesnt exist");
                     }
                     p.add(add);

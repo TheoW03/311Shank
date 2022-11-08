@@ -56,6 +56,8 @@ public class Parser {
      */
     public Node FunctionCall() {
         Token name = current;
+        HashMap<Token.OPTokens,Integer> builtInHM = new HashMap<>(); //use this.
+        //this point im making a hash :')
         boolean builtIn =
                 name.getTokenEnum() == Token.OPTokens.SQRT
                         || name.getTokenEnum() == Token.OPTokens.GET_RANDOM
@@ -146,7 +148,9 @@ public class Parser {
                         (matchAndRemove(Token.OPTokens.LESS_THAN_EQAUALS) != null) ? current :
                                 (matchAndRemove(Token.OPTokens.GREATER_THAN) != null) ? current :
                                         (matchAndRemove(Token.OPTokens.GREATER_THAN_EQUALS) != null) ? current :
-                                                (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current : null;
+                                                (matchAndRemove(Token.OPTokens.NOT_EQUAL) != null) ? current :
+                                                        (matchAndRemove(Token.OPTokens.AND) != null) ? current:
+                                                                (matchAndRemove(Token.OPTokens.OR) != null) ? current: null;
         if (operator != null) {
             Node node = null;
             while (true) {

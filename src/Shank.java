@@ -74,12 +74,13 @@ public class Shank {
     public static void ParserTestMethod(ArrayList<Token> a){
         Parser p = new Parser(a);
         ArrayList<FunctionNode> fn = p.parse();
-        Node boolExp = p.parseBooleanNodes();
-        Interperter i2 = new Interperter();
+//        Node boolExp = p.parseBooleanNodes();
+//        Interperter i2 = new Interperter();
+//        Object javaMoment = (Number) i2.resolveBooleanExp(boolExp,new HashMap<>());
 //        i2.travserse(boolExp);
-//        if(i2.resolveBooleanExp(boolExp, new HashMap<>()) == 1){
+//        if(((Number)javaMoment).floatValue() == 1.0f){
 //            System.out.println("true");
-//        }else if(i2.resolveBooleanExp(boolExp,new HashMap<>()) == 0){
+//        }else if(((Number)javaMoment).floatValue() == 0.0f){
 //            System.out.println("false");
 //        }else{
 //            System.out.println("error");
@@ -94,6 +95,9 @@ public class Shank {
         for(int i = 0; i < fn.size(); i++){
             in.compileMethods(fn.get(i),new HashMap<>(),"Start");
         }
+        String l = "hello world";
+        l = l.substring(1,9);
+        System.out.println(l);
 
 
 

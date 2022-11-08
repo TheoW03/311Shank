@@ -65,6 +65,9 @@ public class Lexer {
         keyWords.put("floatToInt", new Token(Token.OPTokens.FLOAT_CON_INT, "floatToInt"));
         keyWords.put("read", new Token(Token.OPTokens.READ, "read"));
         keyWords.put("getRandom", new Token(Token.OPTokens.GET_RANDOM, "getRandom"));
+        keyWords.put("substrng", new Token(Token.OPTokens.SUB_STRING, "substring"));
+        keyWords.put("charat", new Token(Token.OPTokens.CHAR_AT, "charat"));
+        keyWords.put("strlength", new Token(Token.OPTokens.STR_LEN, "strlength"));
         keyWords.put("true", new Token(Token.OPTokens.TRUE, "true"));
         keyWords.put("false", new Token(Token.OPTokens.FALSE, "false"));
     }

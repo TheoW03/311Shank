@@ -1,14 +1,11 @@
-define vectors(x,y,z:integer)
-begin
-write x
-end
 define Start(a,b,c:integer)
 variables
 var string s := "hello world"
 string k := "hello world"
-integer test := 10
+boolean f := true
+integer test := 29
 begin
-if test = 10 then
+if 2+2 = 4 then
 begin
     write "hello world"
     test := 20
