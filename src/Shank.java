@@ -20,14 +20,11 @@ import java.util.HashMap;
  * @author Theo willis
  * @version 1.0.0
  * ~ project outline here ~
- * <h3>They seh dem run di streets wen mi pave di road.
+ * <h3>Dem seh dem run di streets wen mi pave di road.
  * this lyric from ninja man makes me love this class (the song he sang this in is called. ninja mi ninja - ninja man) </h3>
  *
  *  69 commits lego.
- * <p>the diragatory exception messages was my brain. after 5 days of non stop java and burnout.
- * i just wrote what ever bc I was tired.</p>
- * <p>there is a bjillon tests Im missing here. but good luck</p>
- * <p>enjoy :D</p>
+ *  <p></p>
  */
 
 //compiles. trust me bro ;)

@@ -431,32 +431,11 @@ public class Interperter {
         } else {
             throw new UnauthTokenException("error");
         }
-//        Token.OPTokens op = boolExp.getCondition();
-//        //cheks
-//        if (op == Token.OPTokens.EQUALITY_EUQUALS) {
-//            return Resolve(boolExp.right, vars) == Resolve(boolExp.left, vars);
-//        } else if (op == Token.OPTokens.NOT_EQUAL) {
-//            return Resolve(boolExp.right, vars) != Resolve(boolExp.left, vars);
-//            //jokes on u java uses "!=" L common Old 4chan L LOl.
-//        } else if (op == GREATER_THAN) {
-//            return Resolve(boolExp.right, vars) > Resolve(boolExp.left, vars);
-//
-//        } else if (op == Token.OPTokens.LESS_THAN) {
-//            return Resolve(boolExp.right, vars) < Resolve(boolExp.left, vars);
-//        } else if (op == Token.OPTokens.LESS_THAN_EQAUALS) {
-//            return Resolve(boolExp.right, vars) <= Resolve(boolExp.left, vars);
-//
-//        } else if (op == Token.OPTokens.GREATER_THAN_EQUALS) {
-//            return Resolve(boolExp.right, vars) >= Resolve(boolExp.left, vars);
-//
-//        } else {
-//            throw new UnauthTokenException("error");
-//        }
     }
 
     /**
      * @param function function def
-     * @param vars     current context.
+     * @param vars  current context.
      */
 
     public void compileMethods(FunctionNode function, HashMap<String, DataType> vars, String name) {
@@ -541,7 +520,7 @@ public class Interperter {
                             varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
                         }
 //                        varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
-                    }else if(tok == Token.OPTokens.CHAR || tok == Token.OPTokens.CHARACTER){
+                    } else if (tok == Token.OPTokens.CHAR || tok == Token.OPTokens.CHARACTER) {
                         if (varRef.isGlobal()) {
                             global.put(varRef.getName().getTokenValue(), new CharacterDataType(varRef.getValue(), varRef.isConstant()));
                         } else {
@@ -574,7 +553,7 @@ public class Interperter {
                     ArrayList<DataType> listOfParams = new ArrayList<>();
                     addToList(params, listOfParams, vars, global);
                     builtIn.get(callNodeRef.getName().getTokenEnum()).execute(listOfParams);
-                    if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) {
+                    if (callNodeRef.getName().getTokenEnum() == Token.OPTokens.INT_CON_FLOAT) { //added bc why not
                         float n = Float.parseFloat(listOfParams.get(0).ToString());
                         FloatDataType newnum = new FloatDataType(new FloatNode(n), false);
                         vars.replace(params.get(0).ToString(), newnum);
@@ -593,6 +572,7 @@ public class Interperter {
                         for (int i3 = 0; i3 < callNodeRef.getParamss().size(); i3++) {
                             VaraibleNode b = (VaraibleNode) paramsForFunc.get(i3);
                             if (vars.get(b.getName().getTokenValue()) == null) {
+                                //checks type
                                 if (((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.INTEGER) {
                                     vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(), new IntDataType(null, false));
                                 }
@@ -611,6 +591,8 @@ public class Interperter {
                             }
                             String k = b.getName().getTokenValue();
                             DataType log = vars.get(b.getName().getTokenValue());
+
+
                             boolean j = vars.get(b.getName().getTokenValue()) instanceof IntDataType;
                             boolean z = vars.get(b.getName().getTokenValue()) instanceof StringDataType;
                             boolean h = vars.get(b.getName().getTokenValue()) instanceof FloatDataType;
@@ -651,7 +633,7 @@ public class Interperter {
                                 StringDataType val = new StringDataType(new StringNode(c.getName().getTokenValue()), false);
                                 scope2.put(va, val);
 //                                vars.replace(va, val);
-                            }else if(vars.get(b.getName().getTokenValue()) instanceof CharacterDataType){
+                            } else if (vars.get(b.getName().getTokenValue()) instanceof CharacterDataType) {
                                 VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
                                 String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
                                 CharacterDataType val = new CharacterDataType(new CharacterNode(c.getName().getTokenValue().charAt(0)), false);
@@ -717,15 +699,15 @@ public class Interperter {
                         } else {
                             global.get(a).FromString(Float.toString(b));
                         }
-                    }else if(vars.get(assign.getVarName()) instanceof CharacterDataType || global.get(assign.getVarName()) instanceof CharacterDataType){
+                    } else if (vars.get(assign.getVarName()) instanceof CharacterDataType || global.get(assign.getVarName()) instanceof CharacterDataType) {
                         String a = assign.getVarName();
-                        char b = ((CharacterNode)(assign.getMath())).getData();
+                        char b = ((CharacterNode) (assign.getMath())).getData();
                         if (global.get(a) == null) {
                             vars.get(a).FromString(String.valueOf(b));
                         } else {
                             global.get(a).FromString(String.valueOf(b));
                         }
-                    }else{
+                    } else {
                         throw new UnauthTokenException("no acceptable value");
                     }
                 } else {
