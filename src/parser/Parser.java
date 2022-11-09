@@ -56,7 +56,7 @@ public class Parser {
      */
     public Node FunctionCall() {
         Token name = current;
-        HashMap<Token.OPTokens,Integer> builtInHM = new HashMap<>(); //use this.
+//        HashMap<Token.OPTokens,Integer> builtInHM = new HashMap<>(); //use this.
         //this point im making a hash :')
         boolean builtIn =
                 name.getTokenEnum() == Token.OPTokens.SQRT
@@ -64,7 +64,10 @@ public class Parser {
                         || name.getTokenEnum() == Token.OPTokens.WRITE
                         || name.getTokenEnum() == Token.OPTokens.READ
                         || name.getTokenEnum() == Token.OPTokens.FLOAT_CON_INT
-                        || name.getTokenEnum() == Token.OPTokens.INT_CON_FLOAT; //Idk if the builtins are supposed to be Keywords
+                        || name.getTokenEnum() == Token.OPTokens.INT_CON_FLOAT
+                        ||name.getTokenEnum() == Token.OPTokens.SUB_STRING
+                        || name.getTokenEnum() == Token.OPTokens.CHAR_AT
+                        ||name.getTokenEnum() == Token.OPTokens.STR_LEN; //Idk if the builtins are supposed to be Keywords
         if (!builtIn && current.getTokenEnum() != Token.OPTokens.IDENTIFIER) {
             return null;
         }
@@ -382,7 +385,8 @@ public class Parser {
         }
         if (matchAndRemove(Token.OPTokens.WRITE) != null
                 || matchAndRemove(Token.OPTokens.SQRT) != null || matchAndRemove(Token.OPTokens.READ) != null
-                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null || matchAndRemove(Token.OPTokens.INT_CON_FLOAT) != null || matchAndRemove(Token.OPTokens.GET_RANDOM) != null) {
+                || matchAndRemove(Token.OPTokens.FLOAT_CON_INT) != null || matchAndRemove(Token.OPTokens.INT_CON_FLOAT) != null || matchAndRemove(Token.OPTokens.GET_RANDOM) != null
+                || matchAndRemove(Token.OPTokens.SUB_STRING) != null || matchAndRemove(Token.OPTokens.STR_LEN) != null || matchAndRemove(Token.OPTokens.CHAR_AT) != null) {
             return FunctionCall();
         }
         if (matchAndRemove(Token.OPTokens.WHILE) != null) {

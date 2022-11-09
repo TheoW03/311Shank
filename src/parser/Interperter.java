@@ -98,8 +98,8 @@ public class Interperter {
      * this works  just like resolve for booleans like
      * true and false or true or
      * 1 = 2 and 2 = 1 or 3 = 4
-     *
-     *
+     * <p>
+     * <p>
      * java moment when u have to use the wrappers :')
      */
 
@@ -124,29 +124,29 @@ public class Interperter {
         if (root instanceof StringNode) {
             return root.ToString();
         }
-        if(root instanceof MathOpNode){
-            return Resolve(root,vars);
+        if (root instanceof MathOpNode) {
+            return Resolve(root, vars);
         }
         if (root instanceof VaraibleReferenceNode) {
             if (global.get(root.ToString()) != null) {
-                try{
+                try {
                     return Float.parseFloat(global.get(root.ToString()).ToString());
-                }catch (NumberFormatException e){
-                    if(vars.get(root.ToString()).ToString() == "false"){
+                } catch (NumberFormatException e) {
+                    if (vars.get(root.ToString()).ToString() == "false") {
                         return 1.0f;
-                    }else{
+                    } else {
                         return 0.0f;
                     }
 //                    return global.get(root.ToString()).ToString();
                 }
             } else {
-                try{
+                try {
                     return Float.parseFloat(vars.get(root.ToString()).ToString());
-                }catch (NumberFormatException e){
-                    if(vars.get(root.ToString()) instanceof BooleanDataType){
-                        if(vars.get(root.ToString()).ToString() == "true"){
+                } catch (NumberFormatException e) {
+                    if (vars.get(root.ToString()) instanceof BooleanDataType) {
+                        if (vars.get(root.ToString()).ToString() == "true") {
                             return 1.0f;
-                        }else{
+                        } else {
                             return 0.0f;
                         }
 
@@ -423,10 +423,10 @@ public class Interperter {
      * @return
      */
     public boolean evauluateBool(Node boolExp, HashMap<String, DataType> vars) {
-        Object r = (Number)resolveBooleanExp(boolExp, vars);
-        if (((Number)r).floatValue() == 1.0f) {
+        Object r = (Number) resolveBooleanExp(boolExp, vars);
+        if (((Number) r).floatValue() == 1.0f) {
             return true;
-        } else if (((Number)r).floatValue() == 0.0f) {
+        } else if (((Number) r).floatValue() == 0.0f) {
             return false;
         } else {
             throw new UnauthTokenException("error");
@@ -495,10 +495,10 @@ public class Interperter {
                         throw new UnauthTokenException("to many characters");
                     }
                     if (varRef.isGlobal()) {
-                        global.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
+                        global.put(varRef.getName().getTokenValue(), new CharacterDataType(varRef.getValue(), false));
 
                     } else {
-                        varP.put(varRef.getName().getTokenValue(), new StringDataType(varRef.getValue(), false));
+                        varP.put(varRef.getName().getTokenValue(), new CharacterDataType(varRef.getValue(), false));
 
                     }
                 }
@@ -541,6 +541,12 @@ public class Interperter {
                             varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
                         }
 //                        varP.put(varRef.getName().getTokenValue(), new BooleanDataType(varRef.getValue(), varRef.isConstant()));
+                    }else if(tok == Token.OPTokens.CHAR || tok == Token.OPTokens.CHARACTER){
+                        if (varRef.isGlobal()) {
+                            global.put(varRef.getName().getTokenValue(), new CharacterDataType(varRef.getValue(), varRef.isConstant()));
+                        } else {
+                            varP.put(varRef.getName().getTokenValue(), new CharacterDataType(varRef.getValue(), varRef.isConstant()));
+                        }
                     }
                 }
             }
@@ -599,6 +605,9 @@ public class Interperter {
                                 if (((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.BOOLEAN_DT) {
                                     vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(), new BooleanDataType(null, false));
                                 }
+                                if (((VaraibleNode) paramsForFunc.get(i3)).getType().getTokenEnum() == Token.OPTokens.CHARACTER) {
+                                    vars.put(((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue(), new CharacterDataType(null, false));
+                                }
                             }
                             String k = b.getName().getTokenValue();
                             DataType log = vars.get(b.getName().getTokenValue());
@@ -642,7 +651,13 @@ public class Interperter {
                                 StringDataType val = new StringDataType(new StringNode(c.getName().getTokenValue()), false);
                                 scope2.put(va, val);
 //                                vars.replace(va, val);
+                            }else if(vars.get(b.getName().getTokenValue()) instanceof CharacterDataType){
+                                VaraibleReferenceNode c = (VaraibleReferenceNode) params.get(i3);
+                                String va = ((VaraibleNode) paramsForFunc.get(i3)).getName().getTokenValue();
+                                CharacterDataType val = new CharacterDataType(new CharacterNode(c.getName().getTokenValue().charAt(0)), false);
+                                scope2.put(va, val);
                             }
+
                         }
                         compileMethods(nonBuiltIns.get(callNodeRef.getName().getTokenValue()), scope2, callNodeRef.getName().getTokenValue());
                     }
@@ -692,7 +707,7 @@ public class Interperter {
                         }
                     } else if (vars.get(assign.getVarName()) instanceof BooleanDataType || global.get(assign.getVarName()) instanceof BooleanDataType) {
                         Object d = resolveBooleanExp(assign.getMath(), vars);
-                        float b = ((Number)d).floatValue();
+                        float b = ((Number) d).floatValue();
                         String a = assign.getVarName();
                         if (vars.get(assign.getVarName()) == null && global.get(assign.getVarName()) == null) {
                             throw new UnauthTokenException("doesnt exist");
@@ -702,6 +717,16 @@ public class Interperter {
                         } else {
                             global.get(a).FromString(Float.toString(b));
                         }
+                    }else if(vars.get(assign.getVarName()) instanceof CharacterDataType || global.get(assign.getVarName()) instanceof CharacterDataType){
+                        String a = assign.getVarName();
+                        char b = ((CharacterNode)(assign.getMath())).getData();
+                        if (global.get(a) == null) {
+                            vars.get(a).FromString(String.valueOf(b));
+                        } else {
+                            global.get(a).FromString(String.valueOf(b));
+                        }
+                    }else{
+                        throw new UnauthTokenException("no acceptable value");
                     }
                 } else {
                     throw new UnauthTokenException("var doesnt exist");
@@ -783,6 +808,8 @@ public class Interperter {
                 p.add(new FloatDataType(f, false));
             } else if (f.getName().getTokenEnum() == Token.OPTokens.TRUE || f.getName().getTokenEnum() == Token.OPTokens.FALSE) {
                 p.add(new BooleanDataType(f, false)); //remeber to add char.
+            } else if (f.getName().getTokenEnum() == Token.OPTokens.CHAR) {
+                p.add(new CharacterDataType(f, false));
             } else { //checks if Varef
                 if (i == (params.size() - 1)) { //this adds it to the last thing
                     if (vars.get(f.ToString()) == null && globals.get(f.ToString()) == null) {

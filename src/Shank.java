@@ -95,10 +95,6 @@ public class Shank {
         for(int i = 0; i < fn.size(); i++){
             in.compileMethods(fn.get(i),new HashMap<>(),"Start");
         }
-        String l = "hello world";
-        l = l.substring(1,9);
-        System.out.println(l);
-
 
 
 //        ArrayList<Node> n = new ArrayList<>();

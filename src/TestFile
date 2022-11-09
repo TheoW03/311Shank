@@ -3,15 +3,10 @@ variables
 var string s := "hello world"
 string k := "hello world"
 boolean f := true
-integer test := 29
+character test := 'a'
 begin
-if 2+2 = 4 then
-begin
-    write "hello world"
-    test := 20
-end
+test := 'b'
 
 write test
-test := 30
 
 end
