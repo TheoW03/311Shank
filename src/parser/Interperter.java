@@ -425,7 +425,7 @@ public class Interperter {
     public boolean evauluateBool(Node boolExp, HashMap<String, DataType> vars) {
         Object r = (Number) resolveBooleanExp(boolExp, vars);
         if (((Number) r).floatValue() == 1.0f) {
-            return true;
+            return true; //e
         } else if (((Number) r).floatValue() == 0.0f) {
             return false;
         } else {
