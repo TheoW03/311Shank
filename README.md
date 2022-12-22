@@ -1,3 +1,7 @@
 # 311Shank
 
-shank Langauge for 311
+programming language I wrote for school
+Called shank
+
+interptered language
+
